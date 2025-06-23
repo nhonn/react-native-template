@@ -53,7 +53,10 @@ react-native-template/
 1. Create a new project using this template:
 
 ```bash
-npx create-expo-app --template my-template-project
+npx create-expo-app --template github:nhonn/react-native-template
+
+# Or using bun
+bun create expo --template github:nhonn/react-native-template
 ```
 
 2. Navigate to your project and install dependencies:
