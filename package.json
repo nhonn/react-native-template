@@ -13,7 +13,9 @@
   "dependencies": {
     "@expo/vector-icons": "14.1.0",
     "@react-native-async-storage/async-storage": "2.1.2",
+    "@sentry/react-native": "^6.17.0",
     "@shopify/flash-list": "1.7.6",
+    "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
     "date-fns": "4.1.0",
     "expo": "53.0.11",
@@ -52,14 +54,16 @@
     "react-native-webview": "13.13.5",
     "tailwind-merge": "3.3.1",
     "tailwindcss": "3.4.17",
+    "vexo-analytics": "^1.5.0",
     "zustand": "5.0.5"
   },
   "devDependencies": {
     "@babel/core": "7.26.0",
+    "@biomejs/biome": "2.1.1",
     "@types/react": "19.0.10",
+    "lefthook": "^1.12.2",
     "typescript": "5.8.3",
-    "eslint": "9.25.0",
-    "eslint-config-expo": "9.2.0"
+    "ultracite": "5.0.36"
   },
   "private": true
 }

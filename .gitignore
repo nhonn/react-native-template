@@ -37,3 +37,47 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+.env
+.env.local
+
+/android/
+/ios/
+/modules/**/android/build/
+!modules/**/android/
+!modules/**/ios/
+
+# Build optimization caches
+node_modules/.cache/
+.expo/cache/
+.cache/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Babel cache
+babel.cache.json
+
+# ESLint cache
+.eslintcache
+
+# Metro cache
+.metro/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# IDE files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
