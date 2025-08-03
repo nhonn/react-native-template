@@ -46,10 +46,7 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      "expo-sqlite",
-      "expo-localization",
-      "expo-web-browser"
+      ]
     ],
     "experiments": {
       "typedRoutes": true
