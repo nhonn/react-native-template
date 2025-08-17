@@ -46,6 +46,7 @@
     "@babel/core": "7.26.0",
     "@biomejs/biome": "2.1.1",
     "@types/react": "19.0.10",
+    "babel-plugin-inline-import": "^3.0.0",
     "lefthook": "^1.12.2",
     "typescript": "5.8.3",
     "ultracite": "5.0.36"

@@ -72,7 +72,6 @@ babel.cache.json
 .temp/
 
 # IDE files
-.vscode/settings.json
 .idea/
 *.swp
 *.swo

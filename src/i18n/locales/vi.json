@@ -9,5 +9,13 @@
     "next": "Tiếp theo",
     "active": "Hoạt động",
     "current": "Hiện tại"
+  },
+  "screens": {
+    "tab1": {
+      "title": "Màn hình 1"
+    },
+    "tab2": {
+      "title": "Màn hình 2"
+    }
   }
 }

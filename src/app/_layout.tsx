@@ -1,5 +1,4 @@
 import { wrap } from "@sentry/react-native";
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -35,11 +34,6 @@ function AppContent() {
   const { isThemeLoaded, colors } = useTheme();
   const splashHiddenRef = useRef(false);
 
-  // Start font loading immediately
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
   const [appState, setAppState] = useState<AppState>({
     fonts: false,
     database: false,
@@ -56,7 +50,6 @@ function AppContent() {
     }
 
     const currentState = {
-      fonts: loaded,
       database: appState.database,
       theme: isThemeLoaded,
       error: appState.error,
@@ -64,7 +57,7 @@ function AppContent() {
 
     // Optimized check: reduce strictness for faster startup
     const themeReady = isThemeLoaded && colors; // Don't wait for theme string
-    const isReady = currentState.fonts && currentState.database && themeReady && !currentState.error && !isInitializing;
+    const isReady = themeReady && !currentState.error && !isInitializing;
 
     dbLogger.info("App readiness:", {
       ...currentState,
@@ -84,7 +77,7 @@ function AppContent() {
         dbLogger.error("Failed to hide splash screen:", error);
       }
     }
-  }, [loaded, appState, isThemeLoaded, colors, isInitializing]);
+  }, [appState, isThemeLoaded, colors, isInitializing]);
 
   // Parallel initialization on mount
   useEffect(() => {
@@ -93,11 +86,6 @@ function AppContent() {
       setIsInitializing(true);
     });
   }, []);
-
-  // Optimized state updates
-  useEffect(() => {
-    setAppState((prev) => ({ ...prev, fonts: loaded }));
-  }, [loaded]);
 
   useEffect(() => {
     // Faster theme ready check
