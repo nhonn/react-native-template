@@ -5,12 +5,14 @@ import { ActivityIndicator, Animated, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
-import { iconProps } from "@/constants/styles";
-import { uiLogger } from "@/utils/logger";
+import { useThemeIconSizes } from "@/theme";
 import { Heading } from "../common/Heading";
 import type { WebViewLayoutProps } from "./types";
 
-const backIcon = <ChevronLeft {...iconProps.lg} color="white" />;
+const BackIcon = () => {
+  const iconSizes = useThemeIconSizes();
+  return <ChevronLeft color="white" size={iconSizes.lg} />;
+};
 
 const WebViewLayoutComponent = ({
   title,
@@ -87,8 +89,7 @@ const WebViewLayoutComponent = ({
         } else {
           router.replace("/(tabs)");
         }
-      } catch (error) {
-        uiLogger.error("Error navigating back", error);
+      } catch (_) {
         // Fallback to home if back navigation fails
         router.replace("/(tabs)");
       }
@@ -116,7 +117,11 @@ const WebViewLayoutComponent = ({
       <View className="flex-1 bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">
         <View className="w-full flex-row items-center justify-between bg-theme p-3">
           <View className="max-w-[60%] flex-row items-center gap-2">
-            {showBack && <Pressable onPress={handleBack}>{backIcon}</Pressable>}
+            {showBack && (
+              <Pressable onPress={handleBack}>
+                <BackIcon />
+              </Pressable>
+            )}
             <Heading.PageTitle value={title} />
           </View>
           {callToAction}

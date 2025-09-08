@@ -1,66 +1,83 @@
 // biome-ignore-all lint/suspicious/noConsole: console for development
 
+export type LogLevel = "debug" | "info" | "warn" | "error";
+
 export interface LoggerConfig {
   enabled: boolean;
-  minLevel: "debug" | "info" | "warn" | "error";
+  minLevel: LogLevel;
   prefix?: string;
+  timestamp?: boolean;
 }
 
+const LOG_LEVELS: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+};
+
 class Logger {
-  private config: LoggerConfig = {
-    enabled: __DEV__,
-    minLevel: "debug",
-    prefix: "",
-  };
+  private config: LoggerConfig;
 
-  constructor(config?: Partial<LoggerConfig>) {
-    if (config) {
-      this.config = { ...this.config, ...config };
+  constructor(config: Partial<LoggerConfig> = {}) {
+    this.config = {
+      enabled: __DEV__,
+      minLevel: "debug",
+      timestamp: true,
+      ...config,
+    };
+  }
+
+  private shouldLog(level: LogLevel): boolean {
+    return this.config.enabled && LOG_LEVELS[level] >= LOG_LEVELS[this.config.minLevel];
+  }
+
+  private formatMessage(level: LogLevel, message: string): string {
+    const parts: string[] = [];
+
+    if (this.config.prefix) {
+      parts.push(`[${this.config.prefix}]`);
     }
-  }
 
-  private shouldLog(level: "debug" | "info" | "warn" | "error"): boolean {
-    return this.config.enabled && level >= this.config.minLevel;
-  }
+    if (this.config.timestamp) {
+      parts.push(`[${new Date().toISOString()}]`);
+    }
 
-  private formatMessage(level: string, message: string, ...args: unknown[]): [string, ...unknown[]] {
-    const timestamp = new Date().toISOString();
-    const prefix = this.config.prefix ? `[${this.config.prefix}] ` : "";
-    return [`${prefix}[${timestamp}] ${level}: ${message}`, ...args];
+    parts.push(`${level.toUpperCase()}:`, message);
+
+    return parts.join(" ");
   }
 
   debug(message: string, ...args: unknown[]): void {
     if (this.shouldLog("debug")) {
-      console.log(...this.formatMessage("DEBUG", message, ...args));
+      console.log(this.formatMessage("debug", message), ...args);
     }
   }
 
   info(message: string, ...args: unknown[]): void {
     if (this.shouldLog("info")) {
-      console.info(...this.formatMessage("INFO", message, ...args));
+      console.info(this.formatMessage("info", message), ...args);
     }
   }
 
   warn(message: string, ...args: unknown[]): void {
     if (this.shouldLog("warn")) {
-      console.warn(...this.formatMessage("WARN", message, ...args));
+      console.warn(this.formatMessage("warn", message), ...args);
     }
   }
 
   error(message: string, ...args: unknown[]): void {
     if (this.shouldLog("error")) {
-      console.error(...this.formatMessage("ERROR", message, ...args));
+      console.error(this.formatMessage("error", message), ...args);
     }
   }
 
-  // Simple log method that behaves like console.log but respects dev mode
   log(message: string, ...args: unknown[]): void {
     if (this.config.enabled) {
       console.log(message, ...args);
     }
   }
 
-  // Group logging for related operations
   group(label: string): void {
     if (this.config.enabled) {
       console.group(label);
@@ -73,14 +90,12 @@ class Logger {
     }
   }
 
-  // Table logging for structured data
   table(data: unknown): void {
     if (this.config.enabled) {
       console.table(data);
     }
   }
 
-  // Performance timing
   time(label: string): void {
     if (this.config.enabled) {
       console.time(label);
@@ -93,12 +108,10 @@ class Logger {
     }
   }
 
-  // Update configuration
   configure(config: Partial<LoggerConfig>): void {
     this.config = { ...this.config, ...config };
   }
 
-  // Create a scoped logger with a specific prefix
   scope(prefix: string): Logger {
     return new Logger({
       ...this.config,
@@ -110,16 +123,10 @@ class Logger {
 // Default logger instance
 export const logger = new Logger();
 
-// Pre-configured loggers for common use cases
-export const dbLogger = logger.scope("DB");
-export const apiLogger = logger.scope("API");
-export const uiLogger = logger.scope("UI");
-export const storageLogger = logger.scope("Storage");
-export const analyticsLogger = logger.scope("Analytics");
+// Factory function for creating scoped loggers
+export const createLogger = (prefix: string, config?: Partial<LoggerConfig>): Logger => {
+  return new Logger({ ...config, prefix });
+};
 
 // Simple functions that mirror console methods but respect dev mode
-export const log = logger.log.bind(logger);
-export const debug = logger.debug.bind(logger);
-export const info = logger.info.bind(logger);
-export const warn = logger.warn.bind(logger);
-export const error = logger.error.bind(logger);
+export const { log, debug, info, warn, error } = logger;

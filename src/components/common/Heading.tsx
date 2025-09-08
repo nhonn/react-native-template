@@ -8,7 +8,7 @@ interface HeadingProps {
 }
 
 const PageTitle: FC<HeadingProps> = memo(({ value, style }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   return (
     <Text className="my-2 w-full font-bold text-text-dark text-xl uppercase" style={style}>

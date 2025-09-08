@@ -1,4 +1,3 @@
-import { wrap } from "@sentry/react-native";
 import { Stack } from "expo-router";
 import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -6,22 +5,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
-import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { useTheme } from "@/hooks/useTheme";
 import { initializeI18n } from "@/i18n";
-import { ThemeProvider } from "@/providers/ThemeProvider";
-import { initAnalytics } from "@/utils/analytics";
-import { dbLogger } from "@/utils/logger";
-import { initSentry } from "@/utils/sentry";
+import { MainProvider } from "@/providers/MainProvider";
+import { logger } from "@/utils/logger";
 import "../global.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete
 preventAutoHideAsync();
 
 // Initialize critical services immediately (don't wait)
-const initPromise = Promise.all([initSentry(), initializeI18n(), initAnalytics()]).catch((error) => {
-  dbLogger.error("Failed to initialize services:", error);
-});
+const initPromise = Promise.all([initializeI18n()]);
 
 interface AppState {
   fonts: boolean;
@@ -31,7 +25,7 @@ interface AppState {
 }
 
 function AppContent() {
-  const { isThemeLoaded, colors } = useTheme();
+  const { theme } = useTheme();
   const splashHiddenRef = useRef(false);
 
   const [appState, setAppState] = useState<AppState>({
@@ -51,19 +45,13 @@ function AppContent() {
 
     const currentState = {
       database: appState.database,
-      theme: isThemeLoaded,
+      theme: !!theme,
       error: appState.error,
     };
 
     // Optimized check: reduce strictness for faster startup
-    const themeReady = isThemeLoaded && colors; // Don't wait for theme string
+    const themeReady = !!theme; // Simple theme check
     const isReady = themeReady && !currentState.error && !isInitializing;
-
-    dbLogger.info("App readiness:", {
-      ...currentState,
-      themeReady,
-      isReady,
-    });
 
     if (isReady) {
       try {
@@ -72,12 +60,11 @@ function AppContent() {
 
         await hideAsync();
         splashHiddenRef.current = true;
-        dbLogger.info("Splash hidden - app ready");
-      } catch (error) {
-        dbLogger.error("Failed to hide splash screen:", error);
+      } catch (_) {
+        logger.error("Failed to hide splash screen");
       }
     }
-  }, [appState, isThemeLoaded, colors, isInitializing]);
+  }, [appState, theme, isInitializing]);
 
   // Parallel initialization on mount
   useEffect(() => {
@@ -89,9 +76,9 @@ function AppContent() {
 
   useEffect(() => {
     // Faster theme ready check
-    const themeReady = isThemeLoaded && !!colors;
+    const themeReady = !!theme;
     setAppState((prev) => ({ ...prev, theme: themeReady }));
-  }, [isThemeLoaded, colors]);
+  }, [theme]);
 
   // Check readiness immediately when conditions change
   useEffect(() => {
@@ -102,8 +89,7 @@ function AppContent() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!splashHiddenRef.current) {
-        dbLogger.warn("Splash timeout - forcing hide after 8 seconds");
-        hideAsync().catch((error) => dbLogger.error("Failed to force hide splash:", error));
+        hideAsync();
         splashHiddenRef.current = true;
       }
     }, 8000); // Reduced from 15 to 8 seconds
@@ -113,24 +99,20 @@ function AppContent() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ErrorBoundary>
+      <MainProvider>
         <Stack initialRouteName="(tabs)">
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
-      </ErrorBoundary>
+      </MainProvider>
     </GestureHandlerRootView>
   );
 }
 
 function RootLayout() {
-  return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
-  );
+  return <AppContent />;
 }
 
-export default wrap(RootLayout);
+export default RootLayout;

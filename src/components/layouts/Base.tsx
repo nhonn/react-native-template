@@ -5,11 +5,13 @@ import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Heading } from "@/components/common/Heading";
-import { iconProps } from "@/constants/styles";
-import { uiLogger } from "@/utils/logger";
+import { useThemeIconSizes } from "@/theme";
 import type { BaseLayoutProps } from "./types";
 
-const backIcon = <ChevronLeft {...iconProps.lg} color="white" />;
+const BackIcon = () => {
+  const iconSizes = useThemeIconSizes();
+  return <ChevronLeft color="white" size={iconSizes.lg} />;
+};
 
 const BaseLayoutComponent: FC<BaseLayoutProps> = ({
   title,
@@ -32,8 +34,7 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
         } else {
           router.replace("/(tabs)");
         }
-      } catch (error) {
-        uiLogger.error("Error navigating back", error);
+      } catch (_) {
         // Fallback to home if back navigation fails
         router.replace("/(tabs)");
       }
@@ -45,7 +46,11 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
       <View className="flex-1 bg-background-light dark:bg-background-dark">
         <View className="w-full flex-row items-center justify-between bg-theme p-3">
           <View className="max-w-[60%] flex-row items-center gap-2">
-            {showBack && <Pressable onPress={handleBack}>{backIcon}</Pressable>}
+            {showBack && (
+              <Pressable onPress={handleBack}>
+                <BackIcon />
+              </Pressable>
+            )}
             <Heading.PageTitle value={title || ""} />
           </View>
           {callToAction}

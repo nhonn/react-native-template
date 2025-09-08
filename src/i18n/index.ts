@@ -4,8 +4,19 @@ import { NativeModules, Platform } from "react-native";
 
 import { logger } from "@/utils/logger";
 import { storage } from "@/utils/storage";
-import en from "./locales/en.json" with { type: "json" };
-import vi from "./locales/vi.json" with { type: "json" };
+// Import English namespaces
+import enCommon from "./locales/en/common.json" with { type: "json" };
+import enDate from "./locales/en/date.json" with { type: "json" };
+import enErrorBoundary from "./locales/en/error_boundary.json" with { type: "json" };
+import enHistory from "./locales/en/history.json" with { type: "json" };
+import enScreens from "./locales/en/screens.json" with { type: "json" };
+
+// Import Vietnamese namespaces
+import viCommon from "./locales/vi/common.json" with { type: "json" };
+import viDate from "./locales/vi/date.json" with { type: "json" };
+import viErrorBoundary from "./locales/vi/error_boundary.json" with { type: "json" };
+import viHistory from "./locales/vi/history.json" with { type: "json" };
+import viScreens from "./locales/vi/screens.json" with { type: "json" };
 
 const FALLBACK_LANGUAGE = "en" as const;
 const SUPPORTED_LANGUAGES = ["en", "vi", "es", "zh"] as const;
@@ -85,8 +96,20 @@ const getDeviceLanguage = (): string => {
 };
 
 export const resources = {
-  en: { translation: en },
-  vi: { translation: vi },
+  en: {
+    common: enCommon,
+    screens: enScreens,
+    error_boundary: enErrorBoundary,
+    history: enHistory,
+    date: enDate,
+  },
+  vi: {
+    common: viCommon,
+    screens: viScreens,
+    error_boundary: viErrorBoundary,
+    history: viHistory,
+    date: viDate,
+  },
 } as const;
 
 export type Languages = keyof typeof resources;
@@ -96,6 +119,8 @@ const i18nConfig = {
   resources,
   lng: FALLBACK_LANGUAGE,
   fallbackLng: FALLBACK_LANGUAGE,
+  defaultNS: "common",
+  ns: ["common", "screens", "error_boundary", "history", "date"],
   compatibilityJSON: "v4",
   interpolation: {
     escapeValue: false,
@@ -105,10 +130,14 @@ const i18nConfig = {
   },
 } as const;
 
-export const initializeI18n = async () => {
+export const initializeI18n = async (): Promise<void> => {
   try {
-    const lng = await storage.getLanguage().then((result) => result.data as Languages);
-    await i18n.use(initReactI18next).init({ ...i18nConfig, lng: lng || getDeviceLanguage() });
+    // Get stored language preference
+    const languageResult = storage.getLanguage();
+    const storedLanguage = languageResult.success ? (languageResult.data as Languages) : null;
+
+    const selectedLanguage = storedLanguage || getDeviceLanguage();
+    await i18n.use(initReactI18next).init({ ...i18nConfig, lng: selectedLanguage });
   } catch (error) {
     logger.error("Failed to initialize i18n:", error);
     await i18n.init(i18nConfig);
