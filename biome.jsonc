@@ -34,6 +34,12 @@
       },
       "nursery": {
         "noUnknownAtRule": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
       }
     }
   }

@@ -7,22 +7,46 @@ module.exports = {
 
   // Placeholders that will be replaced in the template files
   placeholders: {
-    MyTemplateProject: {
+    "my-template-app": {
       description: "Name of your project in title case, used in various places like app.json and package.json",
-      default: "MyApp",
+      default: "myapp",
     },
     "my-template-project": {
       description: "Name of your project in kebab-case, used for directory names and URLs",
       default: "my-app",
     },
-    mytemplateproject: {
-      description: "Name of your project in lowercase without hyphens, used for bundle identifiers",
-      default: "myapp",
-    },
     "com.mytemplateproject": {
-      description: "Bundle identifier for your app",
+      description:
+        "Bundle identifier for iOS and Android package name - must be unique and follow reverse domain notation",
       default: "com.myapp",
     },
+  },
+
+  // Post-initialization script to ensure proper configuration synchronization
+  postInitScript: {
+    description: "Validates that app.json configurations are properly synchronized",
+    validations: [
+      {
+        file: "app.json",
+        checks: [
+          {
+            path: "expo.scheme",
+            shouldMatch: "mytemplateproject",
+            description: "App scheme should match the lowercase project name",
+          },
+          {
+            path: "expo.ios.bundleIdentifier",
+            shouldMatch: "com.mytemplateproject",
+            description: "iOS bundle identifier should match the bundle identifier placeholder",
+          },
+          {
+            path: "expo.android.package",
+            shouldMatch: "com.mytemplateproject",
+            description: "Android package should match the bundle identifier placeholder",
+          },
+        ],
+      },
+    ],
   },
 
   // Files to ignore when creating a new project
