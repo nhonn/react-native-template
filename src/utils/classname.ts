@@ -1,5 +1,4 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 
 const classNameCache = new Map<string, string>();
 
@@ -19,13 +18,13 @@ let options = defaultOptions;
 
 export function cn(...inputs: ClassValue[]): string {
   if (!options.enableCache) {
-    return twMerge(clsx(inputs));
+    return clsx(inputs);
   }
   const cacheKey = JSON.stringify(inputs);
   if (classNameCache.has(cacheKey)) {
     return classNameCache.get(cacheKey) || "";
   }
-  const result = twMerge(clsx(inputs));
+  const result = clsx(inputs);
   if (classNameCache.size >= options.cacheSize) {
     const firstKey = classNameCache.keys().next().value;
     if (firstKey !== undefined) {
