@@ -1,4 +1,7 @@
-import { storageLogger } from "@/utils/logger";
+import { createLogger } from "@/utils/logger";
+
+const storageLogger = createLogger("storage");
+
 import { secureStorage } from "@/utils/mmkv";
 
 export interface StorageResult<T> {

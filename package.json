@@ -12,6 +12,7 @@
     "check": "bunx @biomejs/biome check ."
   },
   "dependencies": {
+    "@sentry/react-native": "^7.1.0",
     "@shopify/flash-list": "2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
@@ -24,9 +25,9 @@
     "expo-status-bar": "~3.0.8",
     "i18next": "25.2.1",
     "lucide-react-native": "0.513.0",
+    "mixpanel-react-native": "^3.1.2",
     "nanoid": "^5.1.5",
     "nativewind": "4.2.1",
-    "posthog-react-native": "^4.5.0",
     "react": "19.1.0",
     "react-hook-form": "^7.62.0",
     "react-i18next": "15.5.2",

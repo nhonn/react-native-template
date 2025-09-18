@@ -1,17 +1,17 @@
 import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "react";
 import { Dimensions, Modal, type ModalProps, Pressable, View } from "react-native";
-import { PanGestureHandler, type PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   interpolate,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 
@@ -93,14 +93,14 @@ const Sheet = memo(
         }
       }, [isOpen, overlayOpacity, translateY, snapPointsInPixels, initialSnapPoint]);
 
-      const gestureHandler = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, { startY: number }>({
-        onStart: (_, context) => {
-          context.startY = translateY.value;
-        },
-        onActive: (event, context) => {
-          translateY.value = Math.max(snapPointsInPixels[snapPoints.length - 1], context.startY + event.translationY);
-        },
-        onEnd: (event) => {
+      const panGesture = Gesture.Pan()
+        .onStart(() => {
+          // Store the starting position
+        })
+        .onUpdate((event) => {
+          translateY.value = Math.max(snapPointsInPixels[snapPoints.length - 1], event.translationY);
+        })
+        .onEnd((event) => {
           const velocity = event.velocityY;
           const currentY = translateY.value;
 
@@ -134,8 +134,7 @@ const Sheet = memo(
               stiffness: 300,
             });
           }
-        },
-      });
+        });
 
       const overlayAnimatedStyle = useAnimatedStyle(() => ({
         opacity: overlayOpacity.value,
@@ -178,7 +177,7 @@ const Sheet = memo(
               <Pressable className="flex-1" onPress={handleOverlayPress} />
             </Animated.View>
 
-            <PanGestureHandler onGestureEvent={gestureHandler}>
+            <GestureDetector gesture={panGesture}>
               <Animated.View
                 className={cn("absolute right-0 bottom-0 left-0 rounded-t-3xl bg-surface-primary", className)}
                 style={[sheetAnimatedStyle, { maxHeight }]}
@@ -193,7 +192,7 @@ const Sheet = memo(
                   {children}
                 </View>
               </Animated.View>
-            </PanGestureHandler>
+            </GestureDetector>
           </View>
         </Modal>
       );

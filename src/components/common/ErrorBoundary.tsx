@@ -4,6 +4,7 @@ import { Component, type ErrorInfo, type FC, memo, type ReactNode, useMemo } fro
 import { useTranslation } from "react-i18next";
 import { ScrollView, Text, View } from "react-native";
 
+import { sentry } from "@/lib/sentry";
 import { useThemeIconSizes } from "@/theme";
 import { logger } from "@/utils/logger";
 import { Layout } from "../layouts";
@@ -102,7 +103,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       logger.error("Error info:", errorInfo);
     }
 
-    // Error tracking removed
+    // Report error to Sentry
+    sentry.captureException(error, {
+      errorInfo: errorInfo.componentStack,
+      errorBoundary: true,
+    });
   }
 
   handleReset = () => {
