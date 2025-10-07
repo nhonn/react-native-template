@@ -280,7 +280,7 @@ const lightTheme = {
   colors: {
     // Background colors
     background: {
-      primary: palette.white,
+      primary: palette.white as string,
       secondary: palette.gray[50],
       tertiary: palette.gray[100],
       inverse: palette.gray[900],
@@ -337,7 +337,7 @@ const darkTheme = {
   colors: {
     // Background colors
     background: {
-      primary: palette.gray[950],
+      primary: palette.gray[950] as string,
       secondary: palette.gray[900],
       tertiary: palette.gray[800],
       inverse: palette.gray[50],

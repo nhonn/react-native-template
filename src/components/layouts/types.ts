@@ -28,3 +28,9 @@ export interface WebViewLayoutProps extends BareLayoutProps {
   webViewProps?: Partial<React.ComponentProps<typeof WebView>>;
   callToAction?: ReactNode;
 }
+
+export interface ModalLayoutProps {
+  title?: string;
+  children: ReactNode;
+  screenName?: string;
+}
