@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { memo } from "react";
 import { ActivityIndicator, View, type ViewProps } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

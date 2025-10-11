@@ -9,7 +9,16 @@
     "lineEnding": "lf"
   },
   "javascript": {
-    "globals": ["__DEV__"],
+    "globals": [
+      "__DEV__",
+      "jest",
+      "describe",
+      "test",
+      "it",
+      "expect",
+      "beforeEach",
+      "afterEach"
+    ],
     "formatter": {
       "arrowParentheses": "always",
       "bracketSameLine": false,

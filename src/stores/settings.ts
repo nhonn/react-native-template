@@ -1,10 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import type { TextSizePreference } from "@/theme";
 import type { ValidDateFormat } from "@/types/date";
 import { createMMKVJSONStorage } from "@/utils/storage";
-
-export type TextSizePreference = "smaller" | "default" | "bigger";
 
 export interface ZustandSettings {
   premium: boolean;

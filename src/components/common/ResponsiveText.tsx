@@ -1,8 +1,8 @@
 import { type FC, memo, type ReactNode, useMemo } from "react";
 import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from "react-native";
 
+import { TYPOGRAPHY_PRESETS, useResponsiveTypography } from "@/theme";
 import { cn } from "@/utils/classname";
-import { TYPOGRAPHY_PRESETS, useResponsiveTypography } from "@/utils/typography";
 
 // Font size variants based on the typography system
 type FontSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";

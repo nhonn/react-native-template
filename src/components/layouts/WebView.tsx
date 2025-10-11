@@ -5,13 +5,11 @@ import { ActivityIndicator, Animated, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
-import { useThemeIconSizes } from "@/theme";
 import { Heading } from "../common/Heading";
 import type { WebViewLayoutProps } from "./types";
 
 const BackIcon = () => {
-  const iconSizes = useThemeIconSizes();
-  return <ChevronLeft color="white" size={iconSizes.lg} />;
+  return <ChevronLeft color="white" size={24} />;
 };
 
 const WebViewLayoutComponent = ({
@@ -113,9 +111,9 @@ const WebViewLayoutComponent = ({
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-theme" edges={safeAreaEdges}>
-      <View className="flex-1 bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark">
-        <View className="w-full flex-row items-center justify-between bg-theme p-3">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={safeAreaEdges}>
+      <View className="flex-1 bg-white">
+        <View className="w-full flex-row items-center justify-between bg-primary-500 p-3">
           <View className="max-w-[60%] flex-row items-center gap-2">
             {showBack && (
               <Pressable onPress={handleBack}>

@@ -5,12 +5,10 @@ import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Heading } from "@/components/common/Heading";
-import { useThemeIconSizes } from "@/theme";
 import type { BaseLayoutProps } from "./types";
 
 const BackIcon = () => {
-  const iconSizes = useThemeIconSizes();
-  return <ChevronLeft color="white" size={iconSizes.lg} />;
+  return <ChevronLeft color="white" size={24} />;
 };
 
 const BaseLayoutComponent: FC<BaseLayoutProps> = ({
@@ -42,9 +40,9 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
   }, [onBack, router]);
 
   return (
-    <SafeAreaView className="flex-1 bg-theme" edges={safeAreaEdges}>
-      <View className="flex-1 bg-background-light dark:bg-background-dark">
-        <View className="w-full flex-row items-center justify-between bg-theme p-3">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={safeAreaEdges}>
+      <View className="flex-1 bg-white">
+        <View className="w-full flex-row items-center justify-between bg-primary-500 p-3">
           <View className="max-w-[60%] flex-row items-center gap-2">
             {showBack && (
               <Pressable onPress={handleBack}>
@@ -55,7 +53,7 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
           </View>
           {callToAction}
         </View>
-        <View className="flex-1 bg-background-light p-3 dark:bg-background-dark" style={contentContainerStyle}>
+        <View className="flex-1 bg-white p-3" style={contentContainerStyle}>
           {children}
         </View>
       </View>

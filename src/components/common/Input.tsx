@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Eye, EyeOff, Search } from "lucide-react-native";
 import { forwardRef, memo, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

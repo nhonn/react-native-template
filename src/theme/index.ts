@@ -1,41 +1,71 @@
 /**
- * Theme System Exports
- * Centralized exports for the design system and theme management
+ * Theme System
+ * Comprehensive design system for React Native applications
  */
 
-// Enhanced theme hooks
-export { useDesignSystem, useTheme } from "../hooks/useTheme";
-// Theme store
-export { useThemeStore } from "../stores/theme";
-// Theme provider and context
+export { BorderRadius } from "./constants/borderRadius";
+export { Breakpoints } from "./constants/breakpoints";
+// Constants
+export { Colors } from "./constants/colors";
+export { Opacity } from "./constants/opacity";
+export { Shadows } from "./constants/shadows";
+export { Spacing } from "./constants/spacing";
 export {
-  ThemeProvider,
+  BASE_FONT_SIZES,
+  BREAKPOINTS,
+  LINE_HEIGHT_MULTIPLIERS,
+  TYPOGRAPHY_PRESETS,
+  Typography,
+} from "./constants/typography";
+// Typography hooks
+export {
+  getTypographyStyleForPreference,
+  useResponsiveTypography,
+} from "./hooks/useResponsiveTypography";
+export {
+  useIsDarkTheme,
+  useTheme,
   useThemeBorderRadius,
   useThemeColors,
-  useThemeContext,
-  useThemeIconSizes,
+  useThemeConfig,
+  useThemeMode,
   useThemeOpacity,
   useThemeShadows,
   useThemeSpacing,
   useThemeTypography,
-} from "./ThemeProvider";
-// Theme tokens and types
+} from "./hooks/useTheme";
+// Hooks
+export { useThemedStyle, useThemedValue } from "./hooks/useThemedStyle";
+// Store and Hooks (Zustand)
+export { useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
+export { darkColorScheme } from "./themes/dark";
+// Themes
+export { lightColorScheme } from "./themes/light";
+// Types
+export type {
+  ColorScheme,
+  DeviceType,
+  FontSize,
+  TextSizePreference,
+  Theme,
+  ThemeConfig,
+  ThemeContextValue,
+  ThemeMode,
+} from "./types";
+// Utilities
 export {
-  type BorderRadius,
-  borderRadius,
-  type IconSizes,
-  iconSizes,
-  type Opacity,
-  opacity,
-  palette,
-  type Shadows,
-  type Spacing,
-  shadows,
-  spacing,
-  type Theme,
-  type ThemeColors,
-  type ThemeMode,
-  type Typography,
-  themes,
-  typography,
-} from "./tokens";
+  createColorClasses,
+  createSpacingClasses,
+  createTypographyClasses,
+  createUtilityClasses,
+} from "./utils/createThemeClasses";
+// Typography utilities
+export {
+  getDensityAwareFontSize,
+  getDeviceType,
+  getResponsiveFontSize,
+  getResponsiveLineHeight,
+  getResponsiveTextClass,
+  getTypographyPreset,
+  getTypographyStyle,
+} from "./utils/typography";

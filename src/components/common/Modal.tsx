@@ -2,6 +2,7 @@ import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "reac
 import { Dimensions, Pressable, Modal as RNModal, type ModalProps as RNModalProps, View } from "react-native";
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

@@ -5,7 +5,7 @@ import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AnalyticsScreenProvider } from "@/hooks/useAnalyticsScreen";
-import { ResponsiveText } from "../common";
+import { ResponsiveText } from "../common/ResponsiveText";
 import type { ModalLayoutProps } from "./types";
 
 const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children, screenName }) => {

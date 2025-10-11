@@ -1,108 +1,39 @@
-import { Stack } from "expo-router";
-import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
+import { Stack, useGlobalSearchParams, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
-import { useTheme } from "@/hooks/useTheme";
 import { initializeI18n } from "@/i18n";
 import { MainProvider } from "@/providers/MainProvider";
-import { logger } from "@/utils/logger";
+import { type AnalyticsConfig, initAnalytics, trackScreenOpen } from "@/utils/analytics";
+import { initializeRevenueCat } from "@/utils/revenuecat";
 import "../global.css";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete
-preventAutoHideAsync();
+const analyticsConfig: AnalyticsConfig = {
+  mixpanelToken: process.env.EXPO_PUBLIC_MIXPANEL_TOKEN || "",
+  sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN || "",
+  environment: __DEV__ ? "development" : "production",
+  enableAnalytics: Boolean(process.env.EXPO_PUBLIC_MIXPANEL_TOKEN),
+  enableErrorTracking: Boolean(process.env.EXPO_PUBLIC_SENTRY_DSN),
+};
 
-// Initialize critical services immediately (don't wait)
-const initPromise = Promise.all([initializeI18n()]);
+let isInitialized = false;
 
-interface AppState {
-  fonts: boolean;
-  database: boolean;
-  theme: boolean;
-  error: string | null;
+if (!isInitialized) {
+  Promise.all([initializeI18n(), initAnalytics(analyticsConfig), initializeRevenueCat()]).then(() => {
+    isInitialized = true;
+  });
 }
 
 function AppContent() {
-  const { theme } = useTheme();
-  const splashHiddenRef = useRef(false);
-
-  const [appState, setAppState] = useState<AppState>({
-    fonts: false,
-    database: false,
-    theme: false,
-    error: null,
-  });
-
-  const [isInitializing, setIsInitializing] = useState(false);
-
-  // Optimized app readiness check with minimal delay
-  const checkAndHideSplash = useCallback(async () => {
-    if (splashHiddenRef.current) {
-      return;
-    }
-
-    const currentState = {
-      database: appState.database,
-      theme: !!theme,
-      error: appState.error,
-    };
-
-    // Optimized check: reduce strictness for faster startup
-    const themeReady = !!theme; // Simple theme check
-    const isReady = themeReady && !currentState.error && !isInitializing;
-
-    if (isReady) {
-      try {
-        // Reduced delay for faster startup
-        await new Promise((resolve) => setTimeout(resolve, 50));
-
-        await hideAsync();
-        splashHiddenRef.current = true;
-      } catch (_) {
-        logger.error("Failed to hide splash screen");
-      }
-    }
-  }, [appState, theme, isInitializing]);
-
-  // Parallel initialization on mount
-  useEffect(() => {
-    // Wait for critical services, then start database
-    initPromise.finally(() => {
-      setIsInitializing(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    // Faster theme ready check
-    const themeReady = !!theme;
-    setAppState((prev) => ({ ...prev, theme: themeReady }));
-  }, [theme]);
-
-  // Check readiness immediately when conditions change
-  useEffect(() => {
-    checkAndHideSplash();
-  }, [checkAndHideSplash]);
-
-  // Reduced timeout for faster fallback
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!splashHiddenRef.current) {
-        hideAsync();
-        splashHiddenRef.current = true;
-      }
-    }, 8000); // Reduced from 15 to 8 seconds
-
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MainProvider>
         <Stack initialRouteName="(tabs)">
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
+          <Stack.Screen name="(modals)" options={{ headerShown: false, presentation: "modal" }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
@@ -112,6 +43,13 @@ function AppContent() {
 }
 
 function RootLayout() {
+  const pathname = usePathname();
+  const params = useGlobalSearchParams();
+
+  useEffect(() => {
+    trackScreenOpen(pathname, params);
+  }, [pathname, params]);
+
   return <AppContent />;
 }
 
