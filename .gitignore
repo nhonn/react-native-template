@@ -80,3 +80,7 @@ babel.cache.json
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+ios
+android
+.env
