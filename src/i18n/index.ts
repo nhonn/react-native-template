@@ -8,14 +8,12 @@ import { storage } from "@/utils/storage";
 import enCommon from "./locales/en/common.json" with { type: "json" };
 import enDate from "./locales/en/date.json" with { type: "json" };
 import enErrorBoundary from "./locales/en/error_boundary.json" with { type: "json" };
-import enHistory from "./locales/en/history.json" with { type: "json" };
 import enScreens from "./locales/en/screens.json" with { type: "json" };
 
 // Import Vietnamese namespaces
 import viCommon from "./locales/vi/common.json" with { type: "json" };
 import viDate from "./locales/vi/date.json" with { type: "json" };
 import viErrorBoundary from "./locales/vi/error_boundary.json" with { type: "json" };
-import viHistory from "./locales/vi/history.json" with { type: "json" };
 import viScreens from "./locales/vi/screens.json" with { type: "json" };
 
 const FALLBACK_LANGUAGE = "en" as const;
@@ -100,14 +98,12 @@ export const resources = {
     common: enCommon,
     screens: enScreens,
     error_boundary: enErrorBoundary,
-    history: enHistory,
     date: enDate,
   },
   vi: {
     common: viCommon,
     screens: viScreens,
     error_boundary: viErrorBoundary,
-    history: viHistory,
     date: viDate,
   },
 } as const;
@@ -133,8 +129,8 @@ const i18nConfig = {
 export const initializeI18n = async (): Promise<void> => {
   try {
     // Get stored language preference
-    const languageResult = storage.getLanguage();
-    const storedLanguage = languageResult.success ? (languageResult.data as Languages) : null;
+    const languageResult = storage.getString("language");
+    const storedLanguage = languageResult ? (languageResult as Languages) : null;
 
     const selectedLanguage = storedLanguage || getDeviceLanguage();
     await i18n.use(initReactI18next).init({ ...i18nConfig, lng: selectedLanguage });
