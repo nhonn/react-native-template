@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router";
 import { History, Home } from "lucide-react-native";
-import { Platform } from "react-native";
 
 export default function TabLayout() {
   return (
@@ -9,13 +8,6 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
       }}
     >
       <Tabs.Screen

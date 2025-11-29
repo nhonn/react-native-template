@@ -5,6 +5,7 @@
 
 import React from "react";
 import { Appearance, useColorScheme } from "react-native";
+import { Uniwind } from "uniwind";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -67,6 +68,7 @@ export const useThemeStore = create<ThemeStore>()(
       setMode: (mode: ThemeMode) => {
         const theme = createTheme(mode);
         set({ mode, theme });
+        Uniwind.setTheme(mode);
       },
 
       toggleMode: () => {
@@ -74,6 +76,7 @@ export const useThemeStore = create<ThemeStore>()(
         const newMode = currentMode === "light" ? "dark" : "light";
         const theme = createTheme(newMode);
         set({ mode: newMode, theme });
+        Uniwind.setTheme(newMode);
       },
 
       resetMode: () => {
@@ -81,6 +84,7 @@ export const useThemeStore = create<ThemeStore>()(
         const resetMode = followSystemTheme ? getInitialMode(followSystemTheme, defaultMode) : defaultMode;
         const theme = createTheme(resetMode);
         set({ mode: resetMode, theme });
+        Uniwind.setTheme(resetMode);
       },
 
       setConfig: (config: Partial<ThemeConfig>) => {
@@ -111,6 +115,7 @@ export const useThemeStore = create<ThemeStore>()(
           if (systemMode !== get().mode) {
             const theme = createTheme(systemMode);
             set({ mode: systemMode, theme });
+            Uniwind.setTheme(systemMode);
           }
         }
       },

@@ -1,6 +1,6 @@
 import { type FC, memo } from "react";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "@/components/styled/SafeAreaView";
 
 import type { BareLayoutProps } from "./types";
 

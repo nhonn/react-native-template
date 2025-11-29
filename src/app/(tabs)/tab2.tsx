@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "@/components/styled/SafeAreaView";
 
 export default function Tab2Screen() {
   const { t } = useTranslation("screens");

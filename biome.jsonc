@@ -45,7 +45,8 @@
         "noUnknownAtRule": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noDuplicateCustomProperties": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"

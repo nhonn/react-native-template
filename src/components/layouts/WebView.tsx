@@ -2,8 +2,8 @@ import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Animated, Pressable, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
+import { SafeAreaView } from "@/components/styled/SafeAreaView";
 
 import { Heading } from "../common/Heading";
 import type { WebViewLayoutProps } from "./types";

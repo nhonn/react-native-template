@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { X } from "lucide-react-native";
 import { type FC, memo } from "react";
 import { Pressable, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "@/components/styled/SafeAreaView";
 
 import { ResponsiveText } from "../common/ResponsiveText";
 import type { ModalLayoutProps } from "./types";
