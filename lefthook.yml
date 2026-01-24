@@ -1,7 +1,9 @@
 pre-commit:
-  jobs:
-    - run: bunx ultracite format
-      glob: 
+  parallel: true
+  commands:
+    format:
+      run: bunx ultracite format
+      glob:
         - "*.js"
         - "*.jsx"
         - "*.ts"
@@ -10,3 +12,8 @@ pre-commit:
         - "*.jsonc"
         - "*.css"
       stage_fixed: true
+    lint:
+      run: bunx @biomejs/biome check .
+      stage_fixed: true
+    typecheck:
+      run: bun run typecheck

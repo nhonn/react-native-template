@@ -1,13 +1,13 @@
 import { type FC, memo } from "react";
 import { View } from "react-native";
-import { SafeAreaView } from "@/components/styled/SafeAreaView";
 
+import { SafeAreaView } from "@/components/styled/SafeAreaView";
 import type { BareLayoutProps } from "./types";
 
 const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerStyle, safeAreaEdges = ["top"] }) => {
   return (
-    <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark" edges={safeAreaEdges}>
-      <View className="flex-1 bg-background-light px-4 py-2 dark:bg-background-dark" style={contentContainerStyle}>
+    <SafeAreaView className="flex-1 bg-background" edges={safeAreaEdges}>
+      <View className="flex-1 bg-background px-4 py-2" style={contentContainerStyle}>
         {children}
       </View>
     </SafeAreaView>
@@ -15,5 +15,7 @@ const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerSt
 };
 
 export const BareLayout = memo(BareLayoutComponent);
+
+BareLayout.displayName = "BareLayout";
 
 BareLayout.displayName = "BareLayout";

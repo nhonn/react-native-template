@@ -2,9 +2,8 @@ import { useRouter } from "expo-router";
 import { X } from "lucide-react-native";
 import { type FC, memo } from "react";
 import { Pressable, View } from "react-native";
+import { Typography } from "@/components/common";
 import { SafeAreaView } from "@/components/styled/SafeAreaView";
-
-import { ResponsiveText } from "../common/ResponsiveText";
 import type { ModalLayoutProps } from "./types";
 
 const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
@@ -15,9 +14,9 @@ const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-light px-4 py-2 pb-2 lg:px-8 lg:py-2 dark:bg-background-dark">
+    <SafeAreaView className="flex-1 bg-background px-4 py-2 pb-2 lg:px-8 lg:py-2">
       <View className="flex-row items-center justify-between py-4">
-        <ResponsiveText preset="h4">{title}</ResponsiveText>
+        <Typography variant="h4">{title}</Typography>
         <Pressable className="px-4" onPress={handleClose}>
           <X />
         </Pressable>
@@ -28,3 +27,5 @@ const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
 };
 
 export const ModalLayout = memo(ModalLayoutComponent);
+
+ModalLayout.displayName = "ModalLayout";

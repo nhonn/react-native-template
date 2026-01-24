@@ -7,9 +7,12 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "lint": "bunx @biomejs/biome check .",
+    "lint:fix": "bunx @biomejs/biome check --write .",
+    "typecheck": "tsc --noEmit",
     "prebuild": "bunx expo prebuild --clean",
     "format": "bunx @biomejs/biome format .",
-    "format:write": "bunx @biomejs/biome format --write ."
+    "format:write": "bunx @biomejs/biome format --write .",
+    "analyze:bundle": "bunx expo export --platform ios && npx source-map-explorer dist/main.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -31,6 +34,7 @@
     "react-hook-form": "^7.62.0",
     "react-i18next": "15.5.2",
     "react-native": "0.81.5",
+    "expo-image": "~3.0.8",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-mmkv": "^3.3.1",
     "react-native-purchases": "^9.4.3",

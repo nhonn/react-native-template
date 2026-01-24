@@ -7,6 +7,10 @@
     "scheme": "mytemplateproject",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
+    "hermesFlags": {
+      "-Xhermes-allow-test-features": true
+    },
     "splash": {
       "imageWidth": 200,
       "resizeMode": "contain",
@@ -27,7 +31,8 @@
     },
     "plugins": ["expo-router", ["expo-splash-screen"]],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "turboModuleAttribute": true
     }
   }
 }

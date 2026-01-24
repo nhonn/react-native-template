@@ -10,14 +10,8 @@ import enDate from "./locales/en/date.json" with { type: "json" };
 import enErrorBoundary from "./locales/en/error_boundary.json" with { type: "json" };
 import enScreens from "./locales/en/screens.json" with { type: "json" };
 
-// Import Vietnamese namespaces
-import viCommon from "./locales/vi/common.json" with { type: "json" };
-import viDate from "./locales/vi/date.json" with { type: "json" };
-import viErrorBoundary from "./locales/vi/error_boundary.json" with { type: "json" };
-import viScreens from "./locales/vi/screens.json" with { type: "json" };
-
 const FALLBACK_LANGUAGE = "en" as const;
-const SUPPORTED_LANGUAGES = ["en", "vi", "es", "zh"] as const;
+const SUPPORTED_LANGUAGES = ["en"] as const;
 
 interface DeviceLanguageConfig {
   ios: {
@@ -99,12 +93,6 @@ export const resources = {
     screens: enScreens,
     error_boundary: enErrorBoundary,
     date: enDate,
-  },
-  vi: {
-    common: viCommon,
-    screens: viScreens,
-    error_boundary: viErrorBoundary,
-    date: viDate,
   },
 } as const;
 

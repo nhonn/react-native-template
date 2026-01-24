@@ -94,6 +94,7 @@ const Button = memo(
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel || title}
           accessibilityRole="button"
+          accessibilityState={{ disabled: disabled || loading }}
           accessible={true}
           className={buttonClasses}
           disabled={disabled || loading}

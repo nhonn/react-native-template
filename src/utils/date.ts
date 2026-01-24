@@ -1,6 +1,5 @@
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import "dayjs/locale/vi";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -15,13 +14,6 @@ dayjs.extend(relativeTime);
 // Supported locales mapping
 const LOCALE_MAP: Record<SupportedLocale, string> = {
   en: "en",
-  vi: "vi",
-  es: "es",
-  fr: "fr",
-  zh: "zh",
-  ja: "ja",
-  ko: "ko",
-  ms: "ms",
 };
 
 // Common date formats

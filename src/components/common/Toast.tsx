@@ -80,12 +80,10 @@ const Toast = memo<ToastProps>(
     }, [id, onDismiss, opacity, scale, translateY]);
 
     useEffect(() => {
-      // Animate in
       translateY.value = withSpring(0, { damping: 20, stiffness: 300 });
       opacity.value = withTiming(1, { duration: 200 });
       scale.value = withSpring(1, { damping: 20, stiffness: 300 });
 
-      // Auto dismiss
       if (duration > 0) {
         const timer = setTimeout(() => {
           handleDismiss();
@@ -93,13 +91,7 @@ const Toast = memo<ToastProps>(
 
         return () => clearTimeout(timer);
       }
-    }, [
-      duration,
-      handleDismiss,
-      opacity,
-      scale, // Animate in
-      translateY,
-    ]);
+    }, [duration, handleDismiss, opacity, scale, translateY]);
 
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [{ translateY: translateY.value }, { scale: scale.value }],
@@ -108,8 +100,14 @@ const Toast = memo<ToastProps>(
 
     const topOffset = insets.top + 16 + index * 80;
 
+    const accessibilityLabel = description ? `${title}. ${description}` : title;
+
     return (
       <Animated.View
+        accessibilityLabel={accessibilityLabel}
+        accessibilityLiveRegion="polite"
+        accessibilityRole="alert"
+        accessible={true}
         style={[animatedStyle, { position: "absolute", top: topOffset, left: 0, right: 0, zIndex: 1000 + index }]}
       >
         <View className={cn(toastVariants({ variant }))}>
@@ -161,7 +159,6 @@ const Toast = memo<ToastProps>(
   },
 );
 
-// Toast Manager Component
 const ToastManager = memo(
   forwardRef<ToastRef>((_, ref) => {
     const [toasts, setToasts] = useState<ToastData[]>([]);
@@ -197,7 +194,6 @@ const ToastManager = memo(
   }),
 );
 
-// Hook for using toast
 let toastRef: React.RefObject<ToastRef | null> | null = null;
 
 export const useToast = () => {
@@ -240,7 +236,6 @@ export const useToast = () => {
   };
 };
 
-// Provider component to be used at app root
 export const ToastProvider = memo<{ children: React.ReactNode }>(({ children }) => {
   const ref = useRef<ToastRef>(null);
 

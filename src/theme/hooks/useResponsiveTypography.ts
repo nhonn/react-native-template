@@ -58,7 +58,7 @@ export const getTypographyStyleForPreference = (size: FontSize, preference: Text
 export const useResponsiveTypography = () => {
   const deviceType = getDeviceType();
   const pixelRatio = PixelRatio.get();
-  const textSizePreference = useSettingsStore((state: any) => state.textSizePreference);
+  const textSizePreference = useSettingsStore((state) => state.textSizePreference);
 
   const getAdjustedFontSize = useCallback(
     (size: FontSize) => applyTextSizePreference(size, textSizePreference),

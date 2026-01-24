@@ -6,7 +6,7 @@ export type ValidDateFormat = "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY/MM/DD";
 export type DateInput = Date | number | string | Dayjs;
 
 // Locale codes supported by the application
-export type SupportedLocale = "en" | "vi" | "es" | "fr" | "zh" | "ja" | "ko" | "ms";
+export type SupportedLocale = "en";
 
 // Translation function type for date utilities
 export type TranslationFunction = (key: string) => string;

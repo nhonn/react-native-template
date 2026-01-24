@@ -49,7 +49,6 @@ export type {
   TextSizePreference,
   Theme,
   ThemeConfig,
-  ThemeContextValue,
   ThemeMode,
 } from "./types";
 // Utilities

@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { ActivityIndicator, View, type ViewProps } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 
@@ -176,19 +176,26 @@ const SkeletonCard = memo<{ className?: string }>(({ className }) => (
   </View>
 ));
 
-const SkeletonList = memo<{ items?: number; className?: string }>(({ items = 3, className }) => (
-  <View className={cn("space-y-4", className)}>
-    {Array.from({ length: items }, (_, index) => (
-      <View className="flex-row items-center space-x-3" key={`skeleton-item-${Date.now()}-${index}`}>
-        <Skeleton height={40} variant="avatar" width={40} />
-        <View className="flex-1 space-y-2">
-          <Skeleton variant="text" widthVariant="3/4" />
-          <Skeleton variant="text" widthVariant="1/2" />
+const SkeletonList = memo<{ items?: number; className?: string }>(({ items = 3, className }) => {
+  const skeletonIds = useMemo(
+    () => Array.from({ length: items }, () => Math.random().toString(36).substring(7)),
+    [items],
+  );
+
+  return (
+    <View className={cn("space-y-4", className)}>
+      {skeletonIds.map((id) => (
+        <View className="flex-row items-center space-x-3" key={`skeleton-${id}`}>
+          <Skeleton height={40} variant="avatar" width={40} />
+          <View className="flex-1 space-y-2">
+            <Skeleton variant="text" widthVariant="3/4" />
+            <Skeleton variant="text" widthVariant="1/2" />
+          </View>
         </View>
-      </View>
-    ))}
-  </View>
-));
+      ))}
+    </View>
+  );
+});
 
 const SkeletonProfile = memo<{ className?: string }>(({ className }) => (
   <View className={cn("items-center space-y-4 p-6", className)}>

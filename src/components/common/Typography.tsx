@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { memo } from "react";
-import { Text, type TextProps } from "react-native";
+import { memo, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Text as RNText, type TextProps as RNTextProps } from "react-native";
 
 import { cn } from "@/utils/classname";
 
@@ -71,15 +72,35 @@ const typographyVariants = cva("text-text-primary", {
   },
 });
 
-export interface TypographyProps extends Omit<TextProps, "style">, VariantProps<typeof typographyVariants> {
+export interface TypographyProps
+  extends Omit<RNTextProps, "style" | "children">,
+    VariantProps<typeof typographyVariants> {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
+  translate?: boolean;
+  i18nKey?: string;
 }
 
 const Typography = memo<TypographyProps>(
-  ({ variant, color, align, weight, transform, decoration, className, children, ...props }) => {
+  ({
+    variant,
+    color,
+    align,
+    weight,
+    transform,
+    decoration,
+    className,
+    children,
+    translate = false,
+    i18nKey,
+    ...props
+  }) => {
+    const { t } = useTranslation();
+    const content = (i18nKey ? t(i18nKey) : children) as ReactNode;
+    const displayContent = translate && !i18nKey && typeof children === "string" ? t(children) : content;
+
     return (
-      <Text
+      <RNText
         className={cn(
           typographyVariants({
             variant,
@@ -93,13 +114,12 @@ const Typography = memo<TypographyProps>(
         )}
         {...props}
       >
-        {children}
-      </Text>
+        {displayContent}
+      </RNText>
     );
   },
 );
 
-// Convenience components for common text types
 const H1 = memo<Omit<TypographyProps, "variant">>(({ children, ...props }) => (
   <Typography variant="h1" {...props}>
     {children}
@@ -184,7 +204,6 @@ const Label = memo<Omit<TypographyProps, "variant">>(({ children, ...props }) =>
   </Typography>
 ));
 
-// Display names for debugging
 Typography.displayName = "Typography";
 H1.displayName = "H1";
 H2.displayName = "H2";
