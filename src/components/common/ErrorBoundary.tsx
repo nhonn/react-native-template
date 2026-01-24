@@ -1,4 +1,3 @@
-import { captureException } from "@sentry/react-native";
 import { router } from "expo-router";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react-native";
 import { Component, type ErrorInfo, type FC, memo, type ReactNode, useMemo } from "react";
@@ -96,8 +95,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       logger.error("Error caught by ErrorBoundary:", error);
       logger.error("Error info:", errorInfo);
     }
-
-    captureException(error);
   }
 
   handleReset = () => {

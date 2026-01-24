@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
-import type WebView from "react-native-webview";
 
 export interface BareLayoutProps {
   children?: ReactNode;
@@ -16,17 +15,6 @@ export interface BaseLayoutProps {
   onBack?: () => void;
   callToAction?: ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
-}
-
-export interface WebViewLayoutProps extends BareLayoutProps {
-  title: string;
-  showBack?: boolean;
-  onBack?: () => void;
-  url: string;
-  loaderColor?: string;
-  animationDuration?: number;
-  webViewProps?: Partial<React.ComponentProps<typeof WebView>>;
-  callToAction?: ReactNode;
 }
 
 export interface ModalLayoutProps {
