@@ -1,6 +1,6 @@
-import { BareLayout } from "./Bare.js";
-import { BaseLayout } from "./Base.js";
-import { ModalLayout } from "./Modal.js";
+import { BareLayout } from "./Bare";
+import { BaseLayout } from "./Base";
+import { ModalLayout } from "./Modal";
 
 export const Layout = {
   Bare: BareLayout,

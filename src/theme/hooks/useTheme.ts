@@ -3,7 +3,7 @@
  * Hooks for accessing theme state from Zustand store
  */
 
-import { useSystemThemeTracking, useThemeStore } from "../stores/useThemeStore";
+import { useThemeStore } from "../stores/useThemeStore";
 
 /**
  * Main theme hook - replaces the context-based useTheme
@@ -11,9 +11,6 @@ import { useSystemThemeTracking, useThemeStore } from "../stores/useThemeStore";
  */
 export function useTheme() {
   const store = useThemeStore();
-
-  // Initialize system theme tracking
-  useSystemThemeTracking();
 
   return {
     theme: store.theme,

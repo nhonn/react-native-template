@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import { NativeModules, Platform } from "react-native";
 
 import { logger } from "@/utils/logger";
-import { storage } from "@/utils/storage";
+import { StorageKeys, storage } from "@/utils/storage";
 // Import English namespaces
 import enCommon from "./locales/en/common.json" with { type: "json" };
 import enDate from "./locales/en/date.json" with { type: "json" };
@@ -104,7 +104,7 @@ const i18nConfig = {
   lng: FALLBACK_LANGUAGE,
   fallbackLng: FALLBACK_LANGUAGE,
   defaultNS: "common",
-  ns: ["common", "screens", "error_boundary", "history", "date"],
+  ns: ["common", "screens", "error_boundary", "date"],
   compatibilityJSON: "v4",
   interpolation: {
     escapeValue: false,
@@ -116,8 +116,7 @@ const i18nConfig = {
 
 export const initializeI18n = async (): Promise<void> => {
   try {
-    // Get stored language preference
-    const languageResult = storage.getString("language");
+    const languageResult = storage.getString(StorageKeys.LANGUAGE);
     const storedLanguage = languageResult ? (languageResult as Languages) : null;
 
     const selectedLanguage = storedLanguage || getDeviceLanguage();
@@ -127,8 +126,6 @@ export const initializeI18n = async (): Promise<void> => {
     await i18n.init(i18nConfig);
   }
 };
-
-export const i18nReady = initializeI18n();
 
 export const getI18nInstance = () => i18n;
 

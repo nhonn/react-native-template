@@ -13,7 +13,7 @@ This React Native template follows a layered architecture with clear separation 
 - **State Management**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot validation
 - **Animations**: React Native Reanimated 4
-- **Storage**: MMKV (encrypted and unencrypted instances)
+- **Storage**: MMKV (Zustand persistence via JSON adapter)
 - **Analytics**: PostHog
 - **Monetization**: RevenueCat
 - **Testing**: Jest + React Testing Library
@@ -42,7 +42,7 @@ src/
 ├── stores/                # Global state management (settings)
 ├── hooks/                 # Custom React hooks (useDebounce, useThrottle)
 ├── utils/                 # Utility functions (analytics, storage, logger)
-├── i18n/                  # Internationalization (en, vi)
+├── i18n/                  # Internationalization (en)
 ├── providers/             # React providers (MainProvider)
 ├── types/                 # Global TypeScript types
 └── global.css             # TailwindCSS + Uniwind config
@@ -148,14 +148,7 @@ interface Theme {
 
 ### 5. Data Layer
 
-**Storage** - MMKV (encrypted and unencrypted)
-```typescript
-// Encrypted for sensitive data
-const encryptedStorage = new MMKV({ id: 'encrypted-secure', encryptionKey });
-
-// Unencrypted for cache
-const cacheStorage = new MMKV({ id: 'cache' });
-```
+**Storage** - MMKV via `react-native-mmkv`
 
 **Analytics** - PostHog
 ```typescript
@@ -253,7 +246,6 @@ const { t } = useTranslation('screens');
 
 **Supported Languages**:
 - English (en)
-- Vietnamese (vi)
 
 **Namespaces**:
 - common, screens, date, error_boundary
@@ -368,7 +360,7 @@ bun run analyze:bundle
 
 ## Security Considerations
 
-- Use encrypted MMKV for sensitive data
+- Avoid hardcoded encryption keys; use platform keychain/secure storage for secrets
 - Never commit `.env` files
 - Use PostHog for error tracking (no secrets in logs)
 - Validate all inputs using Valibot schemas

@@ -17,5 +17,3 @@ const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerSt
 export const BareLayout = memo(BareLayoutComponent);
 
 BareLayout.displayName = "BareLayout";
-
-BareLayout.displayName = "BareLayout";

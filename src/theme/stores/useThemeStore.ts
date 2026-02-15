@@ -9,6 +9,7 @@ import { Uniwind } from "uniwind";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { createMMKVJSONStorage } from "@/utils/storage";
 import { BorderRadius } from "../constants/borderRadius";
 import { Opacity } from "../constants/opacity";
 import { Shadows } from "../constants/shadows";
@@ -122,11 +123,17 @@ export const useThemeStore = create<ThemeStore>()(
     }),
     {
       name: "theme-store",
+      storage: createMMKVJSONStorage(),
       partialize: (state) => ({
         mode: state.mode,
         followSystemTheme: state.followSystemTheme,
         defaultMode: state.defaultMode,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.mode) {
+          Uniwind.setTheme(state.mode);
+        }
+      },
     },
   ),
 );
