@@ -1,4 +1,3 @@
-// biome-ignore lint/style/noExportedImports: Need to import and export InteractionManager
 import { InteractionManager } from "react-native";
 
 export const runAfterInteractions = (callback: () => void) => {

@@ -18,7 +18,6 @@ config.transformer = {
 
 config.serializer = {
   ...config.serializer,
-  experimentalCodeSplitting: true,
 };
 
 config.resolver = {

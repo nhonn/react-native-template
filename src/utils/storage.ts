@@ -1,8 +1,8 @@
-import { MMKV } from "react-native-mmkv";
+import { createMMKV, type MMKV } from "react-native-mmkv";
 import { createJSONStorage, type StateStorage } from "zustand/middleware";
 
 // MMKV instance
-const mmkvStorage = new MMKV();
+const mmkvStorage: MMKV = createMMKV();
 
 // Create a StateStorage adapter for MMKV
 const mmkvStateStorage: StateStorage = {
@@ -22,7 +22,7 @@ const mmkvStateStorage: StateStorage = {
   },
   removeItem: (name: string) => {
     try {
-      mmkvStorage.delete(name);
+      mmkvStorage.remove(name);
     } catch {
       // Silent fail for storage operations
     }
@@ -92,14 +92,14 @@ export const storage: StorageInterface = {
   },
   remove: (key: string) => {
     try {
-      mmkvStorage.delete(key);
+      mmkvStorage.remove(key);
     } catch {
       // Silent fail for storage operations
     }
   },
   removeItem: (key: string) => {
     try {
-      mmkvStorage.delete(key);
+      mmkvStorage.remove(key);
     } catch {
       // Silent fail for storage operations
     }

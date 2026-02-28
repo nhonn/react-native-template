@@ -6,11 +6,7 @@
     "orientation": "portrait",
     "scheme": "mytemplateproject",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "jsEngine": "hermes",
-    "hermesFlags": {
-      "-Xhermes-allow-test-features": true
-    },
     "splash": {
       "imageWidth": 200,
       "resizeMode": "contain",
@@ -24,15 +20,13 @@
       "infoPlist": {}
     },
     "android": {
-      "edgeToEdgeEnabled": true,
       "package": "com.mytemplateproject",
       "versionCode": 1,
       "version": "1.0.0"
     },
-    "plugins": ["expo-router", ["expo-splash-screen"]],
+    "plugins": ["expo-router", ["expo-splash-screen"], "expo-image"],
     "experiments": {
-      "typedRoutes": true,
-      "turboModuleAttribute": true
+      "typedRoutes": true
     }
   }
 }
