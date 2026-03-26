@@ -6,6 +6,7 @@ export * from "./Checkbox";
 export * from "./Divider";
 export * from "./ErrorBoundary";
 export * from "./Input";
+export * from "./LegendList";
 export * from "./Loading";
 export * from "./Modal";
 export * from "./Progress";

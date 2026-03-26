@@ -14,7 +14,7 @@ This React Native template follows a layered architecture with clear separation 
 - **Forms**: React Hook Form + Valibot validation
 - **Animations**: React Native Reanimated 4
 - **Storage**: MMKV (Zustand persistence via JSON adapter)
-- **Analytics**: PostHog
+- **Analytics**: Vexo
 - **Monetization**: RevenueCat
 - **Testing**: Jest + React Testing Library
 - **Linting**: Biome (extends Ultracite)
@@ -150,7 +150,7 @@ interface Theme {
 
 **Storage** - MMKV via `react-native-mmkv`
 
-**Analytics** - PostHog
+**Analytics** - Vexo
 ```typescript
 // Initialize with API key
 initAnalytics();
@@ -159,14 +159,14 @@ initAnalytics();
 trackError({ error, context, tags });
 
 // Track events
-posthogClient.capture('event_name', { properties });
+trackEvent('event_name', { properties });
 ```
 
 ### 6. Performance Optimizations
 
 **List Rendering**:
-- Use `@shopify/flash-list` (already installed)
-- Implement `getItemLayout`, `renderItem`
+- Use `LegendList` from `@/components/common`
+- Implement `getEstimatedItemSize` (or `getFixedItemSize`) and `renderItem`
 - Use stable keys (not index or `Date.now()`)
 
 **Animations**:
@@ -212,7 +212,7 @@ runAfterInteractions(() => {
 - Fallback navigation if back fails
 
 **Global Error Tracking**:
-- PostHog captures exceptions
+- Vexo captures exceptions
 - Context and tags for categorization
 - Development logging
 
@@ -290,8 +290,8 @@ pre-commit:
 4. Avoid prop drilling - use Zustand or Context
 
 ### Performance
-1. Use `FlashList` instead of `ScrollView` for lists
-2. Implement `getItemLayout` when item sizes are known
+1. Use `LegendList` instead of `ScrollView` for lists
+2. Implement `getEstimatedItemSize` or `getFixedItemSize` when item sizes are known
 3. Use stable keys for lists (not index)
 4. Memoize expensive computations with `useMemo`
 5. Use `useCallback` for event handlers
@@ -362,7 +362,7 @@ bun run analyze:bundle
 
 - Avoid hardcoded encryption keys; use platform keychain/secure storage for secrets
 - Never commit `.env` files
-- Use PostHog for error tracking (no secrets in logs)
+- Use Vexo for error tracking (no secrets in logs)
 - Validate all inputs using Valibot schemas
 - Secure bundle IDs in production
 
