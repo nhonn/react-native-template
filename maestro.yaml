@@ -1,0 +1,4 @@
+appId: ${APP_ID}
+platform: both
+flowDir: e2e/flows
+outputDir: e2e/results

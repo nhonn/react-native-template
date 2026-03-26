@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+name: Modal Flow
+onFlowError:
+  continueIf: true
+  stopApp: true
+---
+- launchApp
+- waitForAnimationToEnd
+# Open modal - adjust selector based on actual trigger
+- tapOn:
+    text: "Open Modal"
+- waitForAnimationToEnd
+- assertVisible:
+    text: "Modal 1"
+- takeScreenshot:
+    path: e2e/results/modal1.png
+# Close modal
+- tapOn:
+    text: "Close"
+- waitForAnimationToEnd

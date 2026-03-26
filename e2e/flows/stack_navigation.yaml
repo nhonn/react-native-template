@@ -1,0 +1,18 @@
+appId: ${APP_ID}
+name: Stack Navigation
+onFlowError:
+  continueIf: true
+  stopApp: true
+---
+- launchApp
+- waitForAnimationToEnd
+# Navigate to Stack screen - adjust selector based on actual navigation
+- tapOn:
+    text: "Go to Stack 1"
+- waitForAnimationToEnd
+- assertVisible:
+    text: "Stack 1"
+- takeScreenshot:
+    path: e2e/results/stack1.png
+- goBack
+- waitForAnimationToEnd

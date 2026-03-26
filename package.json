@@ -13,7 +13,11 @@
     "prebuild": "bunx expo prebuild --clean",
     "format": "bunx @biomejs/biome format .",
     "format:write": "bunx @biomejs/biome format --write .",
-    "analyze:bundle": "bunx expo export --platform ios && npx source-map-explorer dist/main.js"
+    "analyze:bundle": "bunx expo export --platform ios && npx source-map-explorer dist/main.js",
+    "install-maestro": "curl -Ls 'https://get.maestro.mobile.dev' | bash",
+    "e2e": "maestro test e2e/flows",
+    "e2e:ios": "maestro test e2e/flows --platform ios",
+    "e2e:android": "maestro test e2e/flows --platform android"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

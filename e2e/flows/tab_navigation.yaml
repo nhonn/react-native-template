@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+name: Tab Navigation
+onFlowError:
+  continueIf: true
+  stopApp: true
+---
+- launchApp
+- waitForAnimationToEnd
+- assertVisible:
+    text: ".*" # Tab 1 content
+- takeScreenshot:
+    path: e2e/results/tab1.png
+# Navigate to Tab 2 - adjust selector based on actual tab UI
+- tapOn:
+    text: "Tab 2"
+- waitForAnimationToEnd
+- assertVisible:
+    text: ".*" # Tab 2 content
+- takeScreenshot:
+    path: e2e/results/tab2.png

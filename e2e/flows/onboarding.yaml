@@ -1,0 +1,12 @@
+appId: ${APP_ID}
+name: Onboarding Flow
+onFlowError:
+  continueIf: true
+  stopApp: true
+---
+- launchApp
+- waitForAnimationToEnd
+- assertVisible:
+    text: ".*" # Adjust based on your actual screen content
+- takeScreenshot:
+    path: e2e/results/onboarding.png

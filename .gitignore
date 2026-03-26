@@ -84,3 +84,6 @@ Desktop.ini
 ios
 android
 .env
+
+# E2E Test Results
+e2e/results/
