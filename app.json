@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "scheme": "mytemplateproject",
     "userInterfaceStyle": "automatic",
-    "jsEngine": "hermes",
     "splash": {
       "imageWidth": 200,
       "resizeMode": "contain",
