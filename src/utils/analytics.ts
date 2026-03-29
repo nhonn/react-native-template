@@ -1,5 +1,3 @@
-import { customEvent, disableTracking, enableTracking, identifyDevice, vexo } from "vexo-analytics";
-
 import { logger } from "./logger";
 
 export interface AnalyticsError {
@@ -11,26 +9,12 @@ export interface AnalyticsError {
 
 let isInitialized = false;
 
-const initializeVexo = (): boolean => {
-  const vexoApiKey = process.env.EXPO_PUBLIC_VEXO_API_KEY;
-
-  if (!vexoApiKey) {
-    logger.log("Vexo NOT initialized - api key: NOT SET");
-    return false;
-  }
-
-  vexo(vexoApiKey);
-  logger.log("Vexo initialized successfully");
-  return true;
-};
-
 export const initAnalytics = (): void => {
   try {
-    isInitialized = initializeVexo();
-    logger.log("Analytics initialization completed");
+    isInitialized = true;
+    logger.log("Analytics template initialized (no provider configured)");
   } catch (error) {
     logger.error("Failed to initialize analytics:", error);
-    throw error;
   }
 };
 
@@ -39,19 +23,7 @@ export const trackError = (analyticsError: AnalyticsError): void => {
     return;
   }
 
-  try {
-    customEvent("$exception", {
-      level: analyticsError.level || "error",
-      $exception_personURL: analyticsError.error.message,
-      $exception_type: analyticsError.error.name,
-      ...analyticsError.context,
-      ...analyticsError.tags,
-    });
-  } catch (error) {
-    if (process.env.EXPO_PUBLIC_ENVIRONMENT === "development") {
-      logger.error("Failed to track error:", error);
-    }
-  }
+  logger.log("trackError called (analytics provider not configured):", analyticsError);
 };
 
 export const trackEvent = (name: string, properties: Record<string, unknown> = {}): void => {
@@ -59,13 +31,7 @@ export const trackEvent = (name: string, properties: Record<string, unknown> = {
     return;
   }
 
-  try {
-    customEvent(name, properties);
-  } catch (error) {
-    if (process.env.EXPO_PUBLIC_ENVIRONMENT === "development") {
-      logger.error("Failed to track event:", error);
-    }
-  }
+  logger.log("trackEvent called (analytics provider not configured):", { name, properties });
 };
 
 export const identifyUser = async (userId: string): Promise<void> => {
@@ -73,13 +39,7 @@ export const identifyUser = async (userId: string): Promise<void> => {
     return;
   }
 
-  try {
-    await identifyDevice(userId);
-  } catch (error) {
-    if (process.env.EXPO_PUBLIC_ENVIRONMENT === "development") {
-      logger.error("Failed to identify user:", error);
-    }
-  }
+  logger.log("identifyUser called (analytics provider not configured):", userId);
 };
 
 export const resetUser = async (): Promise<void> => {
@@ -87,13 +47,7 @@ export const resetUser = async (): Promise<void> => {
     return;
   }
 
-  try {
-    await identifyDevice(null);
-  } catch (error) {
-    if (process.env.EXPO_PUBLIC_ENVIRONMENT === "development") {
-      logger.error("Failed to reset user identity:", error);
-    }
-  }
+  logger.log("resetUser called (analytics provider not configured)");
 };
 
 export const setTrackingEnabled = async (enabled: boolean): Promise<void> => {
@@ -101,16 +55,5 @@ export const setTrackingEnabled = async (enabled: boolean): Promise<void> => {
     return;
   }
 
-  try {
-    if (enabled) {
-      await enableTracking();
-      return;
-    }
-
-    await disableTracking();
-  } catch (error) {
-    if (process.env.EXPO_PUBLIC_ENVIRONMENT === "development") {
-      logger.error("Failed to update tracking state:", error);
-    }
-  }
+  logger.log("setTrackingEnabled called (analytics provider not configured):", enabled);
 };

@@ -1,11 +1,3 @@
-jest.mock("vexo-analytics", () => ({
-  customEvent: jest.fn(),
-  disableTracking: jest.fn(() => Promise.resolve()),
-  enableTracking: jest.fn(() => Promise.resolve()),
-  identifyDevice: jest.fn(() => Promise.resolve()),
-  vexo: jest.fn(),
-}));
-
 jest.mock("../logger", () => ({
   logger: {
     error: jest.fn(),
@@ -17,38 +9,33 @@ describe("analytics", () => {
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
-    delete process.env.EXPO_PUBLIC_VEXO_API_KEY;
     process.env.EXPO_PUBLIC_ENVIRONMENT = "development";
   });
 
-  it("does not initialize tracking without api key", () => {
-    const { customEvent, vexo } = require("vexo-analytics");
+  it("initializes successfully", () => {
+    const { logger } = require("../logger");
+    const { initAnalytics } = require("../analytics");
+
+    initAnalytics();
+
+    expect(logger.log).toHaveBeenCalledWith("Analytics template initialized (no provider configured)");
+  });
+
+  it("trackEvent logs when not configured", () => {
+    const { logger } = require("../logger");
     const { initAnalytics, trackEvent } = require("../analytics");
 
     initAnalytics();
     trackEvent("test_event", { source: "test" });
 
-    expect(vexo).not.toHaveBeenCalled();
-    expect(customEvent).not.toHaveBeenCalled();
+    expect(logger.log).toHaveBeenCalledWith("trackEvent called (analytics provider not configured):", {
+      name: "test_event",
+      properties: { source: "test" },
+    });
   });
 
-  it("initializes Vexo and tracks events with key", () => {
-    process.env.EXPO_PUBLIC_VEXO_API_KEY = "test-key";
-
-    const { customEvent, vexo } = require("vexo-analytics");
-    const { initAnalytics, trackEvent } = require("../analytics");
-
-    initAnalytics();
-    trackEvent("cta_clicked", { location: "home" });
-
-    expect(vexo).toHaveBeenCalledWith("test-key");
-    expect(customEvent).toHaveBeenCalledWith("cta_clicked", { location: "home" });
-  });
-
-  it("maps trackError to exception event", () => {
-    process.env.EXPO_PUBLIC_VEXO_API_KEY = "test-key";
-
-    const { customEvent } = require("vexo-analytics");
+  it("trackError logs error details", () => {
+    const { logger } = require("../logger");
     const { initAnalytics, trackError } = require("../analytics");
     const error = new Error("boom");
 
@@ -60,33 +47,44 @@ describe("analytics", () => {
       tags: { feature: "analytics" },
     });
 
-    expect(customEvent).toHaveBeenCalledWith(
-      "$exception",
+    expect(logger.log).toHaveBeenCalledWith(
+      "trackError called (analytics provider not configured):",
       expect.objectContaining({
-        $exception_personURL: "boom",
-        $exception_type: "Error",
-        feature: "analytics",
+        error,
         level: "warning",
-        screen: "settings",
       }),
     );
   });
 
-  it("supports identify, reset, and tracking toggles", async () => {
-    process.env.EXPO_PUBLIC_VEXO_API_KEY = "test-key";
-
-    const { disableTracking, enableTracking, identifyDevice } = require("vexo-analytics");
-    const { identifyUser, initAnalytics, resetUser, setTrackingEnabled } = require("../analytics");
+  it("identifyUser logs user id", async () => {
+    const { logger } = require("../logger");
+    const { initAnalytics, identifyUser } = require("../analytics");
 
     initAnalytics();
     await identifyUser("user-123");
+
+    expect(logger.log).toHaveBeenCalledWith("identifyUser called (analytics provider not configured):", "user-123");
+  });
+
+  it("resetUser logs reset", async () => {
+    const { logger } = require("../logger");
+    const { initAnalytics, resetUser } = require("../analytics");
+
+    initAnalytics();
     await resetUser();
+
+    expect(logger.log).toHaveBeenCalledWith("resetUser called (analytics provider not configured)");
+  });
+
+  it("setTrackingEnabled logs enabled state", async () => {
+    const { logger } = require("../logger");
+    const { initAnalytics, setTrackingEnabled } = require("../analytics");
+
+    initAnalytics();
     await setTrackingEnabled(true);
     await setTrackingEnabled(false);
 
-    expect(identifyDevice).toHaveBeenNthCalledWith(1, "user-123");
-    expect(identifyDevice).toHaveBeenNthCalledWith(2, null);
-    expect(enableTracking).toHaveBeenCalledTimes(1);
-    expect(disableTracking).toHaveBeenCalledTimes(1);
+    expect(logger.log).toHaveBeenCalledWith("setTrackingEnabled called (analytics provider not configured):", true);
+    expect(logger.log).toHaveBeenCalledWith("setTrackingEnabled called (analytics provider not configured):", false);
   });
 });

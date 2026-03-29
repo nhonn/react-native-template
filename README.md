@@ -25,8 +25,8 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **State**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot
 - **List rendering**: LegendList v3 utility wrapper
-- **Analytics**: Vexo utility
-- **Monetization**: RevenueCat utility
+- **Analytics**: Template utility (integrate your own)
+- **Monetization**: Adapty utility
 - **Quality**: Biome + Lefthook
 - **Testing**: Jest + React Native Testing Library (Expo preset)
 

@@ -23,7 +23,7 @@
       "versionCode": 1,
       "version": "1.0.0"
     },
-    "plugins": ["expo-router", ["expo-splash-screen"], "expo-image"],
+    "plugins": ["expo-router", ["expo-splash-screen"], "expo-image", "react-native-adapty"],
     "experiments": {
       "typedRoutes": true
     }

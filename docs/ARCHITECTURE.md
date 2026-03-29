@@ -14,8 +14,8 @@ This React Native template follows a layered architecture with clear separation 
 - **Forms**: React Hook Form + Valibot validation
 - **Animations**: React Native Reanimated 4
 - **Storage**: MMKV (Zustand persistence via JSON adapter)
-- **Analytics**: Vexo
-- **Monetization**: RevenueCat
+- **Analytics**: Template (integrate your own)
+- **Monetization**: Adapty
 - **Testing**: Jest + React Testing Library
 - **Linting**: Biome (extends Ultracite)
 - **Type Safety**: TypeScript 5.9 (strict mode)

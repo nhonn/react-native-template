@@ -7,9 +7,9 @@ import "react-native-reanimated";
 
 import { initializeI18n } from "@/i18n";
 import { MainProvider } from "@/providers/MainProvider";
+import { initializeAdapty } from "@/utils/adapty";
 import { initAnalytics } from "@/utils/analytics";
 import { logger } from "@/utils/logger";
-import { initializeRevenueCat } from "@/utils/revenuecat";
 import "../global.css";
 
 preventAutoHideAsync();
@@ -42,7 +42,7 @@ function RootLayout() {
 
     (async () => {
       try {
-        await Promise.all([initializeI18n(), initAnalytics(), initializeRevenueCat()]);
+        await Promise.all([initializeI18n(), initAnalytics(), initializeAdapty()]);
       } catch (error) {
         logger.error("Root initialization failed:", error);
       } finally {
