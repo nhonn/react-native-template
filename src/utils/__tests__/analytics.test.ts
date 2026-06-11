@@ -1,90 +1,132 @@
-jest.mock("../logger", () => ({
-  logger: {
-    error: jest.fn(),
-    log: jest.fn(),
-  },
-}));
+const createPostHogMock = () => {
+  return {
+    capture: jest.fn(),
+    captureException: jest.fn(),
+    identify: jest.fn(),
+    optIn: jest.fn(),
+    optOut: jest.fn(),
+    reset: jest.fn(),
+  };
+};
+
+const loadAnalytics = (env: { apiKey?: string; host?: string } = {}) => {
+  jest.resetModules();
+
+  if (env.apiKey === undefined) {
+    delete process.env.EXPO_PUBLIC_POSTHOG_API_KEY;
+  } else {
+    process.env.EXPO_PUBLIC_POSTHOG_API_KEY = env.apiKey;
+  }
+
+  if (env.host === undefined) {
+    delete process.env.EXPO_PUBLIC_POSTHOG_HOST;
+  } else {
+    process.env.EXPO_PUBLIC_POSTHOG_HOST = env.host;
+  }
+
+  const posthogClient = createPostHogMock();
+  const posthogConstructor = jest.fn(() => posthogClient);
+
+  jest.doMock("posthog-react-native", () => ({
+    __esModule: true,
+    default: posthogConstructor,
+  }));
+
+  const analytics = require("../analytics") as typeof import("../analytics");
+
+  return {
+    analytics,
+    posthogClient,
+    posthogConstructor,
+  };
+};
 
 describe("analytics", () => {
   beforeEach(() => {
-    jest.resetModules();
     jest.clearAllMocks();
-    process.env.EXPO_PUBLIC_ENVIRONMENT = "development";
+    delete process.env.EXPO_PUBLIC_POSTHOG_API_KEY;
+    delete process.env.EXPO_PUBLIC_POSTHOG_HOST;
   });
 
-  it("initializes successfully", () => {
-    const { logger } = require("../logger");
-    const { initAnalytics } = require("../analytics");
+  it("does not initialize PostHog without an API key", () => {
+    const { analytics, posthogConstructor } = loadAnalytics();
 
-    initAnalytics();
+    analytics.initAnalytics();
+    analytics.trackEvent("test_event", { source: "test" });
 
-    expect(logger.log).toHaveBeenCalledWith("Analytics template initialized (no provider configured)");
+    expect(posthogConstructor).not.toHaveBeenCalled();
   });
 
-  it("trackEvent logs when not configured", () => {
-    const { logger } = require("../logger");
-    const { initAnalytics, trackEvent } = require("../analytics");
+  it("initializes PostHog with the configured host and tracks events", () => {
+    const { analytics, posthogClient, posthogConstructor } = loadAnalytics({
+      apiKey: "phc_test",
+      host: "https://us.i.posthog.com",
+    });
 
-    initAnalytics();
-    trackEvent("test_event", { source: "test" });
+    analytics.initAnalytics();
+    analytics.trackEvent("test_event", { source: "test" });
 
-    expect(logger.log).toHaveBeenCalledWith("trackEvent called (analytics provider not configured):", {
-      name: "test_event",
-      properties: { source: "test" },
+    expect(posthogConstructor).toHaveBeenCalledWith("phc_test", {
+      defaultOptIn: true,
+      host: "https://us.i.posthog.com",
+    });
+    expect(posthogClient.capture).toHaveBeenCalledWith("test_event", { source: "test" });
+  });
+
+  it("tracks screen views with a screen_name property", () => {
+    const { analytics, posthogClient } = loadAnalytics({ apiKey: "phc_test" });
+
+    analytics.initAnalytics();
+    analytics.trackScreenView("tab2", { source: "navigation" });
+
+    expect(posthogClient.capture).toHaveBeenCalledWith("screen_view", {
+      screen_name: "tab2",
+      source: "navigation",
     });
   });
 
-  it("trackError logs error details", () => {
-    const { logger } = require("../logger");
-    const { initAnalytics, trackError } = require("../analytics");
+  it("captures error details for PostHog exception events", () => {
+    const { analytics, posthogClient } = loadAnalytics({ apiKey: "phc_test" });
     const error = new Error("boom");
 
-    initAnalytics();
-    trackError({
+    analytics.initAnalytics();
+    analytics.trackError({
       context: { screen: "settings" },
       error,
       level: "warning",
       tags: { feature: "analytics" },
     });
 
-    expect(logger.log).toHaveBeenCalledWith(
-      "trackError called (analytics provider not configured):",
+    expect(posthogClient.captureException).toHaveBeenCalledWith(
+      error,
       expect.objectContaining({
-        error,
+        context: { screen: "settings" },
         level: "warning",
+        tags: { feature: "analytics" },
       }),
     );
   });
 
-  it("identifyUser logs user id", async () => {
-    const { logger } = require("../logger");
-    const { initAnalytics, identifyUser } = require("../analytics");
+  it("identifies users, resets them, and toggles tracking", async () => {
+    const { analytics, posthogClient } = loadAnalytics({ apiKey: "phc_test" });
 
-    initAnalytics();
-    await identifyUser("user-123");
+    analytics.initAnalytics();
+    await analytics.identifyUser("user-123");
+    await analytics.setTrackingEnabled(false);
+    await analytics.resetUser();
+    await analytics.setTrackingEnabled(true);
 
-    expect(logger.log).toHaveBeenCalledWith("identifyUser called (analytics provider not configured):", "user-123");
+    expect(posthogClient.identify).toHaveBeenCalledWith("user-123");
+    expect(posthogClient.optOut).toHaveBeenCalledTimes(2);
+    expect(posthogClient.reset).toHaveBeenCalledTimes(1);
+    expect(posthogClient.optIn).toHaveBeenCalledTimes(1);
   });
 
-  it("resetUser logs reset", async () => {
-    const { logger } = require("../logger");
-    const { initAnalytics, resetUser } = require("../analytics");
+  it("derives screen names from route segments by stripping route groups", () => {
+    const { analytics } = loadAnalytics({ apiKey: "phc_test" });
 
-    initAnalytics();
-    await resetUser();
-
-    expect(logger.log).toHaveBeenCalledWith("resetUser called (analytics provider not configured)");
-  });
-
-  it("setTrackingEnabled logs enabled state", async () => {
-    const { logger } = require("../logger");
-    const { initAnalytics, setTrackingEnabled } = require("../analytics");
-
-    initAnalytics();
-    await setTrackingEnabled(true);
-    await setTrackingEnabled(false);
-
-    expect(logger.log).toHaveBeenCalledWith("setTrackingEnabled called (analytics provider not configured):", true);
-    expect(logger.log).toHaveBeenCalledWith("setTrackingEnabled called (analytics provider not configured):", false);
+    expect(analytics.getScreenNameFromSegments(["(tabs)", "index"])).toBe("index");
+    expect(analytics.getScreenNameFromSegments(["(stacks)", "stack1"])).toBe("stack1");
+    expect(analytics.getScreenNameFromSegments(["(tabs)", "settings", "profile"])).toBe("settings/profile");
   });
 });

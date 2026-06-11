@@ -6,6 +6,11 @@ import { logger } from "./logger";
 const apiKey = process.env.EXPO_PUBLIC_ADAPTY_API_KEY || "";
 
 export const initializeAdapty = () => {
+  if (!apiKey) {
+    logger.warn("Skipping Adapty initialization because EXPO_PUBLIC_ADAPTY_API_KEY is missing.");
+    return;
+  }
+
   adapty.activate(apiKey);
 };
 
@@ -55,7 +60,7 @@ export const getProfile = async () => {
 export const checkActiveSubscription = async (): Promise<boolean> => {
   try {
     const profile = await adapty.getProfile();
-    if (!profile || !profile.accessLevels) {
+    if (!profile?.accessLevels) {
       return false;
     }
     return Object.values(profile.accessLevels).some(

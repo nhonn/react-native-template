@@ -1,11 +1,10 @@
-# LegendList v3 + Vexo Migration
+# LegendList v3 + PostHog Migration
 
 ## Scope
 
 - Removed `@shopify/flash-list`
 - Added `@legendapp/list` pinned to `3.0.0-beta.43`
-- Removed `posthog-react-native`
-- Added `vexo-analytics`
+- Added `posthog-react-native`
 - Replaced analytics implementation in `src/utils/analytics.ts`
 - Added a shared LegendList wrapper in `src/components/common/LegendList.tsx`
 
@@ -22,25 +21,23 @@ The wrapper is exported from `@/components/common` and should be used for all fu
 
 ### Environment Variables
 
-- Removed:
+- Added:
   - `EXPO_PUBLIC_POSTHOG_API_KEY`
   - `EXPO_PUBLIC_POSTHOG_HOST`
-- Added:
-  - `EXPO_PUBLIC_VEXO_API_KEY`
 
 ### API Mapping
 
-- `posthog.capture(event, props)` → `trackEvent(event, props)` → `customEvent(event, props)`
-- `posthog.capture("$exception", props)` → `trackError({ ... })` → `customEvent("$exception", props)`
-- `posthog.identify(userId)` → `identifyUser(userId)` → `identifyDevice(userId)`
-- `posthog.reset()` → `resetUser()` → `identifyDevice(null)`
-- `posthog.opt_in_capturing()` → `setTrackingEnabled(true)` → `enableTracking()`
-- `posthog.opt_out_capturing()` → `setTrackingEnabled(false)` → `disableTracking()`
+- `posthog.capture(event, props)` → `trackEvent(event, props)`
+- `posthog.capture("screen_view", { screen_name })` → `trackScreenView(screenName)`
+- `posthog.capture("$exception", props)` → `trackError({ ... })`
+- `posthog.identify(userId)` → `identifyUser(userId)`
+- `posthog.reset()` → `resetUser()`
+- `posthog.optIn()` → `setTrackingEnabled(true)`
+- `posthog.optOut()` → `setTrackingEnabled(false)`
 
 ## Breaking Changes
 
-- PostHog-specific env variables are no longer read.
-- PostHog host configuration is removed.
+- PostHog env variables are now required for analytics to send data.
 - Any external code relying on direct PostHog client access must migrate to exported utility methods in `src/utils/analytics.ts`.
 - `LegendList` should now be imported from `@/components/common` instead of directly from list libraries to preserve shared defaults.
 
@@ -48,6 +45,7 @@ The wrapper is exported from `@/components/common` and should be used for all fu
 
 - Initialize analytics through `initAnalytics()` only.
 - Track business events through `trackEvent(name, properties)`.
+- Track screens through `trackScreenView(screenName, properties)`.
 - Track handled exceptions through `trackError({ error, context, level, tags })`.
 - Use `identifyUser`, `resetUser`, and `setTrackingEnabled` for identity and consent controls.
 - Use shared `LegendList` wrapper for all new large lists.

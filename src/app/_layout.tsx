@@ -1,5 +1,5 @@
-import { Stack } from "expo-router";
-import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
+import { Stack, useSegments } from "expo-router";
+import { hideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -8,16 +8,34 @@ import "react-native-reanimated";
 import { initializeI18n } from "@/i18n";
 import { MainProvider } from "@/providers/MainProvider";
 import { initializeAdapty } from "@/utils/adapty";
-import { initAnalytics } from "@/utils/analytics";
+import { getScreenNameFromSegments, initAnalytics, trackScreenView } from "@/utils/analytics";
 import { logger } from "@/utils/logger";
+import { initializeSplashScreen } from "@/utils/splashScreen";
 import "../global.css";
 
-preventAutoHideAsync();
+function AnalyticsScreenTracker() {
+  const segments = useSegments();
+  const lastTrackedScreenRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const screenName = getScreenNameFromSegments(segments);
+
+    if (lastTrackedScreenRef.current === screenName) {
+      return;
+    }
+
+    lastTrackedScreenRef.current = screenName;
+    trackScreenView(screenName);
+  }, [segments]);
+
+  return null;
+}
 
 function AppContent() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MainProvider>
+        <AnalyticsScreenTracker />
         <Stack initialRouteName="(tabs)">
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
@@ -42,6 +60,7 @@ function RootLayout() {
 
     (async () => {
       try {
+        await initializeSplashScreen();
         await Promise.all([initializeI18n(), initAnalytics(), initializeAdapty()]);
       } catch (error) {
         logger.error("Root initialization failed:", error);

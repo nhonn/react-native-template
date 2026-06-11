@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "scheme": "mytemplateproject",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "imageWidth": 200,
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
@@ -23,7 +18,14 @@
       "versionCode": 1,
       "version": "1.0.0"
     },
-    "plugins": ["expo-router", ["expo-splash-screen"], "expo-image", "react-native-adapty"],
+    "plugins": [
+      "expo-router",
+      ["expo-splash-screen"],
+      "expo-image",
+      "react-native-adapty",
+      "expo-status-bar",
+      "expo-localization"
+    ],
     "experiments": {
       "typedRoutes": true
     }

@@ -179,4 +179,4 @@ export type InputVariant = VariantProps<typeof inputVariants>["variant"];
 export type InputSize = VariantProps<typeof inputVariants>["size"];
 export type InputState = VariantProps<typeof inputVariants>["state"];
 
-export { Input, PasswordInput, SearchInput, Textarea, inputVariants };
+export { Input, inputVariants, PasswordInput, SearchInput, Textarea };

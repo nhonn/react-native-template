@@ -2,23 +2,23 @@
 
 ## Overview
 
-This React Native template follows a layered architecture with clear separation of concerns. The codebase is built using modern React Native patterns, Expo SDK 54, and emphasizes performance, accessibility, and type safety.
+This React Native template follows a layered architecture with clear separation of concerns. The codebase is built using modern React Native patterns, Expo SDK 56, and emphasizes performance, accessibility, and type safety.
 
 ## Tech Stack
 
-- **Framework**: React Native 0.81.5 + React 19.1.0
-- **Expo SDK**: 54 (latest)
+- **Framework**: React Native 0.85.3 + React 19.2.3
+- **Expo SDK**: 56
 - **Navigation**: Expo Router (file-based routing)
 - **Styling**: TailwindCSS 4 + Uniwind (inline styles)
 - **State Management**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot validation
 - **Animations**: React Native Reanimated 4
 - **Storage**: MMKV (Zustand persistence via JSON adapter)
-- **Analytics**: Template (integrate your own)
+- **Analytics**: PostHog
 - **Monetization**: Adapty
 - **Testing**: Jest + React Testing Library
 - **Linting**: Biome (extends Ultracite)
-- **Type Safety**: TypeScript 5.9 (strict mode)
+- **Type Safety**: TypeScript 6.0 (strict mode)
 
 ## Directory Structure
 
@@ -150,7 +150,7 @@ interface Theme {
 
 **Storage** - MMKV via `react-native-mmkv`
 
-**Analytics** - Vexo
+**Analytics** - PostHog
 ```typescript
 // Initialize with API key
 initAnalytics();
@@ -160,6 +160,9 @@ trackError({ error, context, tags });
 
 // Track events
 trackEvent('event_name', { properties });
+
+// Track screen views
+trackScreenView('tab2', { screen_name: 'tab2' });
 ```
 
 ### 6. Performance Optimizations
@@ -212,7 +215,7 @@ runAfterInteractions(() => {
 - Fallback navigation if back fails
 
 **Global Error Tracking**:
-- Vexo captures exceptions
+- PostHog captures exceptions
 - Context and tags for categorization
 - Development logging
 
@@ -362,7 +365,7 @@ bun run analyze:bundle
 
 - Avoid hardcoded encryption keys; use platform keychain/secure storage for secrets
 - Never commit `.env` files
-- Use Vexo for error tracking (no secrets in logs)
+- Use PostHog for error tracking (no secrets in logs)
 - Validate all inputs using Valibot schemas
 - Secure bundle IDs in production
 

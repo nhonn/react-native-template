@@ -121,4 +121,4 @@ const Chip = memo<ChipProps>(
 Badge.displayName = "Badge";
 Chip.displayName = "Chip";
 
-export { Badge, Chip, badgeVariants, chipVariants };
+export { Badge, badgeVariants, Chip, chipVariants };

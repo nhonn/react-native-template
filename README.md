@@ -5,8 +5,8 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 ## Features
 
 ### Core
-- **React Native**: 0.81.5 + React 19.1.0
-- **Expo**: SDK 54
+- **React Native**: 0.85.3 + React 19.2.3
+- **Expo**: SDK 56
 - **Navigation**: Expo Router 6 (tabs, stacks, modals)
 - **TypeScript**: strict type checking
 - **Package manager**: Bun
@@ -25,7 +25,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **State**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot
 - **List rendering**: LegendList v3 utility wrapper
-- **Analytics**: Template utility (integrate your own)
+- **Analytics**: PostHog with default `screen_view` tracking
 - **Monetization**: Adapty utility
 - **Quality**: Biome + Lefthook
 - **Testing**: Jest + React Native Testing Library (Expo preset)
@@ -103,6 +103,15 @@ export function ThemeExample() {
 ### Internationalization
 
 This template ships with English resources by default. Add more languages by extending `src/i18n/locales/*` and `resources` in `src/i18n/index.ts`.
+
+### Analytics
+
+Analytics is backed by PostHog. Set these env vars in your local `.env` file:
+
+- `EXPO_PUBLIC_POSTHOG_API_KEY`
+- `EXPO_PUBLIC_POSTHOG_HOST` if you use a custom or self-hosted endpoint
+
+By default, the app tracks `screen_view` events with a `screen_name` property derived from the current Expo Router route.
 
 ## Scripts
 

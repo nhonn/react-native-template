@@ -220,4 +220,4 @@ Caption.displayName = "Caption";
 Overline.displayName = "Overline";
 Label.displayName = "Label";
 
-export { Typography, H1, H2, H3, H4, H5, H6, Title, Subtitle, Body, BodyLarge, BodySmall, Caption, Overline, Label };
+export { Body, BodyLarge, BodySmall, Caption, H1, H2, H3, H4, H5, H6, Label, Overline, Subtitle, Title, Typography };
