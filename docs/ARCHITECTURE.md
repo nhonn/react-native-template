@@ -14,7 +14,7 @@ This React Native template follows a layered architecture with clear separation 
 - **Forms**: React Hook Form + Valibot validation
 - **Animations**: React Native Reanimated 4
 - **Storage**: MMKV (Zustand persistence via JSON adapter)
-- **Analytics**: PostHog
+- **Analytics**: Firebase Analytics / GA4
 - **Monetization**: Adapty
 - **Testing**: Jest + React Testing Library
 - **Linting**: Biome (extends Ultracite)
@@ -150,19 +150,13 @@ interface Theme {
 
 **Storage** - MMKV via `react-native-mmkv`
 
-**Analytics** - PostHog
+**Analytics** - Firebase Analytics / GA4
 ```typescript
-// Initialize with API key
-initAnalytics();
-
-// Track errors
-trackError({ error, context, tags });
-
 // Track events
 trackEvent('event_name', { properties });
 
 // Track screen views
-trackScreenView('tab2', { screen_name: 'tab2' });
+trackScreenView('tab2', { source: 'navigation' });
 ```
 
 ### 6. Performance Optimizations
@@ -215,7 +209,7 @@ runAfterInteractions(() => {
 - Fallback navigation if back fails
 
 **Global Error Tracking**:
-- PostHog captures exceptions
+- Sentry captures exceptions
 - Context and tags for categorization
 - Development logging
 
@@ -365,7 +359,7 @@ bun run analyze:bundle
 
 - Avoid hardcoded encryption keys; use platform keychain/secure storage for secrets
 - Never commit `.env` files
-- Use PostHog for error tracking (no secrets in logs)
+- Use Sentry for error tracking (no secrets in logs)
 - Validate all inputs using Valibot schemas
 - Secure bundle IDs in production
 

@@ -25,7 +25,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **State**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot
 - **List rendering**: LegendList v3 utility wrapper
-- **Analytics**: PostHog with default `screen_view` tracking
+- **Analytics**: Firebase Analytics / GA4 with Expo Router `screen_view` tracking
 - **Monetization**: Adapty utility
 - **Quality**: Biome + Lefthook
 - **Testing**: Jest + React Native Testing Library (Expo preset)
@@ -106,12 +106,16 @@ This template ships with English resources by default. Add more languages by ext
 
 ### Analytics
 
-Analytics is backed by PostHog. Set these env vars in your local `.env` file:
+Analytics is backed by Firebase Analytics / GA4 on native iOS and Android. Set up these files in your app root before building a development client:
 
-- `EXPO_PUBLIC_POSTHOG_API_KEY`
-- `EXPO_PUBLIC_POSTHOG_HOST` if you use a custom or self-hosted endpoint
+- `GoogleService-Info.plist`
+- `google-services.json`
 
-By default, the app tracks `screen_view` events with a `screen_name` property derived from the current Expo Router route.
+The template config points Expo at those files through `app.json`. You will need to replace them with files that match your bundle identifier and Android package before native builds will succeed.
+
+By default, the app tracks `screen_view` events with `screen_name` and `screen_class` derived from the current Expo Router route. Generic events are logged through the shared analytics utility with primitive GA4 properties only.
+
+`EXPO_PUBLIC_SENTRY_DSN` remains the only required analytics-related environment variable in `.env`.
 
 ## Scripts
 

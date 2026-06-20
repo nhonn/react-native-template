@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ScrollView, Text, View } from "react-native";
 
 import { logger } from "@/utils/logger";
+import { captureException } from "@/utils/sentry";
 import { Layout } from "../layouts";
 import { Button } from "./Button";
 
@@ -91,6 +92,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       logger.error("Error caught by ErrorBoundary:", error);
       logger.error("Error info:", errorInfo);
     }
+    captureException(error);
   }
 
   handleReset = () => {

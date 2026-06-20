@@ -11,18 +11,23 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.mytemplateproject",
       "buildNumber": "1",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {}
     },
     "android": {
       "package": "com.mytemplateproject",
       "versionCode": 1,
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",
       ["expo-splash-screen"],
       "expo-image",
       "react-native-adapty",
+      "@react-native-firebase/app",
+      "@react-native-firebase/analytics",
+      ["expo-build-properties", { "ios": { "useFrameworks": "static" } }],
       "expo-status-bar",
       "expo-localization"
     ],

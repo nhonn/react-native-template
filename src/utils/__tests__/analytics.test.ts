@@ -1,132 +1,67 @@
-const createPostHogMock = () => {
-  return {
-    capture: jest.fn(),
-    captureException: jest.fn(),
-    identify: jest.fn(),
-    optIn: jest.fn(),
-    optOut: jest.fn(),
-    reset: jest.fn(),
-  };
-};
+const logEvent = jest.fn().mockResolvedValue(undefined);
+const logScreenView = jest.fn().mockResolvedValue(undefined);
+const getAnalytics = jest.fn(() => ({}));
+const loggerError = jest.fn();
 
-const loadAnalytics = (env: { apiKey?: string; host?: string } = {}) => {
-  jest.resetModules();
+jest.mock("@react-native-firebase/analytics", () => ({
+  __esModule: true,
+  getAnalytics,
+  logEvent,
+  logScreenView,
+}));
 
-  if (env.apiKey === undefined) {
-    delete process.env.EXPO_PUBLIC_POSTHOG_API_KEY;
-  } else {
-    process.env.EXPO_PUBLIC_POSTHOG_API_KEY = env.apiKey;
-  }
+jest.mock("../logger", () => ({
+  logger: {
+    error: loggerError,
+  },
+}));
 
-  if (env.host === undefined) {
-    delete process.env.EXPO_PUBLIC_POSTHOG_HOST;
-  } else {
-    process.env.EXPO_PUBLIC_POSTHOG_HOST = env.host;
-  }
-
-  const posthogClient = createPostHogMock();
-  const posthogConstructor = jest.fn(() => posthogClient);
-
-  jest.doMock("posthog-react-native", () => ({
-    __esModule: true,
-    default: posthogConstructor,
-  }));
-
-  const analytics = require("../analytics") as typeof import("../analytics");
-
-  return {
-    analytics,
-    posthogClient,
-    posthogConstructor,
-  };
-};
+const analytics = require("../analytics") as typeof import("../analytics");
 
 describe("analytics", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    delete process.env.EXPO_PUBLIC_POSTHOG_API_KEY;
-    delete process.env.EXPO_PUBLIC_POSTHOG_HOST;
   });
 
-  it("does not initialize PostHog without an API key", () => {
-    const { analytics, posthogConstructor } = loadAnalytics();
-
-    analytics.initAnalytics();
-    analytics.trackEvent("test_event", { source: "test" });
-
-    expect(posthogConstructor).not.toHaveBeenCalled();
-  });
-
-  it("initializes PostHog with the configured host and tracks events", () => {
-    const { analytics, posthogClient, posthogConstructor } = loadAnalytics({
-      apiKey: "phc_test",
-      host: "https://us.i.posthog.com",
+  it("sends primitive event properties to Firebase Analytics", async () => {
+    analytics.trackEvent("test_event", {
+      amount: 42,
+      flag: true,
+      ignored: { nested: true },
+      label: "test",
+      nullable: null,
     });
 
-    analytics.initAnalytics();
-    analytics.trackEvent("test_event", { source: "test" });
+    await Promise.resolve();
 
-    expect(posthogConstructor).toHaveBeenCalledWith("phc_test", {
-      defaultOptIn: true,
-      host: "https://us.i.posthog.com",
+    expect(getAnalytics).toHaveBeenCalledTimes(1);
+    expect(logEvent).toHaveBeenCalledWith(expect.anything(), "test_event", {
+      amount: 42,
+      flag: true,
+      label: "test",
     });
-    expect(posthogClient.capture).toHaveBeenCalledWith("test_event", { source: "test" });
   });
 
-  it("tracks screen views with a screen_name property", () => {
-    const { analytics, posthogClient } = loadAnalytics({ apiKey: "phc_test" });
-
-    analytics.initAnalytics();
-    analytics.trackScreenView("tab2", { source: "navigation" });
-
-    expect(posthogClient.capture).toHaveBeenCalledWith("screen_view", {
-      screen_name: "tab2",
+  it("tracks screen views with name, class, and primitive properties", async () => {
+    analytics.trackScreenView("settings/profile", {
       source: "navigation",
-    });
-  });
-
-  it("captures error details for PostHog exception events", () => {
-    const { analytics, posthogClient } = loadAnalytics({ apiKey: "phc_test" });
-    const error = new Error("boom");
-
-    analytics.initAnalytics();
-    analytics.trackError({
-      context: { screen: "settings" },
-      error,
-      level: "warning",
-      tags: { feature: "analytics" },
+      version: 2,
+      invalid: ["drop"],
     });
 
-    expect(posthogClient.captureException).toHaveBeenCalledWith(
-      error,
-      expect.objectContaining({
-        context: { screen: "settings" },
-        level: "warning",
-        tags: { feature: "analytics" },
-      }),
-    );
-  });
+    await Promise.resolve();
 
-  it("identifies users, resets them, and toggles tracking", async () => {
-    const { analytics, posthogClient } = loadAnalytics({ apiKey: "phc_test" });
-
-    analytics.initAnalytics();
-    await analytics.identifyUser("user-123");
-    await analytics.setTrackingEnabled(false);
-    await analytics.resetUser();
-    await analytics.setTrackingEnabled(true);
-
-    expect(posthogClient.identify).toHaveBeenCalledWith("user-123");
-    expect(posthogClient.optOut).toHaveBeenCalledTimes(2);
-    expect(posthogClient.reset).toHaveBeenCalledTimes(1);
-    expect(posthogClient.optIn).toHaveBeenCalledTimes(1);
+    expect(logScreenView).toHaveBeenCalledWith(expect.anything(), {
+      screen_class: "settings/profile",
+      screen_name: "settings/profile",
+      source: "navigation",
+      version: 2,
+    });
   });
 
   it("derives screen names from route segments by stripping route groups", () => {
-    const { analytics } = loadAnalytics({ apiKey: "phc_test" });
-
     expect(analytics.getScreenNameFromSegments(["(tabs)", "index"])).toBe("index");
-    expect(analytics.getScreenNameFromSegments(["(stacks)", "stack1"])).toBe("stack1");
+    expect(analytics.getScreenNameFromSegments(["(tabs)", "tab2"])).toBe("tab2");
     expect(analytics.getScreenNameFromSegments(["(tabs)", "settings", "profile"])).toBe("settings/profile");
   });
 });

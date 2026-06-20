@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react-native";
 import { Stack, useSegments } from "expo-router";
 import { hideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -8,8 +9,9 @@ import "react-native-reanimated";
 import { initializeI18n } from "@/i18n";
 import { MainProvider } from "@/providers/MainProvider";
 import { initializeAdapty } from "@/utils/adapty";
-import { getScreenNameFromSegments, initAnalytics, trackScreenView } from "@/utils/analytics";
+import { getScreenNameFromSegments, shouldTrackScreenView, trackScreenView } from "@/utils/analytics";
 import { logger } from "@/utils/logger";
+import { initSentry } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
 import "../global.css";
 
@@ -20,7 +22,7 @@ function AnalyticsScreenTracker() {
   useEffect(() => {
     const screenName = getScreenNameFromSegments(segments);
 
-    if (lastTrackedScreenRef.current === screenName) {
+    if (!shouldTrackScreenView(lastTrackedScreenRef.current, screenName)) {
       return;
     }
 
@@ -60,10 +62,12 @@ function RootLayout() {
 
     (async () => {
       try {
+        initSentry();
         await initializeSplashScreen();
-        await Promise.all([initializeI18n(), initAnalytics(), initializeAdapty()]);
+        await Promise.all([initializeI18n(), initializeAdapty()]);
       } catch (error) {
         logger.error("Root initialization failed:", error);
+        Sentry.captureException(error);
       } finally {
         setReady(true);
         await hideAsync();
@@ -78,4 +82,4 @@ function RootLayout() {
   return <AppContent />;
 }
 
-export default RootLayout;
+export default Sentry.wrap(RootLayout);
