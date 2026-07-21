@@ -19,7 +19,7 @@ describe("initializeSplashScreen", () => {
     const { logger } = require("@/utils/logger");
     (preventAutoHideAsync as jest.Mock).mockRejectedValueOnce(new Error("boom"));
 
-    const { initializeSplashScreen } = require("../splashScreen");
+    const { initializeSplashScreen } = require("./splashScreen");
 
     await initializeSplashScreen();
 
@@ -30,7 +30,7 @@ describe("initializeSplashScreen", () => {
     const { logger } = require("@/utils/logger");
     (preventAutoHideAsync as jest.Mock).mockResolvedValueOnce(undefined);
 
-    const { initializeSplashScreen } = require("../splashScreen");
+    const { initializeSplashScreen } = require("./splashScreen");
 
     await initializeSplashScreen();
 

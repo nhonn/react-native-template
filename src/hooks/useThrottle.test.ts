@@ -1,7 +1,7 @@
 jest.useFakeTimers();
 
 import { act, renderHook } from "@testing-library/react-native";
-import { useThrottle, useThrottleCallback, useThrottleValue } from "../useThrottle";
+import { useThrottle, useThrottleCallback, useThrottleValue } from "./useThrottle";
 
 describe("useThrottleValue", () => {
   beforeEach(() => {

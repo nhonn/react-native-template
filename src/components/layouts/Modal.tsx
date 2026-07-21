@@ -4,7 +4,7 @@ import { type FC, memo } from "react";
 import { Pressable, View } from "react-native";
 
 import { Typography } from "@/components/common";
-import { SafeAreaView } from "@/components/styled/SafeAreaView";
+import { SafeAreaView } from "@/components/styled/safe-area-view";
 import type { ModalLayoutProps } from "./types";
 
 const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {

@@ -1,7 +1,7 @@
 jest.useFakeTimers();
 
 import { act, renderHook } from "@testing-library/react-native";
-import { useDebounce, useDebounceCallback, useDebounceValue } from "../useDebounce";
+import { useDebounce, useDebounceCallback, useDebounceValue } from "./useDebounce";
 
 describe("useDebounceValue", () => {
   beforeEach(() => {

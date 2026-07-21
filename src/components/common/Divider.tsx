@@ -3,7 +3,7 @@ import { memo } from "react";
 import { View, type ViewProps } from "react-native";
 
 import { cn } from "@/utils/classname";
-import { Typography } from "./Typography";
+import { Typography } from "./typography";
 
 const dividerVariants = cva("", {
   variants: {

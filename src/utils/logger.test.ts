@@ -28,7 +28,7 @@ jest.spyOn(console, "table").mockImplementation(mockConsole.table);
 jest.spyOn(console, "time").mockImplementation(mockConsole.time);
 jest.spyOn(console, "timeEnd").mockImplementation(mockConsole.timeEnd);
 
-import { logger } from "../logger";
+import { logger } from "./logger";
 
 describe("Logger", () => {
   describe("logger instance exists", () => {

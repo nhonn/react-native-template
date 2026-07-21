@@ -1,7 +1,7 @@
 import { type FC, memo } from "react";
 import { View } from "react-native";
 
-import { SafeAreaView } from "@/components/styled/SafeAreaView";
+import { SafeAreaView } from "@/components/styled/safe-area-view";
 import type { BareLayoutProps } from "./types";
 
 const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerStyle, safeAreaEdges = ["top"] }) => {

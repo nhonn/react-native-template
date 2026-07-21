@@ -7,7 +7,7 @@ import { ScrollView, Text, View } from "react-native";
 import { logger } from "@/utils/logger";
 import { captureException } from "@/utils/sentry";
 import { Layout } from "../layouts";
-import { Button } from "./Button";
+import { Button } from "./button";
 
 interface ErrorBoundaryState {
   hasError: boolean;

@@ -10,7 +10,7 @@ import {
   formatDateWithUserPreference,
   formatRelativeDate,
   parseDateSafely,
-} from "../date";
+} from "./date";
 
 // Define regex at module level for performance
 const TIME_REGEX = /\d{1,2}:\d{2} [AP]M/;

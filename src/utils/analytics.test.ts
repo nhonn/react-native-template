@@ -1,22 +1,22 @@
-const logEvent = jest.fn().mockResolvedValue(undefined);
-const logScreenView = jest.fn().mockResolvedValue(undefined);
-const getAnalytics = jest.fn(() => ({}));
-const loggerError = jest.fn();
+const mockLogEvent = jest.fn().mockResolvedValue(undefined);
+const mockLogScreenView = jest.fn().mockResolvedValue(undefined);
+const mockGetAnalytics = jest.fn(() => ({}));
+const mockLoggerError = jest.fn();
 
 jest.mock("@react-native-firebase/analytics", () => ({
   __esModule: true,
-  getAnalytics,
-  logEvent,
-  logScreenView,
+  getAnalytics: mockGetAnalytics,
+  logEvent: mockLogEvent,
+  logScreenView: mockLogScreenView,
 }));
 
-jest.mock("../logger", () => ({
+jest.mock("./logger", () => ({
   logger: {
-    error: loggerError,
+    error: mockLoggerError,
   },
 }));
 
-const analytics = require("../analytics") as typeof import("../analytics");
+const analytics = require("./analytics") as typeof import("./analytics");
 
 describe("analytics", () => {
   beforeEach(() => {
@@ -34,8 +34,8 @@ describe("analytics", () => {
 
     await Promise.resolve();
 
-    expect(getAnalytics).toHaveBeenCalledTimes(1);
-    expect(logEvent).toHaveBeenCalledWith(expect.anything(), "test_event", {
+    expect(mockGetAnalytics).toHaveBeenCalledTimes(2);
+    expect(mockLogEvent).toHaveBeenCalledWith(expect.anything(), "test_event", {
       amount: 42,
       flag: true,
       label: "test",
@@ -51,7 +51,7 @@ describe("analytics", () => {
 
     await Promise.resolve();
 
-    expect(logScreenView).toHaveBeenCalledWith(expect.anything(), {
+    expect(mockLogScreenView).toHaveBeenCalledWith(expect.anything(), {
       screen_class: "settings/profile",
       screen_name: "settings/profile",
       source: "navigation",

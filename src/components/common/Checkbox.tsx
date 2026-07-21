@@ -5,7 +5,7 @@ import { Pressable, View, type ViewProps } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Colors } from "@/theme/constants/colors";
 import { cn } from "@/utils/classname";
-import { Typography } from "./Typography";
+import { Typography } from "./typography";
 
 const checkboxVariants = cva("justify-center", {
   variants: {

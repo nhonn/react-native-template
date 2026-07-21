@@ -5,7 +5,7 @@ import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanima
 
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
-import { Typography } from "./Typography";
+import { Typography } from "./typography";
 
 const progressVariants = cva("", {
   variants: {

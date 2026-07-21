@@ -32,7 +32,7 @@ jest.mock("@/utils/logger", () => ({
   },
 }));
 
-import { getJSON, StorageKeys, setJSON, storage } from "../storage";
+import { getJSON, StorageKeys, setJSON, storage } from "./storage";
 
 describe("Storage Utils", () => {
   beforeEach(() => {

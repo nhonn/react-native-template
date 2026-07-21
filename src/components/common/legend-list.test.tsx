@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react-native";
 
-import { LegendList } from "../LegendList";
+import { LegendList } from "./legend-list";
 
 jest.mock("@legendapp/list/react-native", () => {
   const React = require("react");
