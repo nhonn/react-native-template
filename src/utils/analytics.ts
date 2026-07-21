@@ -5,6 +5,8 @@ import { logger } from "./logger";
 export type AnalyticsPrimitive = string | number | boolean;
 export type AnalyticsEventProperties = Record<string, AnalyticsPrimitive>;
 
+const analyticsInstance = () => getAnalytics();
+
 const isAnalyticsPrimitive = (value: unknown): value is AnalyticsPrimitive => {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
 };
@@ -37,7 +39,7 @@ const withAnalytics = async (
 
 export const trackEvent = (name: string, properties: Record<string, unknown> = {}): void => {
   void withAnalytics(async (analytics) => {
-    await logEvent(analytics, name, toAnalyticsProperties(properties));
+    await logEvent(analyticsInstance(), name, toAnalyticsProperties(properties));
   });
 };
 

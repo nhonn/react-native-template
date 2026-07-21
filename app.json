@@ -3,7 +3,7 @@
     "name": "my-template-app",
     "slug": "my-template-project",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "scheme": "mytemplateproject",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
@@ -27,9 +27,25 @@
       "react-native-adapty",
       "@react-native-firebase/app",
       "@react-native-firebase/analytics",
-      ["expo-build-properties", { "ios": { "useFrameworks": "static" } }],
       "expo-status-bar",
-      "expo-localization"
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "dynamic",
+            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"]
+          }
+        }
+      ],
+      "expo-localization",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "my-template-project",
+          "organization": "my-template-project"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
