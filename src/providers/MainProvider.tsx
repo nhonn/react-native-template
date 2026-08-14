@@ -1,3 +1,4 @@
+import { HeroUINativeProvider } from "heroui-native/provider";
 import type { ReactNode } from "react";
 
 import { ErrorBoundary } from "@/components/common/error-boundary";
@@ -9,5 +10,9 @@ interface MainProviderProps {
 
 export function MainProvider({ children }: MainProviderProps) {
   useSystemThemeTracking();
-  return <ErrorBoundary>{children}</ErrorBoundary>;
+  return (
+    <HeroUINativeProvider>
+      <ErrorBoundary>{children}</ErrorBoundary>
+    </HeroUINativeProvider>
+  );
 }

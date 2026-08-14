@@ -1,10 +1,10 @@
 import { useRouter } from "expo-router";
+import { Typography } from "heroui-native/text";
 import { X } from "phosphor-react-native";
 import { type FC, memo } from "react";
 import { View } from "react-native";
 
 import { Pressable } from "@/components/common/pressable";
-import { Typography } from "@/components/common/typography";
 import { SafeAreaView } from "@/components/styled/safe-area-view";
 import type { ModalLayoutProps } from "./types";
 
@@ -18,7 +18,7 @@ const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
   return (
     <SafeAreaView className="flex-1 bg-background px-4 py-2 pb-2 lg:px-8 lg:py-2">
       <View className="flex-row items-center justify-between py-4">
-        <Typography variant="h4">{title}</Typography>
+        <Typography type="h4">{title}</Typography>
         <Pressable
           accessibilityLabel="Close"
           accessibilityRole="button"

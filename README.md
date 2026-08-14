@@ -1,6 +1,6 @@
 # React Native Template
 
-Modern Expo + Expo Router template with a small, production-oriented baseline: typed navigation, a component library, a theme system, i18n, and a lightweight state setup.
+Modern Expo + Expo Router template with a small, production-oriented baseline: typed navigation, HeroUI Native, a theme system, i18n, and a lightweight state setup.
 
 ## Features
 
@@ -16,9 +16,9 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **Theming**: light/dark mode + system theme sync
 - **Design tokens**: colors, spacing, typography, radii, shadows
 
-### UI Components
-- **Inputs**: Input, PasswordInput, SearchInput, Textarea
-- **Feedback**: Toast, Loading, Progress
+### UI
+- **HeroUI Native**: default component library (Button, Input, Typography, Toast, etc.)
+- **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
 ### State / Storage / Tooling
@@ -63,17 +63,18 @@ bun run android
 
 ### UI Components
 
+Use HeroUI Native as the default UI. Prefer granular imports.
+
 ```tsx
-import { Button } from "@/components/common/button";
-import { Input, PasswordInput } from "@/components/common/input";
-import { Typography } from "@/components/common/typography";
+import { Button } from "heroui-native/button";
+import { Input } from "heroui-native/input";
+import { Typography } from "heroui-native/text";
 
 export function Example() {
   return (
     <>
-      <Typography variant="h2">Welcome</Typography>
-      <Input label="Email" placeholder="you@example.com" />
-      <PasswordInput label="Password" placeholder="••••••••" />
+      <Typography type="h2">Welcome</Typography>
+      <Input placeholder="you@example.com" />
       <Button variant="primary">Continue</Button>
     </>
   );
@@ -83,15 +84,16 @@ export function Example() {
 ### Theming
 
 ```tsx
-import { Typography } from "@/components/common/typography";
+import { Button } from "heroui-native/button";
+import { Typography } from "heroui-native/text";
 import { useTheme } from "@/theme";
 
 export function ThemeExample() {
-  const { theme, mode, isDark, toggleMode } = useTheme();
+  const { mode, isDark, toggleMode } = useTheme();
 
   return (
     <>
-      <Typography variant="body">
+      <Typography>
         Mode: {mode} ({isDark ? "dark" : "light"})
       </Typography>
       <Button variant="secondary" onPress={toggleMode}>

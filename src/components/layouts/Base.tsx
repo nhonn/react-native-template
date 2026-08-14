@@ -1,10 +1,10 @@
 import { useRouter } from "expo-router";
+import { Typography } from "heroui-native/text";
 import { CaretLeft } from "phosphor-react-native";
 import { type FC, memo, useCallback } from "react";
 import { View } from "react-native";
 
 import { Pressable } from "@/components/common/pressable";
-import { Typography } from "@/components/common/typography";
 import { SafeAreaView } from "@/components/styled/safe-area-view";
 import { useThemeColors } from "@/theme";
 import type { BaseLayoutProps } from "./types";
@@ -54,7 +54,7 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
                 <BackIcon color="white" />
               </Pressable>
             )}
-            <Typography className="text-white uppercase" variant="h6">
+            <Typography className="text-white uppercase" type="h6">
               {title}
             </Typography>
           </View>

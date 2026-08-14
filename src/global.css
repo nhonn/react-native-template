@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "uniwind";
+@import "heroui-native/styles";
 
 @theme {
   --color-primary-50: #eff6ff;
