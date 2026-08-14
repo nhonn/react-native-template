@@ -24,7 +24,6 @@
       "expo-router",
       ["expo-splash-screen"],
       "expo-image",
-      "react-native-adapty",
       "@react-native-firebase/app",
       "@react-native-firebase/analytics",
       "expo-status-bar",

@@ -8,9 +8,9 @@ import "react-native-reanimated";
 
 import { initializeI18n } from "@/i18n";
 import { MainProvider } from "@/providers/MainProvider";
-import { initializeAdapty } from "@/utils/adapty";
 import { getScreenNameFromSegments, shouldTrackScreenView, trackScreenView } from "@/utils/analytics";
 import { logger } from "@/utils/logger";
+import { initializeRevenueCat } from "@/utils/revenuecat";
 import { initSentry } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
 import "../global.css";
@@ -64,7 +64,7 @@ function RootLayout() {
       try {
         initSentry();
         await initializeSplashScreen();
-        await Promise.all([initializeI18n(), initializeAdapty()]);
+        await Promise.all([initializeI18n(), initializeRevenueCat()]);
       } catch (error) {
         logger.error("Root initialization failed:", error);
         Sentry.captureException(error);

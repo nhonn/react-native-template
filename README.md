@@ -26,7 +26,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **Forms**: React Hook Form + Valibot
 - **List rendering**: LegendList v3 utility wrapper
 - **Analytics**: Firebase Analytics / GA4 with Expo Router `screen_view` tracking
-- **Monetization**: Adapty utility
+- **Monetization**: RevenueCat utility
 - **Quality**: Biome + Lefthook
 - **Testing**: Jest + React Native Testing Library (Expo preset)
 
@@ -116,6 +116,17 @@ The template config points Expo at those files through `app.json`. You will need
 By default, the app tracks `screen_view` events with `screen_name` and `screen_class` derived from the current Expo Router route. Generic events are logged through the shared analytics utility with primitive GA4 properties only.
 
 `EXPO_PUBLIC_SENTRY_DSN` remains the only required analytics-related environment variable in `.env`.
+
+### Subscriptions
+
+Subscriptions use RevenueCat (`react-native-purchases` + `react-native-purchases-ui`). Set the public SDK keys in `.env`:
+
+- `EXPO_PUBLIC_REVENUECAT_IOS_API_KEY`
+- `EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY`
+
+The wrapper expects a `premium` entitlement and paywall placements `settings` and `onboarding_v1` in the RevenueCat dashboard. Initialization is skipped when the current platform key is missing.
+
+Expo Go can load the SDK in Preview API Mode, but real purchases require a development build. After adding or changing these native packages, remake the native client (`bun run prebuild` or an EAS development build).
 
 ## Scripts
 
