@@ -1,80 +1,96 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persistObservable } from "@legendapp/state/persist";
+import { useSelector } from "@legendapp/state/react";
 
 import type { TextSizePreference } from "@/theme";
 import type { ValidDateFormat } from "@/types/date";
-import { createMMKVJSONStorage } from "@/utils/storage";
+import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
 
-export interface ZustandSettings {
+export interface RuntimeSettings {
   premium: boolean;
 }
 
 export interface PersistentSettings {
-  // UI preferences that enhance UX
   isTablet: boolean;
   language: string;
-
-  // Display preferences
   dateFormat: ValidDateFormat;
   textSizePreference: TextSizePreference;
 }
 
-export interface SettingsState extends ZustandSettings, PersistentSettings {
-  // Specific actions
+export interface SettingsActions {
   setIsPremium: (isPremium: boolean) => void;
   setIsTablet: (isTablet: boolean) => void;
   setLanguage: (language: string) => void;
-  setDateFormat: (format: "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY/MM/DD") => void;
+  setDateFormat: (format: ValidDateFormat) => void;
   setTextSizePreference: (preference: TextSizePreference) => void;
 }
 
-const defaultZustandSettings: ZustandSettings = {
+export interface SettingsState extends RuntimeSettings, PersistentSettings, SettingsActions {}
+
+const defaultRuntimeSettings: RuntimeSettings = {
   premium: false,
 };
 
 const defaultPersistentSettings: PersistentSettings = {
   isTablet: false,
   language: "en",
-  // Display preferences
   dateFormat: "DD/MM/YYYY",
   textSizePreference: "default",
 };
 
-export const useSettingsStore = create<SettingsState>()(
-  persist(
-    (set) => ({
-      ...defaultZustandSettings,
-      ...defaultPersistentSettings,
-
-      setIsPremium: (isPremium) => {
-        set({ premium: isPremium });
-      },
-
-      setIsTablet: (isTablet) => {
-        set({ isTablet });
-      },
-
-      setLanguage: (language) => {
-        set({ language });
-      },
-
-      setDateFormat: (format) => {
-        set({ dateFormat: format });
-      },
-
-      setTextSizePreference: (preference) => {
-        set({ textSizePreference: preference });
-      },
-    }),
-    {
+export const settings$ = persistObservable(
+  {
+    ...defaultRuntimeSettings,
+    ...defaultPersistentSettings,
+  },
+  {
+    local: {
       name: "settings",
-      storage: createMMKVJSONStorage(),
-      partialize: (state) => ({
-        isTablet: state.isTablet,
-        language: state.language,
-        dateFormat: state.dateFormat,
-        textSizePreference: state.textSizePreference,
-      }),
+      transform: {
+        out: (value) => {
+          const { premium: _premium, ...persisted } = value;
+          return persisted as typeof value;
+        },
+      },
     },
-  ),
+    pluginLocal: ObservablePersistMMKVNative,
+  },
 );
+
+const settingsActions: SettingsActions = {
+  setIsPremium: (isPremium) => {
+    settings$.premium.set(isPremium);
+  },
+  setIsTablet: (isTablet) => {
+    settings$.isTablet.set(isTablet);
+  },
+  setLanguage: (language) => {
+    settings$.language.set(language);
+  },
+  setDateFormat: (format) => {
+    settings$.dateFormat.set(format);
+  },
+  setTextSizePreference: (preference) => {
+    settings$.textSizePreference.set(preference);
+  },
+};
+
+const getSettingsState = (): SettingsState => ({
+  ...settings$.get(),
+  ...settingsActions,
+});
+
+type SettingsStoreHook = {
+  (): SettingsState;
+  <T>(selector: (state: SettingsState) => T): T;
+  getState: () => SettingsState;
+};
+
+export const useSettingsStore = Object.assign(
+  function useSettingsStore<T = SettingsState>(selector?: (state: SettingsState) => T) {
+    return useSelector(() => {
+      const state = getSettingsState();
+      return (selector ? selector(state) : state) as T;
+    });
+  },
+  { getState: getSettingsState },
+) as SettingsStoreHook;

@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+import { CaretLeft } from "phosphor-react-native";
 import { type FC, memo, useCallback } from "react";
 import { Pressable, View } from "react-native";
 
@@ -9,7 +9,7 @@ import { useThemeColors } from "@/theme";
 import type { BaseLayoutProps } from "./types";
 
 const BackIcon = memo<{ color: string }>(({ color }) => {
-  return <ChevronLeft color={color} size={24} />;
+  return <CaretLeft color={color} size={24} />;
 });
 
 const BaseLayoutComponent: FC<BaseLayoutProps> = ({

@@ -87,3 +87,4 @@ android
 # E2E Test Results
 e2e/results/
 .trae
+coverage

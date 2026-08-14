@@ -1,15 +1,16 @@
 /**
  * Theme Store
- * Zustand store for theme management
+ * Legend State observable for theme management
  */
 
+import { computed, when } from "@legendapp/state";
+import { persistObservable } from "@legendapp/state/persist";
+import { useSelector } from "@legendapp/state/react";
 import React from "react";
 import { Appearance, useColorScheme } from "react-native";
 import { Uniwind } from "uniwind";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-import { createMMKVJSONStorage } from "@/utils/storage";
+import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
 import { BorderRadius } from "../constants/borderRadius";
 import { Opacity } from "../constants/opacity";
 import { Shadows } from "../constants/shadows";
@@ -58,110 +59,128 @@ const getInitialMode = (followSystemTheme: boolean, defaultMode: ThemeMode): The
   return defaultMode;
 };
 
-export const useThemeStore = create<ThemeStore>()(
-  persist(
-    (set, get) => ({
-      mode: getInitialMode(true, "light"),
-      followSystemTheme: true,
-      defaultMode: "light",
-      theme: createTheme(getInitialMode(true, "light")),
-
-      setMode: (mode: ThemeMode) => {
-        const theme = createTheme(mode);
-        set({ mode, theme });
-        Uniwind.setTheme(mode);
-      },
-
-      toggleMode: () => {
-        const currentMode = get().mode;
-        const newMode = currentMode === "light" ? "dark" : "light";
-        const theme = createTheme(newMode);
-        set({ mode: newMode, theme });
-        Uniwind.setTheme(newMode);
-      },
-
-      resetMode: () => {
-        const { followSystemTheme, defaultMode } = get();
-        const resetMode = followSystemTheme ? getInitialMode(followSystemTheme, defaultMode) : defaultMode;
-        const theme = createTheme(resetMode);
-        set({ mode: resetMode, theme });
-        Uniwind.setTheme(resetMode);
-      },
-
-      setConfig: (config: Partial<ThemeConfig>) => {
-        const { followSystemTheme, defaultMode } = get();
-        const newFollowSystemTheme = config.followSystemTheme ?? followSystemTheme;
-        const newDefaultMode = config.defaultMode ?? defaultMode;
-
-        let newMode = get().mode;
-
-        if (config.followSystemTheme !== undefined || config.defaultMode !== undefined) {
-          newMode = getInitialMode(newFollowSystemTheme, newDefaultMode);
-        }
-
-        const theme = createTheme(newMode);
-        set({
-          followSystemTheme: newFollowSystemTheme,
-          defaultMode: newDefaultMode,
-          mode: newMode,
-          theme,
-        });
-      },
-
-      updateTheme: () => {
-        const { followSystemTheme } = get();
-        if (followSystemTheme) {
-          const systemColorScheme = Appearance.getColorScheme();
-          const systemMode = systemColorScheme === "dark" ? "dark" : "light";
-          if (systemMode !== get().mode) {
-            const theme = createTheme(systemMode);
-            set({ mode: systemMode, theme });
-            Uniwind.setTheme(systemMode);
-          }
-        }
-      },
-    }),
-    {
-      name: "theme-store",
-      storage: createMMKVJSONStorage(),
-      partialize: (state) => ({
-        mode: state.mode,
-        followSystemTheme: state.followSystemTheme,
-        defaultMode: state.defaultMode,
-      }),
-      onRehydrateStorage: () => (state) => {
-        if (state?.mode) {
-          Uniwind.setTheme(state.mode);
-        }
-      },
-    },
-  ),
+export const themePrefs$ = persistObservable(
+  {
+    mode: getInitialMode(true, "light"),
+    followSystemTheme: true,
+    defaultMode: "light" as ThemeMode,
+  },
+  {
+    local: "theme-store",
+    pluginLocal: ObservablePersistMMKVNative,
+  },
 );
 
-// Hook to initialize system theme tracking
+export const theme$ = computed(() => createTheme(themePrefs$.mode.get()));
+
+when(
+  () => Boolean(themePrefs$._state?.isLoaded.get()),
+  () => {
+    Uniwind.setTheme(themePrefs$.mode.get());
+  },
+);
+
+const applyMode = (mode: ThemeMode) => {
+  themePrefs$.mode.set(mode);
+  Uniwind.setTheme(mode);
+};
+
+const themeActions: ThemeStoreActions = {
+  setMode: (mode) => {
+    applyMode(mode);
+  },
+
+  toggleMode: () => {
+    applyMode(themePrefs$.mode.get() === "light" ? "dark" : "light");
+  },
+
+  resetMode: () => {
+    const { followSystemTheme, defaultMode } = themePrefs$.get();
+    applyMode(followSystemTheme ? getInitialMode(followSystemTheme, defaultMode) : defaultMode);
+  },
+
+  setConfig: (config) => {
+    const current = themePrefs$.get();
+    const followSystemTheme = config.followSystemTheme ?? current.followSystemTheme;
+    const defaultMode = config.defaultMode ?? current.defaultMode;
+    const shouldRecalculateMode = config.followSystemTheme !== undefined || config.defaultMode !== undefined;
+
+    themePrefs$.followSystemTheme.set(followSystemTheme);
+    themePrefs$.defaultMode.set(defaultMode);
+
+    if (shouldRecalculateMode) {
+      applyMode(getInitialMode(followSystemTheme, defaultMode));
+    }
+  },
+
+  updateTheme: () => {
+    if (!themePrefs$.followSystemTheme.get()) {
+      return;
+    }
+
+    const systemMode = Appearance.getColorScheme() === "dark" ? "dark" : "light";
+    if (systemMode !== themePrefs$.mode.get()) {
+      applyMode(systemMode);
+    }
+  },
+};
+
+const getThemeState = (): ThemeStore => ({
+  ...themePrefs$.get(),
+  theme: theme$.get(),
+  ...themeActions,
+});
+
+type ThemeStoreHook = {
+  (): ThemeStore;
+  <T>(selector: (state: ThemeStore) => T): T;
+  getState: () => ThemeStore;
+  setState: (partial: Partial<ThemeStoreState>) => void;
+};
+
+export const useThemeStore = Object.assign(
+  function useThemeStore<T = ThemeStore>(selector?: (state: ThemeStore) => T) {
+    return useSelector(() => {
+      const state = getThemeState();
+      return (selector ? selector(state) : state) as T;
+    });
+  },
+  {
+    getState: getThemeState,
+    setState: (partial: Partial<ThemeStoreState>) => {
+      if (partial.followSystemTheme !== undefined) {
+        themePrefs$.followSystemTheme.set(partial.followSystemTheme);
+      }
+      if (partial.defaultMode !== undefined) {
+        themePrefs$.defaultMode.set(partial.defaultMode);
+      }
+      if (partial.mode !== undefined) {
+        applyMode(partial.mode);
+      }
+    },
+  },
+) as ThemeStoreHook;
+
 export function useSystemThemeTracking() {
   const systemColorScheme = useColorScheme();
-  const { followSystemTheme, updateTheme } = useThemeStore();
+  const followSystemTheme = useSelector(() => themePrefs$.followSystemTheme.get());
 
   React.useEffect(() => {
     if (followSystemTheme) {
-      updateTheme();
+      themeActions.updateTheme();
     }
-  }, [followSystemTheme, systemColorScheme, updateTheme]);
+  }, [followSystemTheme, systemColorScheme]);
 
   React.useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       if (followSystemTheme && colorScheme) {
         const systemMode = colorScheme === "dark" ? "dark" : "light";
-        const { mode } = useThemeStore.getState();
-
-        if (systemMode !== mode) {
-          const theme = createTheme(systemMode);
-          useThemeStore.setState({ mode: systemMode, theme });
+        if (systemMode !== themePrefs$.mode.get()) {
+          applyMode(systemMode);
         }
       }
     });
 
-    return () => subscription?.remove();
+    return () => subscription.remove();
   }, [followSystemTheme]);
 }

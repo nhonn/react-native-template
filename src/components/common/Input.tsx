@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { Eye, EyeOff, Search } from "lucide-react-native";
+import { Eye, EyeSlash, MagnifyingGlass } from "phosphor-react-native";
 import { forwardRef, memo, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
@@ -137,7 +137,7 @@ const PasswordInput = memo(
         onPress={togglePasswordVisibility}
       >
         {showPassword ? (
-          <EyeOff color={colors.text.tertiary} size={20} />
+          <EyeSlash color={colors.text.tertiary} size={20} />
         ) : (
           <Eye color={colors.text.tertiary} size={20} />
         )}
@@ -152,7 +152,7 @@ const SearchInput = memo(
   forwardRef<React.ElementRef<typeof TextInput>, SearchInputProps>(({ onClear, value, ...props }, ref) => {
     const colors = useThemeColors();
 
-    const searchIcon = <Search color={colors.text.tertiary} size={20} />;
+    const searchIcon = <MagnifyingGlass color={colors.text.tertiary} size={20} />;
 
     const clearButton = value && onClear && (
       <Pressable accessibilityLabel="Clear search" accessibilityRole="button" className="p-1" onPress={onClear}>

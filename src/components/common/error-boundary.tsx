@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { AlertTriangle, Home, RefreshCw } from "lucide-react-native";
+import { ArrowsClockwise, House, Warning } from "phosphor-react-native";
 import { Component, type ErrorInfo, type FC, memo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, Text, View } from "react-native";
@@ -34,7 +34,7 @@ const ErrorFallback: FC<ErrorFallbackProps> = memo(({ onReset, onGoHome }) => {
       <ScrollView className="flex-1 px-6 py-8" showsVerticalScrollIndicator={false}>
         <View className="mb-8 items-center">
           <View className="mb-4 h-24 w-24 items-center justify-center rounded-full bg-red-100">
-            <AlertTriangle color="#ef4444" size={48} />
+            <Warning color="#ef4444" size={48} />
           </View>
           <Text className="mb-2 text-center font-bold text-2xl text-gray-900">{t("title")}</Text>
           <Text className="mb-6 text-center text-base text-gray-600">{t("message")}</Text>
@@ -43,7 +43,7 @@ const ErrorFallback: FC<ErrorFallbackProps> = memo(({ onReset, onGoHome }) => {
           <Button
             accessibilityLabel={t("try_again")}
             fullWidth
-            leftIcon={<RefreshCw color="white" size={48} />}
+            leftIcon={<ArrowsClockwise color="white" size={48} />}
             onPress={onReset}
             size="lg"
             title={t("try_again")}
@@ -52,7 +52,7 @@ const ErrorFallback: FC<ErrorFallbackProps> = memo(({ onReset, onGoHome }) => {
           <Button
             accessibilityLabel={t("go_home")}
             fullWidth
-            leftIcon={<Home color="#6b7280" size={48} />}
+            leftIcon={<House color="#6b7280" size={48} />}
             onPress={onGoHome}
             size="lg"
             title={t("go_home")}

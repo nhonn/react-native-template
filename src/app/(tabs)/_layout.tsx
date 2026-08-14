@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { History, Home } from "lucide-react-native";
+import { ClockCounterClockwise, House } from "phosphor-react-native";
 
 export default function TabLayout() {
   return (
@@ -14,14 +14,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Tab 1",
-          tabBarIcon: ({ color }) => <Home color={color} size={28} />,
+          tabBarIcon: ({ color }) => <House color={String(color)} size={28} />,
         }}
       />
       <Tabs.Screen
         name="tab2"
         options={{
           title: "Tab 2",
-          tabBarIcon: ({ color }) => <History color={color} size={28} />,
+          tabBarIcon: ({ color }) => <ClockCounterClockwise color={String(color)} size={28} />,
         }}
       />
     </Tabs>

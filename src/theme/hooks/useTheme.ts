@@ -1,6 +1,6 @@
 /**
- * Theme Hooks (Zustand)
- * Hooks for accessing theme state from Zustand store
+ * Theme Hooks
+ * Hooks for accessing theme state from Legend State
  */
 
 import { useThemeStore } from "../stores/useThemeStore";

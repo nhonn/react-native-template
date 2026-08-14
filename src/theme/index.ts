@@ -36,7 +36,7 @@ export {
 } from "./hooks/useTheme";
 // Hooks
 export { useThemedStyle, useThemedValue } from "./hooks/useThemedStyle";
-// Store and Hooks (Zustand)
+// Store and Hooks
 export { useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
 export { darkColorScheme } from "./themes/dark";
 // Themes

@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { Check } from "lucide-react-native";
+import { Check } from "phosphor-react-native";
 import { forwardRef, memo } from "react";
 import { Pressable, View, type ViewProps } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
@@ -84,7 +84,7 @@ const Checkbox = memo(
             })}
             style={animatedStyle}
           >
-            {checked && !indeterminate && <Check color={Colors.white} size={iconSize} strokeWidth={3} />}
+            {checked && !indeterminate && <Check color={Colors.white} size={iconSize} weight="bold" />}
             {indeterminate && (
               <View
                 className="bg-white"

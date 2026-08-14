@@ -1,36 +1,7 @@
 import { createMMKV, type MMKV } from "react-native-mmkv";
-import { createJSONStorage, type StateStorage } from "zustand/middleware";
 
 // MMKV instance
 const mmkvStorage: MMKV = createMMKV();
-
-// Create a StateStorage adapter for MMKV
-const mmkvStateStorage: StateStorage = {
-  getItem: (name: string) => {
-    try {
-      return mmkvStorage.getString(name) ?? null;
-    } catch {
-      return null;
-    }
-  },
-  setItem: (name: string, value: string) => {
-    try {
-      mmkvStorage.set(name, value);
-    } catch {
-      // Silent fail for storage operations
-    }
-  },
-  removeItem: (name: string) => {
-    try {
-      mmkvStorage.remove(name);
-    } catch {
-      // Silent fail for storage operations
-    }
-  },
-};
-
-// Create JSON storage using the MMKV adapter
-export const createMMKVJSONStorage = () => createJSONStorage(() => mmkvStateStorage);
 
 // Storage interface for backward compatibility
 type StorageInterface = {
@@ -120,11 +91,6 @@ export const storage: StorageInterface = {
   },
 };
 
-// Generic function to create JSON storage with any storage provider
-export const createJSONStorageAdapter = <T extends StateStorage>(storageProvider: T) => {
-  return createJSONStorage(() => storageProvider);
-};
-
 /**
  * A utility function to get a JSON value from storage.
  * @param key The key to retrieve.
@@ -164,7 +130,7 @@ export const StorageKeys = {
   NOTIFICATIONS_ENABLED: "notificationsEnabled",
   BIOMETRIC_ENABLED: "biometricEnabled",
 
-  // Zustand persistence keys
+  // Persistence keys
   QR_WALLET_HISTORY: "qr-wallet-history",
   QR_WALLET_SETTINGS: "qr-wallet-settings",
   QR_WALLET_PREFERENCES: "qr-wallet-preferences",
