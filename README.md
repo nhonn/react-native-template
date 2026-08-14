@@ -142,5 +142,4 @@ Expo Go can load the SDK in Preview API Mode, but real purchases require a devel
 - `bun run format` - format with Biome
 - `bun run format:write` - format with Biome + write
 - `bun run typecheck` - TypeScript typecheck
-- `bun run test` - Jest unit tests
 - `bun run analyze:bundle` - export + analyze JS bundle
