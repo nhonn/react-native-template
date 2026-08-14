@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { Typography } from "heroui-native/text";
-import { X } from "phosphor-react-native";
+import { X } from "phosphor-react-native/src/icons/X";
 import { type FC, memo } from "react";
 import { View } from "react-native";
 

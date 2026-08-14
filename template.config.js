@@ -24,7 +24,8 @@ module.exports = {
 
   // Post-initialization script to ensure proper configuration synchronization
   postInitScript: {
-    description: "Validates that app.json configurations are properly synchronized",
+    description:
+      "Validates that app.json configurations are properly synchronized (dev/preview suffixes live in app.config.ts)",
     validations: [
       {
         file: "app.json",

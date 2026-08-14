@@ -1,12 +1,12 @@
 import { useRouter } from "expo-router";
 import { Typography } from "heroui-native/text";
-import { CaretLeft } from "phosphor-react-native";
+import { CaretLeft } from "phosphor-react-native/src/icons/CaretLeft";
 import { type FC, memo, useCallback } from "react";
 import { View } from "react-native";
 
 import { Pressable } from "@/components/common/pressable";
 import { SafeAreaView } from "@/components/styled/safe-area-view";
-import { useThemeColors } from "@/theme";
+import { useThemeColors } from "@/theme/hooks/useTheme";
 import type { BaseLayoutProps } from "./types";
 
 const BackIcon = memo<{ color: string }>(({ color }) => {
@@ -33,10 +33,10 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
         if (router.canGoBack?.()) {
           router.back();
         } else {
-          router.replace("/(tabs)");
+          router.replace("/");
         }
       } catch (_) {
-        router.replace("/(tabs)");
+        router.replace("/");
       }
     }
   }, [onBack, router]);

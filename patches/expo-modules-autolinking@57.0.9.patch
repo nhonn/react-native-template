@@ -1,0 +1,12 @@
+diff --git a/scripts/ios/precompiled_modules.rb b/scripts/ios/precompiled_modules.rb
+index cbbc021f8b6492c1d4c1738f3b37c29f16a346a4..465ae758804e4fbf6e4d1ce05e3084e1e150f468 100644
+--- a/scripts/ios/precompiled_modules.rb
++++ b/scripts/ios/precompiled_modules.rb
+@@ -896,6 +896,7 @@ module Expo
+         installer.pods_project.targets.each do |target|
+           target.build_configurations.each do |config|
+             existing = config.build_settings['HEADER_SEARCH_PATHS'] || '$(inherited)'
++            existing = existing.join(' ') if existing.is_a?(Array)
+             unless existing.include?(paths_string)
+               config.build_settings['HEADER_SEARCH_PATHS'] = "#{existing} #{paths_string}"
+             end

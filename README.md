@@ -63,6 +63,28 @@ bun run ios
 bun run android
 ```
 
+### App variants
+
+Development and production installs can sit side by side. `app.json` holds the production identity; `app.config.ts` suffixes it when `APP_VARIANT` is not `production`.
+
+| Variant       | `APP_VARIANT`          | Name                        | Bundle ID / package             |
+| ------------- | ---------------------- | --------------------------- | ------------------------------- |
+| Dev (default) | `development` or `dev` | `my-template-app (Dev)`     | `com.mytemplateproject.dev`     |
+| Preview       | `preview`              | `my-template-app (Preview)` | `com.mytemplateproject.preview` |
+| Production    | `production`           | `my-template-app`           | `com.mytemplateproject`         |
+
+Local scripts (`start`, `ios`, `android`, `prebuild`) set `APP_VARIANT=development`. EAS profiles in `eas.json` set the same variable per build. Only the development build registers the generated `exp+<slug>` scheme so the Metro QR code opens the Dev app.
+
+Read the resolved variant at runtime with `Constants.expoConfig?.extra?.variant`. Register each identifier separately with Firebase, Sentry, and any other service keyed to bundle ID.
+
+Switching a local native project to another variant:
+
+```bash
+APP_VARIANT=production bunx expo prebuild --clean
+```
+
+Use `APP_VARIANT=development bunx expo prebuild --clean` before the next dev session so CLI schemes point at the Dev app again.
+
 ## Usage
 
 ### UI Components

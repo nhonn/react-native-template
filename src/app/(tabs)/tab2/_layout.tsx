@@ -1,14 +1,13 @@
 import { Stack } from "expo-router/stack";
 
-export default function StackLayout() {
+export default function TabTwoStack() {
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="stack1" />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }

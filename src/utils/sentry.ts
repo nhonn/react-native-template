@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/react-native";
+import { captureException as sentryCaptureException, init } from "@sentry/react-native";
 
 import { logger } from "./logger";
 
@@ -14,7 +14,7 @@ export const initSentry = (): void => {
   initialized = true;
 
   try {
-    Sentry.init({
+    init({
       dsn: sentryDsn,
       enabled: !__DEV__ || Boolean(sentryDsn),
       tracesSampleRate: 0,
@@ -29,5 +29,5 @@ export const captureException = (error: unknown): void => {
     return;
   }
 
-  Sentry.captureException(error);
+  sentryCaptureException(error);
 };

@@ -1,29 +1,20 @@
-import { Tabs } from "expo-router";
-import { ClockCounterClockwise, House } from "phosphor-react-native";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
+
+export const unstable_settings = {
+  anchor: "(home)",
+};
 
 export default function TabLayout() {
   return (
-    <Tabs
-      initialRouteName="index"
-      screenOptions={{
-        headerShown: false,
-        tabBarShowLabel: false,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Tab 1",
-          tabBarIcon: ({ color }) => <House color={String(color)} size={28} />,
-        }}
-      />
-      <Tabs.Screen
-        name="tab2"
-        options={{
-          title: "Tab 2",
-          tabBarIcon: ({ color }) => <ClockCounterClockwise color={String(color)} size={28} />,
-        }}
-      />
-    </Tabs>
+    <NativeTabs>
+      <NativeTabs.Trigger name="(home)">
+        <NativeTabs.Trigger.Label>Tab 1</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf={{ default: "house", selected: "house.fill" }} md="home" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="tab2">
+        <NativeTabs.Trigger.Label>Tab 2</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf={{ default: "clock", selected: "clock.fill" }} md="history" />
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }

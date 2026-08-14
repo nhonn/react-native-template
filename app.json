@@ -32,7 +32,7 @@
         {
           "ios": {
             "useFrameworks": "dynamic",
-            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"]
+            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics", "RNPurchases", "RNPaywalls"]
           }
         }
       ],

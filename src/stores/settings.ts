@@ -1,7 +1,7 @@
 import { persistObservable } from "@legendapp/state/persist";
 import { useSelector } from "@legendapp/state/react";
 
-import type { TextSizePreference } from "@/theme";
+import type { TextSizePreference } from "@/theme/types";
 import type { ValidDateFormat } from "@/types/date";
 import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
 
