@@ -1,17 +1,18 @@
 {
   "name": "my-template-app",
-  "main": "expo-router/entry",
   "version": "1.0.0",
+  "private": true,
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "lint": "bunx @biomejs/biome check .",
-    "lint:fix": "bunx @biomejs/biome check --write .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
     "typecheck": "tsc --noEmit",
     "prebuild": "bunx expo prebuild --clean",
-    "format": "bunx @biomejs/biome format .",
-    "format:write": "bunx @biomejs/biome format --write .",
+    "format": "oxfmt --check .",
+    "format:write": "oxfmt --write .",
     "analyze:bundle": "bunx expo export --platform ios && npx source-map-explorer dist/main.js"
   },
   "dependencies": {
@@ -60,12 +61,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
-    "@biomejs/biome": "2.4.16",
     "@expo/metro-runtime": "~57.0.9",
     "@types/react": "19.2.17",
     "babel-plugin-inline-import": "^3.0.0",
     "lefthook": "2.1.9",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
     "typescript": "~6.0.3"
-  },
-  "private": true
+  }
 }

@@ -1,4 +1,4 @@
-// biome-ignore-all lint/suspicious/noConsole: console for development
+/* eslint-disable no-console -- console for development */
 
 export type LogLevel = "debug" | "info" | "warn" | "error";
 

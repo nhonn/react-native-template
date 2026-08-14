@@ -18,10 +18,7 @@ export {
   Typography,
 } from "./constants/typography";
 // Typography hooks
-export {
-  getTypographyStyleForPreference,
-  useResponsiveTypography,
-} from "./hooks/useResponsiveTypography";
+export { getTypographyStyleForPreference, useResponsiveTypography } from "./hooks/useResponsiveTypography";
 export {
   useIsDarkTheme,
   useTheme,
@@ -42,15 +39,7 @@ export { darkColorScheme } from "./themes/dark";
 // Themes
 export { lightColorScheme } from "./themes/light";
 // Types
-export type {
-  ColorScheme,
-  DeviceType,
-  FontSize,
-  TextSizePreference,
-  Theme,
-  ThemeConfig,
-  ThemeMode,
-} from "./types";
+export type { ColorScheme, DeviceType, FontSize, TextSizePreference, Theme, ThemeConfig, ThemeMode } from "./types";
 // Utilities
 export {
   createColorClasses,

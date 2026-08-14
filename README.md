@@ -5,6 +5,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 ## Features
 
 ### Core
+
 - **React Native**: 0.85.3 + React 19.2.3
 - **Expo**: SDK 56
 - **Navigation**: Expo Router 6 (tabs, stacks, modals)
@@ -12,22 +13,25 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **Package manager**: Bun
 
 ### Styling & Theme
+
 - **Styling**: TailwindCSS 4 + Uniwind
 - **Theming**: light/dark mode + system theme sync
 - **Design tokens**: colors, spacing, typography, radii, shadows
 
 ### UI
+
 - **HeroUI Native**: default component library (Button, Input, Typography, Toast, etc.)
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
 ### State / Storage / Tooling
+
 - **State**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot
 - **List rendering**: LegendList v3 utility wrapper
 - **Analytics**: Firebase Analytics / GA4 with Expo Router `screen_view` tracking
 - **Monetization**: RevenueCat utility
-- **Quality**: Biome + Lefthook
+- **Quality**: Oxlint + Oxfmt + Lefthook
 - **Testing**: Jest + React Native Testing Library (Expo preset)
 
 ## Project Structure
@@ -137,9 +141,9 @@ Expo Go can load the SDK in Preview API Mode, but real purchases require a devel
 - `bun start` - start Expo dev server
 - `bun run ios` - run iOS build
 - `bun run android` - run Android build
-- `bun run lint` - run Biome checks
-- `bun run lint:fix` - run Biome checks + write fixes
-- `bun run format` - format with Biome
-- `bun run format:write` - format with Biome + write
+- `bun run lint` - run Oxlint
+- `bun run lint:fix` - run Oxlint with auto-fix
+- `bun run format` - check formatting with Oxfmt
+- `bun run format:write` - format with Oxfmt
 - `bun run typecheck` - TypeScript typecheck
 - `bun run analyze:bundle` - export + analyze JS bundle

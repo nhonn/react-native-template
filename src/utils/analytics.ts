@@ -38,7 +38,7 @@ const withAnalytics = async (
 };
 
 export const trackEvent = (name: string, properties: Record<string, unknown> = {}): void => {
-  void withAnalytics(async (analytics) => {
+  void withAnalytics(async (_analytics) => {
     await logEvent(analyticsInstance(), name, toAnalyticsProperties(properties));
   });
 };
