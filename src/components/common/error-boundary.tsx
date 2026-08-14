@@ -1,13 +1,10 @@
 import { router } from "expo-router";
-import { ArrowsClockwise, House, Warning } from "phosphor-react-native";
 import { Component, type ErrorInfo, type FC, memo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { logger } from "@/utils/logger";
 import { captureException } from "@/utils/sentry";
-import { Layout } from "../layouts";
-import { Button } from "./button";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -30,34 +27,29 @@ const ErrorFallback: FC<ErrorFallbackProps> = memo(({ onReset, onGoHome }) => {
   const { t } = useTranslation("error_boundary");
 
   return (
-    <View className="flex-1 bg-white">
-      <ScrollView className="flex-1 px-6 py-8" showsVerticalScrollIndicator={false}>
-        <View className="mb-8 items-center">
-          <View className="mb-4 h-24 w-24 items-center justify-center rounded-full bg-red-100">
-            <Warning color="#ef4444" size={48} />
-          </View>
-          <Text className="mb-2 text-center font-bold text-2xl text-gray-900">{t("title")}</Text>
-          <Text className="mb-6 text-center text-base text-gray-600">{t("message")}</Text>
+    <View style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <Text style={styles.title}>{t("title")}</Text>
+          <Text style={styles.message}>{t("message")}</Text>
         </View>
-        <View className="mb-8 space-y-4">
-          <Button
+        <View style={styles.actions}>
+          <Pressable
             accessibilityLabel={t("try_again")}
-            fullWidth
-            leftIcon={<ArrowsClockwise color="white" size={48} />}
+            accessibilityRole="button"
             onPress={onReset}
-            size="lg"
-            title={t("try_again")}
-            variant="primary"
-          />
-          <Button
+            style={styles.primaryButton}
+          >
+            <Text style={styles.primaryButtonText}>{t("try_again")}</Text>
+          </Pressable>
+          <Pressable
             accessibilityLabel={t("go_home")}
-            fullWidth
-            leftIcon={<House color="#6b7280" size={48} />}
+            accessibilityRole="button"
             onPress={onGoHome}
-            size="lg"
-            title={t("go_home")}
-            variant="secondary"
-          />
+            style={styles.secondaryButton}
+          >
+            <Text style={styles.secondaryButtonText}>{t("go_home")}</Text>
+          </Pressable>
         </View>
       </ScrollView>
     </View>
@@ -117,13 +109,70 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.fallback;
       }
 
-      return (
-        <Layout.Bare>
-          <ErrorFallback onGoHome={this.handleGoHome} onReset={this.handleReset} />
-        </Layout.Bare>
-      );
+      return <ErrorFallback onGoHome={this.handleGoHome} onReset={this.handleReset} />;
     }
 
     return this.props.children;
   }
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+  content: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 32,
+  },
+  title: {
+    marginBottom: 8,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#111827",
+  },
+  message: {
+    textAlign: "center",
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#4b5563",
+  },
+  actions: {
+    gap: 12,
+  },
+  primaryButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    backgroundColor: "#111827",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  primaryButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ffffff",
+  },
+  secondaryButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#d1d5db",
+    backgroundColor: "#ffffff",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  secondaryButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#374151",
+  },
+});

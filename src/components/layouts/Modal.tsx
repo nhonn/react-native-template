@@ -1,9 +1,10 @@
 import { useRouter } from "expo-router";
 import { X } from "phosphor-react-native";
 import { type FC, memo } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
-import { Typography } from "@/components/common";
+import { Pressable } from "@/components/common/pressable";
+import { Typography } from "@/components/common/typography";
 import { SafeAreaView } from "@/components/styled/safe-area-view";
 import type { ModalLayoutProps } from "./types";
 

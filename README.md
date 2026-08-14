@@ -64,7 +64,9 @@ bun run android
 ### UI Components
 
 ```tsx
-import { Button, Input, PasswordInput, Typography } from "@/components/common";
+import { Button } from "@/components/common/button";
+import { Input, PasswordInput } from "@/components/common/input";
+import { Typography } from "@/components/common/typography";
 
 export function Example() {
   return (
@@ -81,7 +83,7 @@ export function Example() {
 ### Theming
 
 ```tsx
-import { Typography } from "@/components/common";
+import { Typography } from "@/components/common/typography";
 import { useTheme } from "@/theme";
 
 export function ThemeExample() {

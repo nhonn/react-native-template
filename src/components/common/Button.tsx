@@ -1,7 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, memo, useMemo } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
+import { Pressable } from "@/components/common/pressable";
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

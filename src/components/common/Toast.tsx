@@ -1,9 +1,10 @@
 import { cva } from "class-variance-authority";
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Pressable } from "@/components/common/pressable";
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

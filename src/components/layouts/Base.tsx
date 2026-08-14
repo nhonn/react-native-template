@@ -1,9 +1,10 @@
 import { useRouter } from "expo-router";
 import { CaretLeft } from "phosphor-react-native";
 import { type FC, memo, useCallback } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
-import { Typography } from "@/components/common";
+import { Pressable } from "@/components/common/pressable";
+import { Typography } from "@/components/common/typography";
 import { SafeAreaView } from "@/components/styled/safe-area-view";
 import { useThemeColors } from "@/theme";
 import type { BaseLayoutProps } from "./types";

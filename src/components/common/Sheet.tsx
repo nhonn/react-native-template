@@ -1,5 +1,5 @@
 import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "react";
-import { Dimensions, Modal, type ModalProps, Pressable, View } from "react-native";
+import { Dimensions, Modal, type ModalProps, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
@@ -12,6 +12,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Pressable } from "@/components/common/pressable";
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

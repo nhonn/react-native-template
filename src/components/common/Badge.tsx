@@ -1,7 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, memo } from "react";
-import { Pressable, View, type ViewProps } from "react-native";
+import { View, type ViewProps } from "react-native";
 
+import { Pressable } from "@/components/common/pressable";
 import { cn } from "@/utils/classname";
 
 const badgeVariants = cva("items-center justify-center", {

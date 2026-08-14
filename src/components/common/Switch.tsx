@@ -1,10 +1,11 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, memo } from "react";
-import { Pressable, View, type ViewProps } from "react-native";
+import { View, type ViewProps } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useThemeColors } from "@/theme";
 import { Colors } from "@/theme/constants/colors";
 import { cn } from "@/utils/classname";
+import { Pressable } from "./pressable";
 
 const switchVariants = cva("justify-center", {
   variants: {

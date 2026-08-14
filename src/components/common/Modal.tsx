@@ -1,8 +1,9 @@
 import { forwardRef, memo, useEffect, useImperativeHandle, useState } from "react";
-import { Dimensions, Pressable, Modal as RNModal, type ModalProps as RNModalProps, View } from "react-native";
+import { Dimensions, Modal as RNModal, type ModalProps as RNModalProps, View } from "react-native";
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { Pressable } from "@/components/common/pressable";
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

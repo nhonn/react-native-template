@@ -1,8 +1,9 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { Eye, EyeSlash, MagnifyingGlass } from "phosphor-react-native";
 import { forwardRef, memo, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 
+import { Pressable } from "@/components/common/pressable";
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
 

@@ -1,9 +1,10 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, memo, useState } from "react";
-import { Image as ExpoImage, type ImageErrorEvent, type ImageLoadEvent, Pressable, View } from "react-native";
-import { Typography } from "@/components/common";
+import { Image as ExpoImage, type ImageErrorEvent, type ImageLoadEvent, View } from "react-native";
 import { useThemeColors } from "@/theme";
 import { cn } from "@/utils/classname";
+import { Pressable } from "./pressable";
+import { Typography } from "./typography";
 
 const avatarVariants = cva("overflow-hidden", {
   variants: {
