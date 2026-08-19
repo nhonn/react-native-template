@@ -6,7 +6,7 @@ This is an Expo (SDK 57) + Expo Router template. App code lives under `src/`. Th
 
 | Concern       | Choice                                                              |
 | ------------- | ------------------------------------------------------------------- |
-| UI            | HeroUI Native (`heroui-native`), granular imports                   |
+| UI            | Custom primitives in `@/components/ui/*` (granular imports)         |
 | Styling       | Tailwind CSS 4 + Uniwind (`className`)                              |
 | Icons         | `phosphor-react-native` (direct icon path imports)                  |
 | Navigation    | Expo Router file routes in `src/app`                                |
@@ -20,7 +20,7 @@ This is an Expo (SDK 57) + Expo Router template. App code lives under `src/`. Th
 | Subscriptions | RevenueCat (`@/utils/revenuecat`)                                   |
 | Lint / format | Oxlint + Oxfmt; Lefthook runs format + `tsc` on commit              |
 
-Do not add Zustand, Recoil, Redux, or a second UI kit. Do not add a second `HeroUINativeProvider`.
+Do not add Zustand, Recoil, Redux, or a second UI kit. Do not add a UI provider.
 
 ---
 
@@ -42,11 +42,12 @@ src/
 │   └── tab-two/
 ├── components/
 │   ├── common/             # shared primitives (pressable, error-boundary, legend-list)
+│   ├── ui/                 # app UI kit (text, button, input, …)
 │   ├── layouts/            # Layout.Base / Bare / Modal
 │   └── styled/             # thin RN wrappers (SafeAreaView)
 ├── hooks/                  # app-wide hooks (debounce, throttle, refresh)
 ├── i18n/                   # initializeI18n + locales/<lang>/<ns>.json
-├── providers/              # MainProvider (HeroUI + ErrorBoundary + theme tracking)
+├── providers/              # MainProvider (ErrorBoundary + theme tracking)
 ├── stores/                 # app observables (settings$)
 ├── theme/                  # tokens, hooks, theme store, light/dark schemes
 ├── types/                  # shared TS types
@@ -62,6 +63,7 @@ Config and native identity stay at the repo root: `app.json`, `app.config.ts`, `
 | Route, `_layout`, `+not-found`, `+api` | `src/app/…` and nowhere else                   |
 | Screen body (the UI a route renders)   | `src/screens/<kebab-name>/`                    |
 | UI reused by more than one screen      | `src/components/…`                             |
+| Kit primitive (button, input, text)    | `src/components/ui/`                           |
 | UI used by only one screen             | Colocate under that screen folder              |
 | App-wide hook                          | `src/hooks/`                                   |
 | Theme token / theme hook               | `src/theme/` (not `src/hooks`)                 |
@@ -97,31 +99,32 @@ Do not introduce `src/features/`, `src/lib/`, or flatten screens into `app/`.
 
 ## Components and UI
 
-### HeroUI Native (default)
+### Custom UI kit (default)
 
-Use **HeroUI Native** for buttons, inputs, typography, avatars, badges, cards, checkboxes, dividers, loaders, modals, progress, sheets, switches, and toasts.
+Use `@/components/ui` for buttons, inputs, text, badges, cards, checkboxes, dividers, loaders, and switches.
 
-- Import from **granular** entry points. Do not import the `heroui-native` barrel unless the file already depends on most of the library.
+- Import from **granular** files. Do not import the `@/components/ui` barrel unless the file already depends on most of the kit.
 
 ```tsx
-import { Button } from "heroui-native/button";
-import { Input } from "heroui-native/input";
-import { Typography } from "heroui-native/text";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 ```
 
-- Do not recreate those primitives locally.
-- Wrap new trees under the existing `HeroUINativeProvider` in `MainProvider`. Never add a second provider.
-- HeroUI `PressableFeedback` is only for HeroUI-styled press surfaces.
+- Do not add a UI provider. Theme is already applied via Uniwind + `MainProvider` / `useSystemThemeTracking`.
+- Sheets and full-screen modals stay Expo Router (`src/app/(modals)/`) and Gorhom bottom sheets — not kit primitives.
+- Do not add HeroUI, NativeBase, or another component library.
 
 ### Local components that stay local
 
-| Import                                                                | Role                                                                                          |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `@/components/common/pressable`                                       | Custom press targets (gesture-handler). Prefer this over raw `Pressable` for non-HeroUI hits. |
-| `@/components/common/error-boundary`                                  | Already mounted in `MainProvider`.                                                            |
-| `@/components/common/legend-list`                                     | List virtualization wrapper.                                                                  |
-| `@/components/styled/safe-area-view`                                  | Safe area + Uniwind `className`.                                                              |
-| `@/components/layouts` (`Layout.Base`, `Layout.Bare`, `Layout.Modal`) | Screen chrome: back button, title, modal frame.                                               |
+| Import                                                                | Role                                                                      |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `@/components/ui/*`                                                   | Kit primitives (text, button, input, card, …).                            |
+| `@/components/common/pressable`                                       | Custom press targets (gesture-handler). Prefer this over raw `Pressable`. |
+| `@/components/common/error-boundary`                                  | Already mounted in `MainProvider`.                                        |
+| `@/components/common/legend-list`                                     | List virtualization wrapper.                                              |
+| `@/components/styled/safe-area-view`                                  | Safe area + Uniwind `className`.                                          |
+| `@/components/layouts` (`Layout.Base`, `Layout.Bare`, `Layout.Modal`) | Screen chrome: back button, title, modal frame.                           |
 
 New reusable UI: kebab-case file, one primary named export. When a component grows, use a folder + `index.tsx` and colocate private parts.
 

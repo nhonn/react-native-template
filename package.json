@@ -37,7 +37,6 @@
     "expo-router": "~57.0.12",
     "expo-splash-screen": "~57.0.6",
     "expo-status-bar": "~57.0.1",
-    "heroui-native": "^1.0.8",
     "i18next": "25.10.10",
     "phosphor-react-native": "^3.0.6",
     "react": "19.2.3",

@@ -1,6 +1,6 @@
 # React Native Template
 
-Modern Expo + Expo Router template with a small, production-oriented baseline: typed navigation, HeroUI Native, a theme system, i18n, and a lightweight state setup.
+Modern Expo + Expo Router template with a small, production-oriented baseline: typed navigation, a custom UI kit, a theme system, i18n, and a lightweight state setup.
 
 ## Features
 
@@ -20,7 +20,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 
 ### UI
 
-- **HeroUI Native**: default component library (Button, Input, Typography, Toast, etc.)
+- **UI kit**: `@/components/ui` (Text, Button, Input, Card, Badge, Switch, Checkbox, Spinner, Divider)
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
@@ -39,7 +39,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 ```
 src/
 ├── app/                # Expo Router screens
-├── components/         # UI components (common/layouts/styled)
+├── components/         # UI kit, common, layouts, styled
 ├── hooks/              # App-level hooks (debounce/throttle/etc.)
 ├── i18n/               # i18next setup + locales (en)
 ├── providers/          # Top-level providers (ErrorBoundary, etc.)
@@ -89,17 +89,17 @@ Use `APP_VARIANT=development bunx expo prebuild --clean` before the next dev ses
 
 ### UI Components
 
-Use HeroUI Native as the default UI. Prefer granular imports.
+Use the custom UI kit under `@/components/ui`. Prefer granular imports.
 
 ```tsx
-import { Button } from "heroui-native/button";
-import { Input } from "heroui-native/input";
-import { Typography } from "heroui-native/text";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 
 export function Example() {
   return (
     <>
-      <Typography type="h2">Welcome</Typography>
+      <Text variant="h2">Welcome</Text>
       <Input placeholder="you@example.com" />
       <Button variant="primary">Continue</Button>
     </>
@@ -110,8 +110,8 @@ export function Example() {
 ### Theming
 
 ```tsx
-import { Button } from "heroui-native/button";
-import { Typography } from "heroui-native/text";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { useTheme } from "@/theme";
 
 export function ThemeExample() {
@@ -119,9 +119,9 @@ export function ThemeExample() {
 
   return (
     <>
-      <Typography>
+      <Text>
         Mode: {mode} ({isDark ? "dark" : "light"})
-      </Typography>
+      </Text>
       <Button variant="secondary" onPress={toggleMode}>
         Toggle theme
       </Button>
