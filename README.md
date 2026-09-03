@@ -14,13 +14,13 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 
 ### Styling & Theme
 
-- **Styling**: TailwindCSS 4 + Uniwind
+- **Styling**: @expo/ui style/textStyle + React Native StyleSheet
 - **Theming**: light/dark mode + system theme sync
 - **Design tokens**: colors, spacing, typography, radii, shadows
 
 ### UI
 
-- **UI kit**: `@/components/ui` (Text, Button, Input, Card, Badge, Switch, Checkbox, Spinner, Divider)
+- **UI**: `@expo/ui` universal components (Host, Button, Text, Column, Row, etc.)
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
@@ -39,7 +39,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 ```
 src/
 ├── app/                # Expo Router screens
-├── components/         # UI kit, common, layouts, styled
+├── components/         # Common, layouts
 ├── hooks/              # App-level hooks (debounce/throttle/etc.)
 ├── i18n/               # i18next setup + locales (en)
 ├── providers/          # Top-level providers (ErrorBoundary, etc.)
@@ -89,20 +89,17 @@ Use `APP_VARIANT=development bunx expo prebuild --clean` before the next dev ses
 
 ### UI Components
 
-Use the custom UI kit under `@/components/ui`. Prefer granular imports.
+Use `@expo/ui` universal components wrapped in `Host`.
 
 ```tsx
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
+import { Button, Host, Text } from "@expo/ui";
 
 export function Example() {
   return (
-    <>
-      <Text variant="h2">Welcome</Text>
-      <Input placeholder="you@example.com" />
-      <Button variant="primary">Continue</Button>
-    </>
+    <Host matchContents>
+      <Text textStyle={{ fontSize: 24, fontWeight: "600" }}>Welcome</Text>
+      <Button label="Continue" onPress={() => {}} />
+    </Host>
   );
 }
 ```
@@ -110,22 +107,19 @@ export function Example() {
 ### Theming
 
 ```tsx
-import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
+import { Button, Host, Text } from "@expo/ui";
 import { useTheme } from "@/theme";
 
 export function ThemeExample() {
   const { mode, isDark, toggleMode } = useTheme();
 
   return (
-    <>
+    <Host colorScheme={isDark ? "dark" : "light"} matchContents>
       <Text>
         Mode: {mode} ({isDark ? "dark" : "light"})
       </Text>
-      <Button variant="secondary" onPress={toggleMode}>
-        Toggle theme
-      </Button>
-    </>
+      <Button label="Toggle theme" onPress={toggleMode} variant="outlined" />
+    </Host>
   );
 }
 ```

@@ -3,12 +3,11 @@
  * Legend State observable for theme management
  */
 
-import { computed, when } from "@legendapp/state";
+import { computed } from "@legendapp/state";
 import { persistObservable } from "@legendapp/state/persist";
 import { useSelector } from "@legendapp/state/react";
 import React from "react";
 import { Appearance, useColorScheme } from "react-native";
-import { Uniwind } from "uniwind";
 
 import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
 import { BorderRadius } from "../constants/borderRadius";
@@ -73,16 +72,8 @@ export const themePrefs$ = persistObservable(
 
 export const theme$ = computed(() => createTheme(themePrefs$.mode.get()));
 
-when(
-  () => Boolean(themePrefs$._state?.isLoaded.get()),
-  () => {
-    Uniwind.setTheme(themePrefs$.mode.get());
-  },
-);
-
 const applyMode = (mode: ThemeMode) => {
   themePrefs$.mode.set(mode);
-  Uniwind.setTheme(mode);
 };
 
 const themeActions: ThemeStoreActions = {

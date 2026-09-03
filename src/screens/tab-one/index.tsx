@@ -1,19 +1,19 @@
+import { Column, Host, ScrollView, Text } from "@expo/ui";
 import { useTranslation } from "react-i18next";
-import { ScrollView, View } from "react-native";
 
-import { SafeAreaView } from "@/components/styled/safe-area-view";
-import { Text } from "@/components/ui/text";
+import { useTheme } from "@/theme/hooks/useTheme";
 
 export function TabOneScreen() {
   const { t } = useTranslation("screens");
+  const { isDark } = useTheme();
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
-      <ScrollView className="flex-1" contentContainerClassName="pb-8" showsVerticalScrollIndicator={false}>
-        <View className="mb-6 px-4 pt-4">
-          <Text variant="h4">{t("tab1.title")}</Text>
-        </View>
+    <Host colorScheme={isDark ? "dark" : "light"} style={{ flex: 1 }}>
+      <ScrollView showsIndicators={false}>
+        <Column style={{ padding: 16 }}>
+          <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{t("tab1.title")}</Text>
+        </Column>
       </ScrollView>
-    </SafeAreaView>
+    </Host>
   );
 }

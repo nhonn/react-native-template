@@ -4,21 +4,19 @@ This is an Expo (SDK 57) + Expo Router template. App code lives under `src/`. Th
 
 ## Stack (do not swap without being asked)
 
-| Concern       | Choice                                                              |
-| ------------- | ------------------------------------------------------------------- |
-| UI            | Custom primitives in `@/components/ui/*` (granular imports)         |
-| Styling       | Tailwind CSS 4 + Uniwind (`className`)                              |
-| Icons         | `phosphor-react-native` (direct icon path imports)                  |
-| Navigation    | Expo Router file routes in `src/app`                                |
-| Screen bodies | `src/screens/*`, imported by route files                            |
-| State         | Legend State (`@legendapp/state`) + MMKV persist                    |
-| Forms         | React Hook Form                                                     |
-| Lists         | `@/components/common/legend-list` (`@legendapp/list`)               |
-| i18n          | i18next + `react-i18next`, JSON namespaces under `src/i18n/locales` |
-| Analytics     | Firebase Analytics via `@/utils/analytics`                          |
-| Errors        | Sentry (`@/utils/sentry`) + local `ErrorBoundary`                   |
-| Subscriptions | RevenueCat (`@/utils/revenuecat`)                                   |
-| Lint / format | Oxlint + Oxfmt; Lefthook runs format + `tsc` on commit              |
+| UI | `@expo/ui` universal. Import from `@expo/ui`. Every `@expo/ui` tree sits in `Host`. |
+| Styling | `@expo/ui` `style` / `textStyle` on native trees. RN leftovers: `StyleSheet` + `useThemeColors()`. Never `className`, Tailwind, or Uniwind. |
+| Icons | `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-symbol>", android: import("@expo/material-symbols/<name>.xml") })`. Never Phosphor. |
+| Navigation | Expo Router file routes in `src/app` |
+| Screen bodies | `src/screens/*`, imported by route files |
+| State | Legend State (`@legendapp/state`) + MMKV persist |
+| Forms | React Hook Form |
+| Lists | `@/components/common/legend-list` (`@legendapp/list`) |
+| i18n | i18next + `react-i18next`, JSON namespaces under `src/i18n/locales` |
+| Analytics | Firebase Analytics via `@/utils/analytics` |
+| Errors | Sentry (`@/utils/sentry`) + local `ErrorBoundary` |
+| Subscriptions | RevenueCat (`@/utils/revenuecat`) |
+| Lint / format | Oxlint + Oxfmt; Lefthook runs format + `tsc` on commit |
 
 Do not add Zustand, Recoil, Redux, or a second UI kit. Do not add a UI provider.
 
@@ -42,9 +40,7 @@ src/
 │   └── tab-two/
 ├── components/
 │   ├── common/             # shared primitives (pressable, error-boundary, legend-list)
-│   ├── ui/                 # app UI kit (text, button, input, …)
-│   ├── layouts/            # Layout.Base / Bare / Modal
-│   └── styled/             # thin RN wrappers (SafeAreaView)
+│   └── layouts/            # Layout.Base / Bare / Modal
 ├── hooks/                  # app-wide hooks (debounce, throttle, refresh)
 ├── i18n/                   # initializeI18n + locales/<lang>/<ns>.json
 ├── providers/              # MainProvider (ErrorBoundary + theme tracking)
@@ -58,20 +54,20 @@ Config and native identity stay at the repo root: `app.json`, `app.config.ts`, `
 
 ### Placement rules
 
-| Kind of file                           | Put it here                                    |
-| -------------------------------------- | ---------------------------------------------- |
-| Route, `_layout`, `+not-found`, `+api` | `src/app/…` and nowhere else                   |
-| Screen body (the UI a route renders)   | `src/screens/<kebab-name>/`                    |
-| UI reused by more than one screen      | `src/components/…`                             |
-| Kit primitive (button, input, text)    | `src/components/ui/`                           |
-| UI used by only one screen             | Colocate under that screen folder              |
-| App-wide hook                          | `src/hooks/`                                   |
-| Theme token / theme hook               | `src/theme/` (not `src/hooks`)                 |
-| Cross-screen persisted state           | `src/stores/`                                  |
-| Theme mode / colors                    | `src/theme/stores/`                            |
-| String the user sees                   | `src/i18n/locales/<lang>/<ns>.json` + `t()`    |
-| One-off helper                         | `src/utils/`                                   |
-| Provider that must wrap the tree       | `src/providers/` — compose into `MainProvider` |
+| Kind of file                           | Put it here                                                                   |
+| -------------------------------------- | ----------------------------------------------------------------------------- |
+| Route, `_layout`, `+not-found`, `+api` | `src/app/…` and nowhere else                                                  |
+| Screen body (the UI a route renders)   | `src/screens/<kebab-name>/`                                                   |
+| UI reused by more than one screen      | `src/components/…`                                                            |
+| Native control                         | Import from `@expo/ui` in the screen/layout. Do not add `src/components/ui/`. |
+| UI used by only one screen             | Colocate under that screen folder                                             |
+| App-wide hook                          | `src/hooks/`                                                                  |
+| Theme token / theme hook               | `src/theme/` (not `src/hooks`)                                                |
+| Cross-screen persisted state           | `src/stores/`                                                                 |
+| Theme mode / colors                    | `src/theme/stores/`                                                           |
+| String the user sees                   | `src/i18n/locales/<lang>/<ns>.json` + `t()`                                   |
+| One-off helper                         | `src/utils/`                                                                  |
+| Provider that must wrap the tree       | `src/providers/` — compose into `MainProvider`                                |
 
 `src/app` is routes-only. Route files stay thin:
 
@@ -99,41 +95,59 @@ Do not introduce `src/features/`, `src/lib/`, or flatten screens into `app/`.
 
 ## Components and UI
 
-### Custom UI kit (default)
+### Expo UI (default)
 
-Use `@/components/ui` for buttons, inputs, text, badges, cards, checkboxes, dividers, loaders, and switches.
-
-- Import from **granular** files. Do not import the `@/components/ui` barrel unless the file already depends on most of the kit.
+- Import `Host`, `Button`, `Text`, `TextInput`, `Switch`, `Checkbox`, `Icon`, `BottomSheet`, `Picker`, `Slider`, `Column`, `Row`, `ScrollView` from `@expo/ui`.
+- Wrap every `@expo/ui` subtree in `Host` from `@expo/ui` (never from `@expo/ui/swift-ui` or `@expo/ui/jetpack-compose`). `matchContents` for intrinsic-sized controls; `style={{ flex: 1 }}` when the host should fill. Pass `colorScheme={isDark ? "dark" : "light"}` from `useTheme()` so native UI follows the theme store.
+- Example button:
 
 ```tsx
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
+<Host matchContents colorScheme={isDark ? "dark" : "light"}>
+  <Button label="Continue" onPress={() => {}} />
+</Host>
 ```
 
-- Do not add a UI provider. Theme is already applied via Uniwind + `MainProvider` / `useSystemThemeTracking`.
-- Sheets and full-screen modals stay Expo Router (`src/app/(modals)/`) and Gorhom bottom sheets — not kit primitives.
-- Do not add HeroUI, NativeBase, or another component library.
+- `BottomSheet` is a sibling of `Host`, not nested in it (`isPresented` + `onDismiss`):
+
+```tsx
+<>
+  <Host matchContents>
+    <Button label="Open" onPress={() => setOpen(true)} />
+  </Host>
+  <BottomSheet isPresented={open} onDismiss={() => setOpen(false)}>
+    <Column spacing={12}>
+      <Text>Sheet</Text>
+    </Column>
+  </BottomSheet>
+</>
+```
+
+- Full-screen flows stay Expo Router `src/app/(modals)/`. Sheets use universal `BottomSheet`, not Gorhom, not `@expo/ui/community/bottom-sheet`.
+- Do not add `@gorhom/bottom-sheet`, `@react-native-community/datetimepicker`, `@react-native-community/slider`, `@react-native-picker/picker`, `@react-native-menu/menu`, `react-native-pager-view`, `@react-native-segmented-control/segmented-control`, `@react-native-masked-view/masked-view`. Universal `@expo/ui` first; `@expo/ui/community/<kebab-name>` only when migrating an existing community API.
+- Universal first. Platform-specific `@expo/ui/swift-ui` / `jetpack-compose` only when universal lacks the control; isolate in `src/components/**/*.ios.tsx` / `*.android.tsx` (never under `src/app/`).
+- `Button` uses `label` + `variant`: `"filled"` | `"outlined"` | `"text"`. `Switch`/`Checkbox` use `value` + `onValueChange`. Controlled `TextInput` uses `useNativeState`, not a string `value`.
+- `@expo/ui` `List` is not for large datasets — keep `@/components/common/legend-list`.
+- Do not wrap `@expo/ui` in a local kit. Do not add HeroUI/NativeBase/another kit. Do not add a UI provider. Do not add Tailwind, Uniwind, or `className`.
+- RN-only gaps (card/spinner/divider): RN `View` / `ActivityIndicator` + `StyleSheet`, or platform-specific `@expo/ui` when needed.
+- Theme mode: `useTheme()` / `useThemeStore()`. After mode changes, `Host colorScheme` is the only native theming hook — do not call `Uniwind.setTheme`.
 
 ### Local components that stay local
 
-| Import                                                                | Role                                                                      |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `@/components/ui/*`                                                   | Kit primitives (text, button, input, card, …).                            |
-| `@/components/common/pressable`                                       | Custom press targets (gesture-handler). Prefer this over raw `Pressable`. |
-| `@/components/common/error-boundary`                                  | Already mounted in `MainProvider`.                                        |
-| `@/components/common/legend-list`                                     | List virtualization wrapper.                                              |
-| `@/components/styled/safe-area-view`                                  | Safe area + Uniwind `className`.                                          |
-| `@/components/layouts` (`Layout.Base`, `Layout.Bare`, `Layout.Modal`) | Screen chrome: back button, title, modal frame.                           |
+| Import                                                                | Role                                                                                                                 |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `@/components/common/pressable`                                       | Custom press targets (gesture-handler). Prefer this over raw `Pressable`.                                            |
+| `@/components/common/error-boundary`                                  | Already mounted in `MainProvider`.                                                                                   |
+| `@/components/common/legend-list`                                     | List virtualization wrapper.                                                                                         |
+| `@/components/layouts` (`Layout.Base`, `Layout.Bare`, `Layout.Modal`) | Screen chrome: back button, title, modal frame. Layouts import `SafeAreaView` from `react-native-safe-area-context`. |
 
 New reusable UI: kebab-case file, one primary named export. When a component grows, use a folder + `index.tsx` and colocate private parts.
 
-Icons: import the specific Phosphor file (`phosphor-react-native/src/icons/CaretLeft`), not the full icon barrel.
+Icons: `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-symbol>", android: import("@expo/material-symbols/<name>.xml") })`. Never Phosphor.
 
 ### Styling
 
-- Prefer Uniwind/`className` and theme tokens (`bg-background`, `bg-surface-primary`, semantic colors from `useThemeColors()`).
-- `StyleSheet.create` only when className cannot express the style; keep it at the bottom of the same file.
+- Native trees: `@expo/ui` `style` / `textStyle`.
+- RN leftovers: `StyleSheet` + `useThemeColors()`. Never `className`, Tailwind, or Uniwind.
 - Theme mode: `useTheme()` / `useThemeStore()` from `@/theme`. Do not call `Appearance` ad hoc in screens.
 
 ### Layouts and navigation
@@ -170,7 +184,7 @@ useSettingsStore.getState().setLanguage("en");
 settings$.language.set("en");
 ```
 
-Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider` already runs `useSystemThemeTracking()`. After theme mode changes, Uniwind is updated from the store — do not call `Uniwind.setTheme` from random screens.
+Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider` already runs `useSystemThemeTracking()`. Native trees track theme changes via `Host colorScheme`.
 
 ### What belongs where
 

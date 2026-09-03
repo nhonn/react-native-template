@@ -1,4 +1,3 @@
-const { withUniwindConfig } = require("uniwind/metro");
 const { getDefaultConfig } = require("expo/metro-config");
 
 const config = getDefaultConfig(__dirname);
@@ -28,4 +27,4 @@ config.resolver = {
 
 config.watchFolders = [];
 
-module.exports = withUniwindConfig(config, { cssEntryFile: "./src/global.css" });
+module.exports = config;

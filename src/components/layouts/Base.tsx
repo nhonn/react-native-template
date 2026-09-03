@@ -1,16 +1,15 @@
+import { Button, Host, Icon, Text } from "@expo/ui";
 import { useRouter } from "expo-router";
-import { CaretLeft } from "phosphor-react-native/src/icons/CaretLeft";
 import { type FC, memo, useCallback } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Pressable } from "@/components/common/pressable";
-import { SafeAreaView } from "@/components/styled/safe-area-view";
-import { Text } from "@/components/ui/text";
-import { useThemeColors } from "@/theme/hooks/useTheme";
+import { useTheme, useThemeColors } from "@/theme/hooks/useTheme";
 import type { BaseLayoutProps } from "./types";
 
-const BackIcon = memo<{ color: string }>(({ color }) => {
-  return <CaretLeft color={color} size={24} />;
+const BACK_ICON = Icon.select({
+  ios: "chevron.left",
+  android: import("@expo/material-symbols/arrow_back.xml"),
 });
 
 const BaseLayoutComponent: FC<BaseLayoutProps> = ({
@@ -24,6 +23,7 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
 }) => {
   const router = useRouter();
   const colors = useThemeColors();
+  const { isDark } = useTheme();
 
   const handleBack = useCallback(() => {
     if (onBack) {
@@ -35,32 +35,33 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
         } else {
           router.replace("/");
         }
-      } catch (_) {
+      } catch {
         router.replace("/");
       }
     }
   }, [onBack, router]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={safeAreaEdges}>
-      <View className="flex-1 bg-surface-primary">
-        <View
-          className="w-full flex-row items-center justify-between p-3"
-          style={{ backgroundColor: colors.interactive.primary }}
-        >
-          <View className="max-w-[60%] flex-row items-center gap-2">
-            {showBack && (
-              <Pressable onPress={handleBack}>
-                <BackIcon color="white" />
-              </Pressable>
-            )}
-            <Text className="text-white uppercase" variant="h6">
-              {title}
-            </Text>
+    <SafeAreaView edges={safeAreaEdges} style={[styles.root, { backgroundColor: colors.background.primary }]}>
+      <View style={[styles.flex, { backgroundColor: colors.surface.primary }]}>
+        <View style={[styles.header, { backgroundColor: colors.interactive.primary }]}>
+          <View style={styles.headerLeft}>
+            {showBack ? (
+              <Host colorScheme={isDark ? "dark" : "light"} matchContents>
+                <Button onPress={handleBack} variant="text">
+                  <Icon color="#FFFFFF" name={BACK_ICON} size={24} />
+                </Button>
+              </Host>
+            ) : null}
+            {title ? (
+              <Host colorScheme={isDark ? "dark" : "light"} matchContents>
+                <Text textStyle={{ color: "#FFFFFF", fontSize: 16, fontWeight: "500" }}>{title}</Text>
+              </Host>
+            ) : null}
           </View>
           {callToAction}
         </View>
-        <View className="flex-1 bg-surface-primary p-3" style={contentContainerStyle}>
+        <View style={[styles.body, { backgroundColor: colors.surface.primary }, contentContainerStyle]}>
           {children}
         </View>
       </View>
@@ -68,9 +69,20 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
   );
 };
 
-export const BaseLayout = memo(BaseLayoutComponent);
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  flex: { flex: 1 },
+  header: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 12,
+  },
+  headerLeft: { maxWidth: "60%", flexDirection: "row", alignItems: "center", gap: 8 },
+  body: { flex: 1, padding: 12 },
+});
 
-BaseLayout.displayName = "BaseLayout";
-BackIcon.displayName = "BackIcon";
+export const BaseLayout = memo(BaseLayoutComponent);
 
 BaseLayout.displayName = "BaseLayout";

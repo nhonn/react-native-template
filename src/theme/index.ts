@@ -40,13 +40,6 @@ export { darkColorScheme } from "./themes/dark";
 export { lightColorScheme } from "./themes/light";
 // Types
 export type { ColorScheme, DeviceType, FontSize, TextSizePreference, Theme, ThemeConfig, ThemeMode } from "./types";
-// Utilities
-export {
-  createColorClasses,
-  createSpacingClasses,
-  createTypographyClasses,
-  createUtilityClasses,
-} from "./utils/createThemeClasses";
 // Typography utilities
 export {
   getDensityAwareFontSize,

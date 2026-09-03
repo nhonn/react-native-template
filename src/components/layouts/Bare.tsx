@@ -1,13 +1,20 @@
 import { type FC, memo } from "react";
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { SafeAreaView } from "@/components/styled/safe-area-view";
+import { useThemeColors } from "@/theme/hooks/useTheme";
 import type { BareLayoutProps } from "./types";
 
 const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerStyle, safeAreaEdges = ["top"] }) => {
+  const colors = useThemeColors();
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={safeAreaEdges}>
-      <View className="flex-1 bg-background px-4 py-2" style={contentContainerStyle}>
+    <SafeAreaView edges={safeAreaEdges} style={{ flex: 1, backgroundColor: colors.background.primary }}>
+      <View
+        style={[
+          { flex: 1, backgroundColor: colors.background.primary, paddingHorizontal: 16, paddingVertical: 8 },
+          contentContainerStyle,
+        ]}
+      >
         {children}
       </View>
     </SafeAreaView>

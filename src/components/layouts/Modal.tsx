@@ -1,33 +1,48 @@
+import { Button, Host, Icon, Text } from "@expo/ui";
 import { useRouter } from "expo-router";
-import { X } from "phosphor-react-native/src/icons/X";
 import { type FC, memo } from "react";
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Pressable } from "@/components/common/pressable";
-import { SafeAreaView } from "@/components/styled/safe-area-view";
-import { Text } from "@/components/ui/text";
+import { useTheme, useThemeColors } from "@/theme/hooks/useTheme";
 import type { ModalLayoutProps } from "./types";
+
+const CLOSE_ICON = Icon.select({
+  ios: "xmark",
+  android: import("@expo/material-symbols/close.xml"),
+});
 
 const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
   const router = useRouter();
+  const colors = useThemeColors();
+  const { isDark } = useTheme();
 
   const handleClose = () => {
     router.back();
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background px-4 py-2 pb-2 lg:px-8 lg:py-2">
-      <View className="flex-row items-center justify-between py-4">
-        <Text variant="h4">{title}</Text>
-        <Pressable
-          accessibilityLabel="Close"
-          accessibilityRole="button"
-          className="px-4"
-          hitSlop={12}
-          onPress={handleClose}
-        >
-          <X />
-        </Pressable>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.background.primary,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+      }}
+    >
+      <View
+        style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 16 }}
+      >
+        {title ? (
+          <Host colorScheme={isDark ? "dark" : "light"} matchContents>
+            <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{title}</Text>
+          </Host>
+        ) : null}
+        <Host colorScheme={isDark ? "dark" : "light"} matchContents>
+          <Button onPress={handleClose} variant="text">
+            <Icon name={CLOSE_ICON} size={24} />
+          </Button>
+        </Host>
       </View>
       {children}
     </SafeAreaView>

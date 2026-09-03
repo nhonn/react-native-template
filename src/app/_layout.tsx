@@ -16,7 +16,6 @@ import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
 import { initSentry } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
-import "../global.css";
 
 export const unstable_settings = {
   anchor: "(tabs)",
