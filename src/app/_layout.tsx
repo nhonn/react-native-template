@@ -1,5 +1,4 @@
 import { captureException, wrap } from "@sentry/react-native";
-import { useSegments } from "expo-router";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
 import { Stack } from "expo-router/stack";
 import { hideAsync } from "expo-splash-screen";
@@ -11,7 +10,6 @@ import "react-native-reanimated";
 import { initializeI18n } from "@/i18n";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
-import { getScreenNameFromSegments, shouldTrackScreenView, trackScreenView } from "@/utils/analytics";
 import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
 import { initSentry } from "@/utils/sentry";
@@ -21,24 +19,6 @@ export const unstable_settings = {
   anchor: "(tabs)",
 };
 
-function AnalyticsScreenTracker() {
-  const segments = useSegments();
-  const lastTrackedScreenRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    const screenName = getScreenNameFromSegments(segments);
-
-    if (!shouldTrackScreenView(lastTrackedScreenRef.current, screenName)) {
-      return;
-    }
-
-    lastTrackedScreenRef.current = screenName;
-    trackScreenView(screenName);
-  }, [segments]);
-
-  return null;
-}
-
 function AppContent() {
   const { isDark } = useTheme();
 
@@ -46,7 +26,6 @@ function AppContent() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MainProvider>
         <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-          <AnalyticsScreenTracker />
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(stacks)" options={{ headerShown: false }} />

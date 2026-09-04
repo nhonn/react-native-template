@@ -19,8 +19,6 @@
     "@expo/ui": "~57.0.15",
     "@legendapp/list": "^3.3.5",
     "@legendapp/state": "^2.1.15",
-    "@react-native-firebase/analytics": "^26.2.0",
-    "@react-native-firebase/app": "^26.2.0",
     "@sentry/react-native": "^8.23.0",
     "dayjs": "^1.11.21",
     "expo": "~57.0.12",

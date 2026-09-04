@@ -29,7 +29,6 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 - **State**: Zustand with MMKV persistence
 - **Forms**: React Hook Form + Valibot
 - **List rendering**: LegendList v3 utility wrapper
-- **Analytics**: Firebase Analytics / GA4 with Expo Router `screen_view` tracking
 - **Monetization**: RevenueCat utility
 - **Quality**: Oxlint + Oxfmt + Lefthook
 - **Testing**: Jest + React Native Testing Library (Expo preset)
@@ -46,7 +45,7 @@ src/
 ├── stores/             # App stores (settings, etc.)
 ├── theme/              # Theme system (tokens, hooks, store)
 ├── types/              # Shared TS types
-└── utils/              # Utilities (storage, logger, analytics, date, etc.)
+└── utils/              # Utilities (storage, logger, date, etc.)
 ```
 
 ## Getting Started
@@ -75,7 +74,7 @@ Development and production installs can sit side by side. `app.json` holds the p
 
 Local scripts (`start`, `ios`, `android`, `prebuild`) set `APP_VARIANT=development`. EAS profiles in `eas.json` set the same variable per build. Only the development build registers the generated `exp+<slug>` scheme so the Metro QR code opens the Dev app.
 
-Read the resolved variant at runtime with `Constants.expoConfig?.extra?.variant`. Register each identifier separately with Firebase, Sentry, and any other service keyed to bundle ID.
+Read the resolved variant at runtime with `Constants.expoConfig?.extra?.variant`. Register each identifier separately with Sentry, and any other service keyed to bundle ID.
 
 Switching a local native project to another variant:
 
@@ -127,19 +126,6 @@ export function ThemeExample() {
 ### Internationalization
 
 This template ships with English resources by default. Add more languages by extending `src/i18n/locales/*` and `resources` in `src/i18n/index.ts`.
-
-### Analytics
-
-Analytics is backed by Firebase Analytics / GA4 on native iOS and Android. Set up these files in your app root before building a development client:
-
-- `GoogleService-Info.plist`
-- `google-services.json`
-
-The template config points Expo at those files through `app.json`. You will need to replace them with files that match your bundle identifier and Android package before native builds will succeed.
-
-By default, the app tracks `screen_view` events with `screen_name` and `screen_class` derived from the current Expo Router route. Generic events are logged through the shared analytics utility with primitive GA4 properties only.
-
-`EXPO_PUBLIC_SENTRY_DSN` remains the only required analytics-related environment variable in `.env`.
 
 ### Subscriptions
 

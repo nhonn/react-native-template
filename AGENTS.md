@@ -13,7 +13,6 @@ This is an Expo (SDK 57) + Expo Router template. App code lives under `src/`. Th
 | Forms | React Hook Form |
 | Lists | `@/components/common/legend-list` (`@legendapp/list`) |
 | i18n | i18next + `react-i18next`, JSON namespaces under `src/i18n/locales` |
-| Analytics | Firebase Analytics via `@/utils/analytics` |
 | Errors | Sentry (`@/utils/sentry`) + local `ErrorBoundary` |
 | Subscriptions | RevenueCat (`@/utils/revenuecat`) |
 | Lint / format | Oxlint + Oxfmt; Lefthook runs format + `tsc` on commit |
@@ -47,10 +46,10 @@ src/
 ├── stores/                 # app observables (settings$)
 ├── theme/                  # tokens, hooks, theme store, light/dark schemes
 ├── types/                  # shared TS types
-└── utils/                  # storage, logger, analytics, sentry, persist plugin, …
+└── utils/                  # storage, logger, sentry, persist plugin, …
 ```
 
-Config and native identity stay at the repo root: `app.json`, `app.config.ts`, `eas.json`, `package.json`, Firebase plists/json, `patches/`. Generated `ios/` and `android/` are prebuild output.
+Config and native identity stay at the repo root: `app.json`, `app.config.ts`, `eas.json`, `package.json`, `patches/`. Generated `ios/` and `android/` are prebuild output.
 
 ### Placement rules
 
@@ -208,10 +207,9 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ---
 
-## i18n, analytics, errors
+## i18n, errors
 
 - User-visible copy goes through `useTranslation("<namespace>")` and keys in `src/i18n/locales/en/*.json`. Add a language by adding `locales/<code>/` and registering it in `src/i18n/index.ts`.
-- Screen views are tracked in root `_layout` from `useSegments`. New routes should remain compatible with `getScreenNameFromSegments` in `@/utils/analytics`. Custom events: primitive GA4 properties only, via that util.
 - Log with `@/utils/logger`. Report unexpected failures with Sentry (`captureException`) after `initSentry()` (already in root init).
 - Init order is owned by `src/app/_layout.tsx` (`initSentry` → splash → `initializeI18n` + `initializeRevenueCat`). Do not add competing startup effects in random screens.
 
@@ -248,7 +246,7 @@ chore: replace Biome with Oxlint and Oxfmt
 ### What to put in a commit
 
 - One logical change per commit. Do not mix a feature with unrelated dependency churn.
-- Do not commit secrets, `.env`, or someone else’s `GoogleService-Info.plist` / `google-services.json` as if they were the template’s placeholders without being asked.
+- Do not commit secrets or `.env` as if they were the template’s placeholders without being asked.
 - Do not commit `node_modules/`. Treat `ios/` and `android/` as prebuild output unless the task is explicitly about native projects.
 - Do not use `git commit --no-verify` to skip format/typecheck unless the user explicitly asks.
 - Do not amend or force-push unless the user asks.
