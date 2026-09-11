@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface UseThrottleOptions {
   delay: number;
@@ -63,33 +63,30 @@ export function useThrottleCallback<T extends (...args: unknown[]) => unknown>(
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastCallArgsRef = useRef<Parameters<T> | null>(null);
 
-  const throttledCallback = useCallback(
-    (...args: Parameters<T>) => {
-      const now = Date.now();
-      const timeSinceLastCall = now - lastCallTimeRef.current;
+  const throttledCallback = ((...args: Parameters<T>) => {
+    const now = Date.now();
+    const timeSinceLastCall = now - lastCallTimeRef.current;
 
-      // Store the latest arguments for trailing call
-      lastCallArgsRef.current = args;
+    // Store the latest arguments for trailing call
+    lastCallArgsRef.current = args;
 
-      // If leading is true and enough time has passed, call immediately
-      if (leading && timeSinceLastCall >= delay) {
-        lastCallTimeRef.current = now;
-        callback(...args);
-      } else if (trailing && timeoutRef.current === null) {
-        // Schedule trailing call
-        const remainingTime = delay - timeSinceLastCall;
-        timeoutRef.current = setTimeout(() => {
-          if (lastCallArgsRef.current) {
-            lastCallTimeRef.current = Date.now();
-            callback(...lastCallArgsRef.current);
-            lastCallArgsRef.current = null;
-          }
-          timeoutRef.current = null;
-        }, remainingTime);
-      }
-    },
-    [callback, delay, leading, trailing],
-  ) as T;
+    // If leading is true and enough time has passed, call immediately
+    if (leading && timeSinceLastCall >= delay) {
+      lastCallTimeRef.current = now;
+      callback(...args);
+    } else if (trailing && timeoutRef.current === null) {
+      // Schedule trailing call
+      const remainingTime = delay - timeSinceLastCall;
+      timeoutRef.current = setTimeout(() => {
+        if (lastCallArgsRef.current) {
+          lastCallTimeRef.current = Date.now();
+          callback(...lastCallArgsRef.current);
+          lastCallArgsRef.current = null;
+        }
+        timeoutRef.current = null;
+      }, remainingTime);
+    }
+  }) as T;
 
   // Cleanup on unmount
   useEffect(() => {

@@ -1,5 +1,5 @@
-import { resetToTabs } from "@/navigation";
-import { Component, type ErrorInfo, type FC, memo, type ReactNode } from "react";
+import { resetToTabs } from "@/navigation/navigation-ref";
+import { Component, type ErrorInfo, type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -23,7 +23,7 @@ interface ErrorFallbackProps {
   onGoHome: () => void;
 }
 
-const ErrorFallback: FC<ErrorFallbackProps> = memo(({ onReset, onGoHome }) => {
+const ErrorFallback: FC<ErrorFallbackProps> = ({ onReset, onGoHome }) => {
   const { t } = useTranslation("error_boundary");
 
   return (
@@ -54,7 +54,7 @@ const ErrorFallback: FC<ErrorFallbackProps> = memo(({ onReset, onGoHome }) => {
       </ScrollView>
     </View>
   );
-});
+};
 
 ErrorFallback.displayName = "ErrorFallback";
 

@@ -1,6 +1,6 @@
 import { Button, Host, Icon, Text } from "@expo/ui";
 import { useNavigation } from "@react-navigation/native";
-import { type FC, memo } from "react";
+import type { FC } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,7 +12,7 @@ const CLOSE_ICON = Icon.select({
   android: import("@expo/material-symbols/close.xml"),
 });
 
-const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
+export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
   const navigation = useNavigation();
   const colors = useThemeColors();
   const { isDark } = useTheme();
@@ -48,7 +48,5 @@ const ModalLayoutComponent: FC<ModalLayoutProps> = ({ title, children }) => {
     </SafeAreaView>
   );
 };
-
-export const ModalLayout = memo(ModalLayoutComponent);
 
 ModalLayout.displayName = "ModalLayout";

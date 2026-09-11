@@ -1,8 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNavigationContainerRef, type LinkingOptions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Host, Icon } from "@expo/ui";
-import * as Linking from "expo-linking";
 
 import { ModalOneScreen } from "@/screens/modal-one";
 import { NotFoundScreen } from "@/screens/not-found";
@@ -12,31 +10,6 @@ import { TabTwoScreen } from "@/screens/tab-two";
 import { useTheme } from "@/theme/hooks/useTheme";
 
 import type { RootStackParamList, TabsParamList } from "./types";
-
-export const navigationRef = createNavigationContainerRef<RootStackParamList>();
-
-export function resetToTabs() {
-  if (!navigationRef.isReady()) return;
-  navigationRef.reset({ index: 0, routes: [{ name: "Tabs" }] });
-}
-
-export const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.createURL("/"), "mytemplateproject://"],
-  config: {
-    screens: {
-      Tabs: {
-        path: "",
-        screens: {
-          Home: "",
-          Tab2: "tab2",
-        },
-      },
-      Stack1: "stack1",
-      Modal1: "modal1",
-      NotFound: "*",
-    },
-  },
-};
 
 const HOME_ICON = Icon.select({
   ios: "house",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface UseDebounceOptions {
   delay: number;
@@ -45,39 +45,36 @@ export function useDebounceCallback<T extends (...args: unknown[]) => unknown>(
   const lastCallTimeRef = useRef<number>(0);
   const lastCallArgsRef = useRef<Parameters<T> | null>(null);
 
-  const debouncedCallback = useCallback(
-    (...args: Parameters<T>) => {
-      const now = Date.now();
-      const timeSinceLastCall = now - lastCallTimeRef.current;
+  const debouncedCallback = ((...args: Parameters<T>) => {
+    const now = Date.now();
+    const timeSinceLastCall = now - lastCallTimeRef.current;
 
-      // Store the latest arguments
-      lastCallArgsRef.current = args;
+    // Store the latest arguments
+    lastCallArgsRef.current = args;
 
-      // If leading is true and this is the first call or enough time has passed
-      if (leading && (timeoutRef.current === null || timeSinceLastCall >= delay)) {
-        lastCallTimeRef.current = now;
-        callback(...args);
-      }
+    // If leading is true and this is the first call or enough time has passed
+    if (leading && (timeoutRef.current === null || timeSinceLastCall >= delay)) {
+      lastCallTimeRef.current = now;
+      callback(...args);
+    }
 
-      // Clear existing timeout
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
 
-      // Set new timeout for trailing call
-      if (trailing) {
-        timeoutRef.current = setTimeout(() => {
-          if (lastCallArgsRef.current) {
-            lastCallTimeRef.current = Date.now();
-            callback(...lastCallArgsRef.current);
-            lastCallArgsRef.current = null;
-          }
-          timeoutRef.current = null;
-        }, delay);
-      }
-    },
-    [callback, delay, leading, trailing],
-  ) as T;
+    // Set new timeout for trailing call
+    if (trailing) {
+      timeoutRef.current = setTimeout(() => {
+        if (lastCallArgsRef.current) {
+          lastCallTimeRef.current = Date.now();
+          callback(...lastCallArgsRef.current);
+          lastCallArgsRef.current = null;
+        }
+        timeoutRef.current = null;
+      }, delay);
+    }
+  }) as T;
 
   // Cleanup on unmount
   useEffect(() => {

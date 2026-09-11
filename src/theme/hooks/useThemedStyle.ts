@@ -3,7 +3,6 @@
  * Hook for creating styles that respond to theme changes
  */
 
-import { useCallback } from "react";
 import { StyleSheet } from "react-native";
 
 import { useThemeStore } from "../stores/useThemeStore";
@@ -18,11 +17,8 @@ type StyleFunction<T = Record<string, unknown>> = (theme: Theme) => T;
  */
 export function useThemedStyle<T = Record<string, unknown>>(styleFn: StyleFunction<T>) {
   const theme = useThemeStore((state) => state.theme);
-
-  return useCallback(() => {
-    const styles = styleFn(theme);
-    return StyleSheet.create(styles as Record<string, any>);
-  }, [theme, styleFn])();
+  const styles = styleFn(theme);
+  return StyleSheet.create(styles as Record<string, any>);
 }
 
 /**
@@ -32,6 +28,5 @@ export function useThemedStyle<T = Record<string, unknown>>(styleFn: StyleFuncti
  */
 export function useThemedValue<T>(styleFn: StyleFunction<T>) {
   const theme = useThemeStore((state) => state.theme);
-
-  return useCallback(() => styleFn(theme), [theme, styleFn])();
+  return styleFn(theme);
 }

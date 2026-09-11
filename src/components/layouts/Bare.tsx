@@ -1,11 +1,11 @@
-import { type FC, memo } from "react";
+import type { FC } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useThemeColors } from "@/theme/hooks/useTheme";
 import type { BareLayoutProps } from "./types";
 
-const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerStyle, safeAreaEdges = ["top"] }) => {
+export const BareLayout: FC<BareLayoutProps> = ({ children, contentContainerStyle, safeAreaEdges = ["top"] }) => {
   const colors = useThemeColors();
   return (
     <SafeAreaView edges={safeAreaEdges} style={{ flex: 1, backgroundColor: colors.background.primary }}>
@@ -20,7 +20,5 @@ const BareLayoutComponent: FC<BareLayoutProps> = ({ children, contentContainerSt
     </SafeAreaView>
   );
 };
-
-export const BareLayout = memo(BareLayoutComponent);
 
 BareLayout.displayName = "BareLayout";

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { resetToTabs } from "@/navigation";
+import { resetToTabs } from "@/navigation/navigation-ref";
 
 export function NotFoundScreen() {
   return (

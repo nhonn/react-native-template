@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { PixelRatio } from "react-native";
 
 import { useSettingsStore } from "@/stores/settings";
@@ -60,39 +59,21 @@ export const useResponsiveTypography = () => {
   const pixelRatio = PixelRatio.get();
   const textSizePreference = useSettingsStore((state) => state.textSizePreference);
 
-  const getAdjustedFontSize = useCallback(
-    (size: FontSize) => applyTextSizePreference(size, textSizePreference),
-    [textSizePreference],
-  );
+  const getAdjustedFontSize = (size: FontSize) => applyTextSizePreference(size, textSizePreference);
 
-  const getPreferredResponsiveFontSize = useCallback(
-    (size: FontSize) => getResponsiveFontSize(getAdjustedFontSize(size)),
-    [getAdjustedFontSize],
-  );
+  const getPreferredResponsiveFontSize = (size: FontSize) => getResponsiveFontSize(getAdjustedFontSize(size));
 
-  const getPreferredResponsiveLineHeight = useCallback(
-    (size: FontSize) => getResponsiveLineHeight(getAdjustedFontSize(size)),
-    [getAdjustedFontSize],
-  );
+  const getPreferredResponsiveLineHeight = (size: FontSize) => getResponsiveLineHeight(getAdjustedFontSize(size));
 
-  const getPreferredTypographyStyle = useCallback(
-    (size: FontSize) => getTypographyStyle(getAdjustedFontSize(size)),
-    [getAdjustedFontSize],
-  );
+  const getPreferredTypographyStyle = (size: FontSize) => getTypographyStyle(getAdjustedFontSize(size));
 
-  const getPreferredResponsiveTextClass = useCallback(
-    (size: FontSize) => getResponsiveTextClass(getAdjustedFontSize(size)),
-    [getAdjustedFontSize],
-  );
+  const getPreferredResponsiveTextClass = (size: FontSize) => getResponsiveTextClass(getAdjustedFontSize(size));
 
-  const getPreferredTypographyPreset = useCallback(
-    (preset: keyof typeof TYPOGRAPHY_PRESETS) => {
-      const config = TYPOGRAPHY_PRESETS[preset];
-      const responsiveSize = getPreferredResponsiveTextClass(config.size);
-      return `${responsiveSize} ${config.weight} ${config.contrast}`;
-    },
-    [getPreferredResponsiveTextClass],
-  );
+  const getPreferredTypographyPreset = (preset: keyof typeof TYPOGRAPHY_PRESETS) => {
+    const config = TYPOGRAPHY_PRESETS[preset];
+    const responsiveSize = getPreferredResponsiveTextClass(config.size);
+    return `${responsiveSize} ${config.weight} ${config.contrast}`;
+  };
 
   return {
     deviceType,

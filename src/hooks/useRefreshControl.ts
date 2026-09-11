@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InteractionManager } from "react-native";
 
 import { logger } from "@/utils/logger";
@@ -39,7 +39,7 @@ export const useRefreshControl = ({
   }, []);
 
   // Handle refresh with proper state management
-  const handleRefresh = useCallback(async () => {
+  const handleRefresh = async () => {
     if (!(enabled && isMounted.current)) {
       return;
     }
@@ -62,13 +62,12 @@ export const useRefreshControl = ({
       }
     } catch (error) {
       logger.warn("Refresh failed:", error);
-    } finally {
-      // Ensure we're still mounted before updating state
-      if (isMounted.current) {
-        setRefreshing(false);
-      }
     }
-  }, [onRefresh, enabled, delay]);
+    // Ensure we're still mounted before updating state
+    if (isMounted.current) {
+      setRefreshing(false);
+    }
+  };
 
   return {
     refreshing,

@@ -7,7 +7,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
 import { initializeI18n } from "@/i18n";
-import { linking, navigationRef, RootStack } from "@/navigation";
+import { RootStack } from "@/navigation";
+import { linking } from "@/navigation/linking";
+import { navigationRef } from "@/navigation/navigation-ref";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
 import { logger } from "@/utils/logger";
@@ -48,10 +50,9 @@ function App() {
       } catch (error) {
         logger.error("Root initialization failed:", error);
         captureException(error);
-      } finally {
-        setReady(true);
-        await hideAsync();
       }
+      setReady(true);
+      await hideAsync();
     })();
   }, []);
 

@@ -1,10 +1,10 @@
 import { Button, Host, Icon, Text } from "@expo/ui";
 import { useNavigation } from "@react-navigation/native";
-import { type FC, memo, useCallback } from "react";
+import type { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { resetToTabs } from "@/navigation";
+import { resetToTabs } from "@/navigation/navigation-ref";
 import { useTheme, useThemeColors } from "@/theme/hooks/useTheme";
 import type { BaseLayoutProps } from "./types";
 
@@ -13,7 +13,7 @@ const BACK_ICON = Icon.select({
   android: import("@expo/material-symbols/arrow_back.xml"),
 });
 
-const BaseLayoutComponent: FC<BaseLayoutProps> = ({
+export const BaseLayout: FC<BaseLayoutProps> = ({
   title,
   showBack = true,
   onBack,
@@ -26,7 +26,7 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
   const colors = useThemeColors();
   const { isDark } = useTheme();
 
-  const handleBack = useCallback(() => {
+  const handleBack = () => {
     if (onBack) {
       onBack();
     } else if (navigation.canGoBack()) {
@@ -34,7 +34,7 @@ const BaseLayoutComponent: FC<BaseLayoutProps> = ({
     } else {
       resetToTabs();
     }
-  }, [navigation, onBack]);
+  };
 
   return (
     <SafeAreaView edges={safeAreaEdges} style={[styles.root, { backgroundColor: colors.background.primary }]}>
@@ -77,7 +77,5 @@ const styles = StyleSheet.create({
   headerLeft: { maxWidth: "60%", flexDirection: "row", alignItems: "center", gap: 8 },
   body: { flex: 1, padding: 12 },
 });
-
-export const BaseLayout = memo(BaseLayoutComponent);
 
 BaseLayout.displayName = "BaseLayout";
