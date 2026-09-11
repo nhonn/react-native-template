@@ -6,6 +6,9 @@
     "orientation": "default",
     "scheme": "mytemplateproject",
     "userInterfaceStyle": "automatic",
+    "experiments": {
+      "reactCompiler": true
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
@@ -39,7 +42,8 @@
           "project": "my-template-project",
           "organization": "my-template-project"
         }
-      ]
+      ],
+      "@rnrepo/expo-config-plugin"
     ]
   }
 }
