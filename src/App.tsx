@@ -1,6 +1,5 @@
 import { captureException, wrap } from "@sentry/react-native";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router/react-navigation";
-import { Stack } from "expo-router/stack";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { hideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
 import { initializeI18n } from "@/i18n";
+import { linking, navigationRef, RootStack } from "@/navigation";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
 import { logger } from "@/utils/logger";
@@ -15,31 +15,22 @@ import { initializeRevenueCat } from "@/utils/revenuecat";
 import { initSentry } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
 
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
-
 function AppContent() {
   const { isDark } = useTheme();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MainProvider>
-        <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
-            <Stack.Screen name="(modals)" options={{ headerShown: false, presentation: "modal" }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+        <NavigationContainer ref={navigationRef} theme={isDark ? DarkTheme : DefaultTheme} linking={linking}>
+          <RootStack />
           <StatusBar style="auto" />
-        </ThemeProvider>
+        </NavigationContainer>
       </MainProvider>
     </GestureHandlerRootView>
   );
 }
 
-function RootLayout() {
+function App() {
   const [ready, setReady] = useState(false);
   const didInitRef = useRef(false);
 
@@ -71,4 +62,4 @@ function RootLayout() {
   return <AppContent />;
 }
 
-export default wrap(RootLayout);
+export default wrap(App);

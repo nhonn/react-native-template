@@ -1,14 +1,14 @@
 # Agent instructions
 
-This is an Expo (SDK 57) + Expo Router template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **Bun**. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
+This is an Expo (SDK 57) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **Bun**. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
 
 ## Stack (do not swap without being asked)
 
 | UI | `@expo/ui` universal. Import from `@expo/ui`. Every `@expo/ui` tree sits in `Host`. |
 | Styling | `@expo/ui` `style` / `textStyle` on native trees. RN leftovers: `StyleSheet` + `useThemeColors()`. Never `className`, Tailwind, or Uniwind. |
 | Icons | `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-symbol>", android: import("@expo/material-symbols/<name>.xml") })`. Never Phosphor. |
-| Navigation | Expo Router file routes in `src/app` |
-| Screen bodies | `src/screens/*`, imported by route files |
+| Navigation | React Navigation 7 (`@react-navigation/native-stack` + `@react-navigation/bottom-tabs`) in `src/navigation` |
+| Screen bodies | `src/screens/*`, imported by navigators |
 | State | Legend State (`@legendapp/state`) + MMKV persist |
 | Forms | React Hook Form |
 | Lists | `@/components/common/legend-list` (`@legendapp/list`) |
@@ -25,18 +25,16 @@ Do not add Zustand, Recoil, Redux, or a second UI kit. Do not add a UI provider.
 
 ```
 src/
-├── app/                    # Expo Router ONLY — every file is a route or layout
-│   ├── _layout.tsx         # root Stack: (tabs), (stacks), (modals)
-│   ├── +not-found.tsx
-│   ├── (tabs)/             # NativeTabs; anchor is (home)
-│   │   ├── _layout.tsx
-│   │   ├── (home)/         # tab 1 group
-│   │   └── tab2/
-│   ├── (stacks)/           # push stacks, header hidden at root
-│   └── (modals)/           # presentation: modal
-├── screens/                # screen UI rendered by route files
+├── App.tsx                 # init + NavigationContainer host
+├── navigation/             # navigators, linking, param lists
+│   ├── index.tsx
+│   └── types.ts
+├── screens/                # screen UI rendered by navigators
 │   ├── tab-one/
-│   └── tab-two/
+│   ├── tab-two/
+│   ├── stack-one/
+│   ├── modal-one/
+│   └── not-found/
 ├── components/
 │   ├── common/             # shared primitives (pressable, error-boundary, legend-list)
 │   └── layouts/            # Layout.Base / Bare / Modal
@@ -49,36 +47,26 @@ src/
 └── utils/                  # storage, logger, sentry, persist plugin, …
 ```
 
-Config and native identity stay at the repo root: `app.json`, `app.config.ts`, `eas.json`, `package.json`, `patches/`. Generated `ios/` and `android/` are prebuild output.
+Config, root entry (`index.ts`), and native identity stay at the repo root: `app.json`, `app.config.ts`, `eas.json`, `package.json`, `patches/`. Generated `ios/` and `android/` are prebuild output.
 
 ### Placement rules
 
-| Kind of file                           | Put it here                                                                   |
-| -------------------------------------- | ----------------------------------------------------------------------------- |
-| Route, `_layout`, `+not-found`, `+api` | `src/app/…` and nowhere else                                                  |
-| Screen body (the UI a route renders)   | `src/screens/<kebab-name>/`                                                   |
-| UI reused by more than one screen      | `src/components/…`                                                            |
-| Native control                         | Import from `@expo/ui` in the screen/layout. Do not add `src/components/ui/`. |
-| UI used by only one screen             | Colocate under that screen folder                                             |
-| App-wide hook                          | `src/hooks/`                                                                  |
-| Theme token / theme hook               | `src/theme/` (not `src/hooks`)                                                |
-| Cross-screen persisted state           | `src/stores/`                                                                 |
-| Theme mode / colors                    | `src/theme/stores/`                                                           |
-| String the user sees                   | `src/i18n/locales/<lang>/<ns>.json` + `t()`                                   |
-| One-off helper                         | `src/utils/`                                                                  |
-| Provider that must wrap the tree       | `src/providers/` — compose into `MainProvider`                                |
+| Kind of file                         | Put it here                                                                   |
+| ------------------------------------ | ----------------------------------------------------------------------------- |
+| Navigator, linking, param lists      | `src/navigation/`                                                             |
+| Screen body (the UI a route renders) | `src/screens/<kebab-name>/`                                                   |
+| UI reused by more than one screen    | `src/components/…`                                                            |
+| Native control                       | Import from `@expo/ui` in the screen/layout. Do not add `src/components/ui/`. |
+| UI used by only one screen           | Colocate under that screen folder                                             |
+| App-wide hook                        | `src/hooks/`                                                                  |
+| Theme token / theme hook             | `src/theme/` (not `src/hooks`)                                                |
+| Cross-screen persisted state         | `src/stores/`                                                                 |
+| Theme mode / colors                  | `src/theme/stores/`                                                           |
+| String the user sees                 | `src/i18n/locales/<lang>/<ns>.json` + `t()`                                   |
+| One-off helper                       | `src/utils/`                                                                  |
+| Provider that must wrap the tree     | `src/providers/` — compose into `MainProvider`                                |
 
-`src/app` is routes-only. Route files stay thin:
-
-```tsx
-import { TabOneScreen } from "@/screens/tab-one";
-
-export default function TabOneRoute() {
-  return <TabOneScreen />;
-}
-```
-
-Read params, `useLocalSearchParams`, and navigation options in the route file when they are route concerns. Keep layout, lists, and feature UI in `screens/`.
+Navigators live in `src/navigation`; screen UI lives in `src/screens`. Read params with `useRoute` / typed `RouteProp` in the screen or a thin wrapper in the navigator, not in screen chrome. Keep layout, lists, and feature UI in `screens/`.
 
 ### File naming
 
@@ -88,7 +76,7 @@ Read params, `useLocalSearchParams`, and navigation options in the route file wh
 - Platform splits: `name.ios.tsx` / `name.android.tsx` / `name.web.tsx` plus a default `name.tsx`. Same public props on every variant.
 - Tests: colocate `__tests__/` next to the module (existing pattern in `components/common`, `hooks`, `utils`).
 
-Do not introduce `src/features/`, `src/lib/`, or flatten screens into `app/`.
+Do not introduce `src/features/`, `src/lib/`, or put screen UI in `src/navigation` or the repo root.
 
 ---
 
@@ -121,9 +109,9 @@ Do not introduce `src/features/`, `src/lib/`, or flatten screens into `app/`.
 </>
 ```
 
-- Full-screen flows stay Expo Router `src/app/(modals)/`. Sheets use universal `BottomSheet`, not Gorhom, not `@expo/ui/community/bottom-sheet`.
+- Full-screen flows are root stack screens with `presentation: "modal"` in `src/navigation`. Sheets use universal `BottomSheet`, not Gorhom, not `@expo/ui/community/bottom-sheet`.
 - Do not add `@gorhom/bottom-sheet`, `@react-native-community/datetimepicker`, `@react-native-community/slider`, `@react-native-picker/picker`, `@react-native-menu/menu`, `react-native-pager-view`, `@react-native-segmented-control/segmented-control`, `@react-native-masked-view/masked-view`. Universal `@expo/ui` first; `@expo/ui/community/<kebab-name>` only when migrating an existing community API.
-- Universal first. Platform-specific `@expo/ui/swift-ui` / `jetpack-compose` only when universal lacks the control; isolate in `src/components/**/*.ios.tsx` / `*.android.tsx` (never under `src/app/`).
+- Universal first. Platform-specific `@expo/ui/swift-ui` / `jetpack-compose` only when universal lacks the control; isolate in `src/components/**/*.ios.tsx` / `*.android.tsx` (never under `src/navigation/`).
 - `Button` uses `label` + `variant`: `"filled"` | `"outlined"` | `"text"`. `Switch`/`Checkbox` use `value` + `onValueChange`. Controlled `TextInput` uses `useNativeState`, not a string `value`.
 - `@expo/ui` `List` is not for large datasets — keep `@/components/common/legend-list`.
 - Do not wrap `@expo/ui` in a local kit. Do not add HeroUI/NativeBase/another kit. Do not add a UI provider. Do not add Tailwind, Uniwind, or `className`.
@@ -151,10 +139,10 @@ Icons: `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-sy
 
 ### Layouts and navigation
 
-- Tabs: `NativeTabs` in `src/app/(tabs)/_layout.tsx`. New tabs are a folder + `Trigger`.
-- Push flows: `src/app/(stacks)/`.
-- Modals: `src/app/(modals)/` (root stack already sets `presentation: "modal"`).
-- Root `unstable_settings.anchor` is `(tabs)`; tabs anchor is `(home)`.
+- Tabs: `createBottomTabNavigator` in `src/navigation/index.tsx`. New tabs are a `Tab.Screen`.
+- Push flows: another `Stack.Screen` on the root native stack.
+- Modals: root `Stack.Screen` with `presentation: "modal"`.
+- Initial route is `Tabs` / `Home`.
 - Use `Layout.Base` for stack screens that need a title/back; `Layout.Modal` for modal chrome; `Layout.Bare` when the screen owns the whole frame.
 
 ---
@@ -195,7 +183,7 @@ Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider
 | Server/async cache, lists from network              | Keep fetch close to the screen or a dedicated store; do not dump into `settings$` |
 | Form field state                                    | React Hook Form, local to the screen                                              |
 | Transient UI (open sheet, selected tab in a screen) | `useState` / `useReducer` in that component                                       |
-| URL / navigation state                              | Expo Router params and segments                                                   |
+| URL / navigation state                              | React Navigation route names and params                                           |
 
 Do not persist derived data, functions, or React nodes. Do not create a new MMKV instance per store — reuse the persist plugin / `storage` helper.
 
@@ -211,7 +199,7 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 - User-visible copy goes through `useTranslation("<namespace>")` and keys in `src/i18n/locales/en/*.json`. Add a language by adding `locales/<code>/` and registering it in `src/i18n/index.ts`.
 - Log with `@/utils/logger`. Report unexpected failures with Sentry (`captureException`) after `initSentry()` (already in root init).
-- Init order is owned by `src/app/_layout.tsx` (`initSentry` → splash → `initializeI18n` + `initializeRevenueCat`). Do not add competing startup effects in random screens.
+- Init order is owned by `src/App.tsx` (`initSentry` → splash → `initializeI18n` + `initializeRevenueCat`). Do not add competing startup effects in random screens.
 
 ---
 
@@ -256,8 +244,7 @@ chore: replace Biome with Oxlint and Oxfmt
 ## Implementation defaults
 
 - TypeScript strict: no `any`, no unchecked empties; use `unknown` in `catch`.
-- Named exports for screens and components; route files use `export default` (Expo Router).
-- Keep route files thin; keep providers centralized.
+- Named exports for screens, components, and navigators. Root `App` is the default export (Sentry `wrap`) for `registerRootComponent`.
 - Prefer editing existing stores/utils over adding parallel ones.
 - Do not add markdown/docs the user did not ask for.
 - Do not restructure the tree to match a generic Expo tutorial.

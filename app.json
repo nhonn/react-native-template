@@ -19,7 +19,6 @@
       "version": "1.0.0"
     },
     "plugins": [
-      "expo-router",
       ["expo-splash-screen"],
       "expo-image",
       "expo-status-bar",
@@ -41,9 +40,6 @@
           "organization": "my-template-project"
         }
       ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }
