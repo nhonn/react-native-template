@@ -88,3 +88,6 @@ android
 e2e/results/
 .trae
 coverage
+
+# ZCode agent files
+.zcode/
