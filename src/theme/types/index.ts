@@ -95,15 +95,4 @@ export interface Theme {
 export interface ThemeConfig {
   defaultMode?: ThemeMode;
   followSystemTheme?: boolean;
-  persistTheme?: boolean;
-}
-
-// Theme context value
-export interface ThemeContextValue {
-  theme: Theme;
-  mode: ThemeMode;
-  isDark: boolean;
-  setMode: (mode: ThemeMode) => void;
-  toggleMode: () => void;
-  resetMode: () => void;
 }

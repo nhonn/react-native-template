@@ -1,8 +1,30 @@
 {
   "tab1": {
-    "title": "Tab 1"
+    "title": "Tab 1",
+    "subtitle": "A native @expo/ui tree inside Host.",
+    "darkMode": "Dark mode",
+    "cardTitle": "Unistyles card",
+    "cardBody": "This RN view restyles automatically when the mode changes."
   },
   "tab2": {
-    "title": "Tab 2"
+    "title": "Tab 2",
+    "subtitle": "LegendList with pull-to-refresh.",
+    "item": "Item {{index}}"
+  },
+  "stack1": {
+    "title": "Stack 1",
+    "subtitle": "Pushed onto the root stack with Layout.Base chrome.",
+    "increment": "Increment",
+    "counter": "Count: {{count}}",
+    "openModal": "Open modal"
+  },
+  "modal1": {
+    "title": "Modal 1",
+    "subtitle": "Presented as a modal with Layout.Modal chrome.",
+    "openSheet": "Open bottom sheet",
+    "sheet": {
+      "title": "Bottom sheet",
+      "body": "The universal BottomSheet is a sibling of Host, not nested in it."
+    }
   }
 }

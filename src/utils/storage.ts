@@ -129,12 +129,6 @@ export const StorageKeys = {
   // User preferences
   NOTIFICATIONS_ENABLED: "notificationsEnabled",
   BIOMETRIC_ENABLED: "biometricEnabled",
-
-  // Persistence keys
-  QR_WALLET_HISTORY: "qr-wallet-history",
-  QR_WALLET_SETTINGS: "qr-wallet-settings",
-  QR_WALLET_PREFERENCES: "qr-wallet-preferences",
-  QR_WALLET_SEARCH: "qr-wallet-search",
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];

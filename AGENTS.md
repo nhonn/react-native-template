@@ -1,6 +1,6 @@
 # Agent instructions
 
-This is an Expo (SDK 57) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **Bun**. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
+This is an Expo (SDK 57) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **pnpm**. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
 
 ## Stack (do not swap without being asked)
 
@@ -74,7 +74,6 @@ Navigators live in `src/navigation`; screen UI lives in `src/screens`. Read para
 - Hooks: `useX.ts` (camelCase after `use`).
 - Stores: observable `foo$` in `src/stores/foo.ts`; hook export `useFooStore`.
 - Platform splits: `name.ios.tsx` / `name.android.tsx` / `name.web.tsx` plus a default `name.tsx`. Same public props on every variant.
-- Tests: colocate `__tests__/` next to the module (existing pattern in `components/common`, `hooks`, `utils`).
 
 Do not introduce `src/features/`, `src/lib/`, or put screen UI in `src/navigation` or the repo root.
 
@@ -225,7 +224,7 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ## Git commits
 
-Lefthook **pre-commit** runs `oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` and `bun run typecheck` before you commit when you touched types or many files.
+Lefthook **pre-commit** runs `oxfmt --write` (auto-stages fixes) and `pnpm run typecheck`. A commit that fails `tsc` will be rejected. Run `pnpm run lint` and `pnpm run typecheck` before you commit when you touched types or many files.
 
 ### Message format
 

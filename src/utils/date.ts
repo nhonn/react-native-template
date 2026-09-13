@@ -4,6 +4,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { getI18nInstance } from "@/i18n";
+import { useSettingsStore } from "@/stores/settings";
 import type { DateInput, SupportedLocale, TranslationFunction } from "@/types/date";
 import { logger } from "@/utils/logger";
 
@@ -42,8 +43,7 @@ const getLocale = (lang?: string): SupportedLocale => {
 };
 
 const getUserDateFormat = (): string => {
-  // TODO: Get from user settings store when available
-  return "DD/MM/YYYY";
+  return useSettingsStore.getState().dateFormat;
 };
 
 const getUserDateFnsFormat = (userFormat?: string): string => {
@@ -104,7 +104,7 @@ export const formatRelativeDate = (timestamp: DateInput, t?: TranslationFunction
       return formatDate(date, DateFormats.TIME, lang);
     }
     if (diffInDays === 1) {
-      return translate("history:yesterday");
+      return translate("date:yesterday");
     }
     if (diffInDays < 7) {
       return formatDate(date, "dddd", lang);

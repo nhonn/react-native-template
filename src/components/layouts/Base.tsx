@@ -24,7 +24,7 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   callToAction,
 }) => {
   const navigation = useNavigation();
-  const { isDark } = useTheme();
+  const { isDark, theme } = useTheme();
 
   const handleBack = () => {
     if (onBack) {
@@ -44,13 +44,13 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
             {showBack ? (
               <Host colorScheme={isDark ? "dark" : "light"} matchContents>
                 <Button onPress={handleBack} variant="text">
-                  <Icon color="#FFFFFF" name={BACK_ICON} size={24} />
+                  <Icon color={theme.colors.text.inverse} name={BACK_ICON} size={24} />
                 </Button>
               </Host>
             ) : null}
             {title ? (
               <Host colorScheme={isDark ? "dark" : "light"} matchContents>
-                <Text textStyle={{ color: "#FFFFFF", fontSize: 16, fontWeight: "500" }}>{title}</Text>
+                <Text textStyle={{ color: theme.colors.text.inverse, fontSize: 16, fontWeight: "500" }}>{title}</Text>
               </Host>
             ) : null}
           </View>

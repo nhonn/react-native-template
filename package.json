@@ -9,8 +9,8 @@
     "ios": "expo run:ios",
     "lint": "oxlint --fix .",
     "typecheck": "tsc --noEmit",
-    "prebuild": "bunx expo prebuild --clean",
-    "prebuild:dev": "APP_VARIANT=development bunx expo prebuild --clean",
+    "prebuild": "pnpm exec expo prebuild --clean",
+    "prebuild:dev": "APP_VARIANT=development pnpm exec expo prebuild --clean",
     "format": "oxfmt --check .",
     "format:write": "oxfmt --write ."
   },
@@ -62,12 +62,12 @@
     "@expo/metro-runtime": "57.0.15",
     "@types/react": "19.2.18",
     "babel-plugin-inline-import": "3.0.0",
-    "babel-plugin-react-compiler": "1.0.0",
     "lefthook": "2.1.12",
     "oxfmt": "0.67.0",
     "oxlint": "1.82.0",
     "typescript": "6.0.3"
   },
+  "packageManager": "pnpm@12.4.1",
   "expo": {
     "install": {
       "exclude": [

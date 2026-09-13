@@ -1,11 +1,14 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
 
-type AppVariant = "development" | "production";
+type AppVariant = "development" | "preview" | "production";
 
 function resolveVariant(value: string | undefined): AppVariant {
   switch (value) {
     case "dev":
+    case "development":
       return "development";
+    case "preview":
+      return "preview";
     default:
       return "production";
   }
@@ -19,6 +22,8 @@ function getName(base: string) {
       return base;
     case "development":
       return `${base} (Dev)`;
+    case "preview":
+      return `${base} (Preview)`;
   }
 }
 
@@ -28,6 +33,8 @@ function getAppId(base: string) {
       return base;
     case "development":
       return `${base}.dev`;
+    case "preview":
+      return `${base}.preview`;
   }
 }
 

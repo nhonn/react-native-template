@@ -20,5 +20,4 @@ export interface BaseLayoutProps {
 export interface ModalLayoutProps {
   title?: string;
   children: ReactNode;
-  screenName?: string;
 }

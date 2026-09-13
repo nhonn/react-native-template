@@ -1,5 +1,5 @@
-import { captureException, wrap } from "@sentry/react-native";
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { wrap } from "@sentry/react-native";
+import { NavigationContainer } from "@react-navigation/native";
 import { hideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
@@ -11,12 +11,13 @@ import { initializeI18n } from "@/i18n";
 import { RootStack } from "@/navigation";
 import { linking } from "@/navigation/linking";
 import { navigationRef } from "@/navigation/navigation-ref";
+import { createNavigationTheme } from "@/navigation/theme";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
 import { initializeUnistylesTheme } from "@/theme/stores/useThemeStore";
 import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
-import { initSentry } from "@/utils/sentry";
+import { initSentry, captureException } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
 
 const styles = StyleSheet.create({
@@ -24,12 +25,13 @@ const styles = StyleSheet.create({
 });
 
 function AppContent() {
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
+  const navigationTheme = createNavigationTheme(theme);
 
   return (
     <GestureHandlerRootView style={styles.root}>
       <MainProvider>
-        <NavigationContainer ref={navigationRef} theme={isDark ? DarkTheme : DefaultTheme} linking={linking}>
+        <NavigationContainer ref={navigationRef} theme={navigationTheme} linking={linking}>
           <RootStack />
           <StatusBar style="auto" />
         </NavigationContainer>

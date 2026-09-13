@@ -2,7 +2,7 @@ pre-commit:
   parallel: true
   commands:
     format:
-      run: bunx oxfmt --write .
+      run: pnpm exec oxfmt --write .
       glob:
         - "*.js"
         - "*.jsx"
@@ -13,4 +13,4 @@ pre-commit:
         - "*.css"
       stage_fixed: true
     typecheck:
-      run: bun run typecheck
+      run: pnpm run typecheck
