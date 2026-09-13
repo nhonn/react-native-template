@@ -3,8 +3,9 @@ import { useNavigation } from "@react-navigation/native";
 import type { FC } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native-unistyles";
 
-import { useTheme, useThemeColors } from "@/theme/hooks/useTheme";
+import { useTheme } from "@/theme/hooks/useTheme";
 import type { ModalLayoutProps } from "./types";
 
 const CLOSE_ICON = Icon.select({
@@ -14,7 +15,6 @@ const CLOSE_ICON = Icon.select({
 
 export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
   const navigation = useNavigation();
-  const colors = useThemeColors();
   const { isDark } = useTheme();
 
   const handleClose = () => {
@@ -22,17 +22,8 @@ export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.background.primary,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-      }}
-    >
-      <View
-        style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 16 }}
-      >
+    <SafeAreaView style={styles.root}>
+      <View style={styles.header}>
         {title ? (
           <Host colorScheme={isDark ? "dark" : "light"} matchContents>
             <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{title}</Text>
@@ -48,5 +39,20 @@ export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create((theme) => ({
+  root: {
+    flex: 1,
+    backgroundColor: theme.colors.background.primary,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: theme.spacing[4],
+  },
+}));
 
 ModalLayout.displayName = "ModalLayout";

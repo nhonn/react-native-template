@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import { StyleSheet } from "react-native-unistyles";
 
 import { initializeI18n } from "@/i18n";
 import { RootStack } from "@/navigation";
@@ -12,16 +13,21 @@ import { linking } from "@/navigation/linking";
 import { navigationRef } from "@/navigation/navigation-ref";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
+import { initializeUnistylesTheme } from "@/theme/stores/useThemeStore";
 import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
 import { initSentry } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
 
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+});
+
 function AppContent() {
   const { isDark } = useTheme();
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.root}>
       <MainProvider>
         <NavigationContainer ref={navigationRef} theme={isDark ? DarkTheme : DefaultTheme} linking={linking}>
           <RootStack />
@@ -45,6 +51,7 @@ function App() {
     (async () => {
       try {
         initSentry();
+        initializeUnistylesTheme();
         await initializeSplashScreen();
         await Promise.all([initializeI18n(), initializeRevenueCat()]);
       } catch (error) {

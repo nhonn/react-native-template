@@ -5,7 +5,7 @@ This is an Expo (SDK 57) + React Navigation template. App code lives under `src/
 ## Stack (do not swap without being asked)
 
 | UI | `@expo/ui` universal. Import from `@expo/ui`. Every `@expo/ui` tree sits in `Host`. |
-| Styling | `@expo/ui` `style` / `textStyle` on native trees. RN leftovers: `StyleSheet` + `useThemeColors()`. Never `className`, Tailwind, or Uniwind. |
+| Styling | `@expo/ui` `style` / `textStyle` on native trees. RN views: react-native-unistyles `StyleSheet.create((theme) => ...)`. Never `className`, Tailwind, or Uniwind. Never `StyleSheet` from `react-native`. |
 | Icons | `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-symbol>", android: import("@expo/material-symbols/<name>.xml") })`. Never Phosphor. |
 | Navigation | React Navigation 7 (`@react-navigation/native-stack` + `@react-navigation/bottom-tabs`) in `src/navigation` |
 | Screen bodies | `src/screens/*`, imported by navigators |
@@ -115,7 +115,7 @@ Do not introduce `src/features/`, `src/lib/`, or put screen UI in `src/navigatio
 - `Button` uses `label` + `variant`: `"filled"` | `"outlined"` | `"text"`. `Switch`/`Checkbox` use `value` + `onValueChange`. Controlled `TextInput` uses `useNativeState`, not a string `value`.
 - `@expo/ui` `List` is not for large datasets — keep `@/components/common/legend-list`.
 - Do not wrap `@expo/ui` in a local kit. Do not add HeroUI/NativeBase/another kit. Do not add a UI provider. Do not add Tailwind, Uniwind, or `className`.
-- RN-only gaps (card/spinner/divider): RN `View` / `ActivityIndicator` + `StyleSheet`, or platform-specific `@expo/ui` when needed.
+- RN-only gaps (card/spinner/divider): RN `View` / `ActivityIndicator` + unistyles `StyleSheet`, or platform-specific `@expo/ui` when needed.
 - Theme mode: `useTheme()` / `useThemeStore()`. After mode changes, `Host colorScheme` is the only native theming hook — do not call `Uniwind.setTheme`.
 
 ### Local components that stay local
@@ -133,9 +133,29 @@ Icons: `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-sy
 
 ### Styling
 
-- Native trees: `@expo/ui` `style` / `textStyle`.
-- RN leftovers: `StyleSheet` + `useThemeColors()`. Never `className`, Tailwind, or Uniwind.
+- React Native trees: **react-native-unistyles**. Import `StyleSheet` from `react-native-unistyles` (never from `react-native`), define styles at module level as `StyleSheet.create((theme) => ({...}))`, and apply with `styles.x`. Themed styles update automatically on mode change — no hook needed.
+- Never inline `style={{...}}` on RN views, never read theme colors in JSX, and never `className`, Tailwind, or Uniwind. `@expo/ui` `style` / `textStyle` props on native trees are the exception — they are `@expo/ui`'s own API and stay inline.
 - Theme mode: `useTheme()` / `useThemeStore()` from `@/theme`. Do not call `Appearance` ad hoc in screens.
+- The mode decision stays in `themePrefs$` (Legend State + MMKV). The store bridges it to unistyles via `applyUnistylesTheme()` (`src/theme/unistyles.ts`) → `UnistylesRuntime.setTheme`. `Host colorScheme` remains the native-tree theming hook; do not call `Uniwind.setTheme`.
+
+Example:
+
+```tsx
+import { View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
+
+const styles = StyleSheet.create((theme) => ({
+  container: {
+    flex: 1,
+    padding: theme.spacing[4],
+    backgroundColor: theme.colors.background.primary,
+  },
+}));
+
+export function MyScreen() {
+  return <View style={styles.container}>{/* ... */}</View>;
+}
+```
 
 ### Layouts and navigation
 
@@ -171,7 +191,7 @@ useSettingsStore.getState().setLanguage("en");
 settings$.language.set("en");
 ```
 
-Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider` already runs `useSystemThemeTracking()`. Native trees track theme changes via `Host colorScheme`.
+Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider` already runs `useSystemThemeTracking()`. Mode changes reach unistyles through `applyUnistylesTheme` (wired inside `applyMode` in the store); root init calls `initializeUnistylesTheme()` so a persisted manual override wins over the system. Native trees track theme changes via `Host colorScheme`; RN trees via unistyles stylesheets.
 
 ### What belongs where
 

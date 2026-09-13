@@ -10,13 +10,8 @@ import React from "react";
 import { Appearance, useColorScheme } from "react-native";
 
 import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
-import { BorderRadius } from "../constants/borderRadius";
-import { Opacity } from "../constants/opacity";
-import { Shadows } from "../constants/shadows";
-import { Spacing } from "../constants/spacing";
-import { Typography } from "../constants/typography";
-import { darkColorScheme } from "../themes/dark";
-import { lightColorScheme } from "../themes/light";
+
+import { applyUnistylesTheme, createTheme } from "../unistyles";
 import type { Theme, ThemeConfig, ThemeMode } from "../types";
 
 interface ThemeStoreState {
@@ -35,20 +30,6 @@ interface ThemeStoreActions {
 }
 
 type ThemeStore = ThemeStoreState & ThemeStoreActions;
-
-const createTheme = (mode: ThemeMode): Theme => {
-  const colorScheme = mode === "dark" ? darkColorScheme : lightColorScheme;
-
-  return {
-    mode,
-    colors: colorScheme,
-    typography: Typography,
-    spacing: Spacing,
-    borderRadius: BorderRadius,
-    shadows: Shadows,
-    opacity: Opacity,
-  };
-};
 
 const getInitialMode = (followSystemTheme: boolean, defaultMode: ThemeMode): ThemeMode => {
   if (followSystemTheme) {
@@ -74,6 +55,7 @@ export const theme$ = computed(() => createTheme(themePrefs$.mode.get()));
 
 const applyMode = (mode: ThemeMode) => {
   themePrefs$.mode.set(mode);
+  applyUnistylesTheme(mode);
 };
 
 const themeActions: ThemeStoreActions = {
@@ -151,6 +133,14 @@ export const useThemeStore = Object.assign(
     },
   },
 ) as ThemeStoreHook;
+
+/**
+ * Pushes the store's persisted, resolved mode into unistyles. Called once
+ * during root init so a manual light/dark override wins over the system.
+ */
+export function initializeUnistylesTheme() {
+  applyUnistylesTheme(themePrefs$.mode.peek());
+}
 
 export function useSystemThemeTracking() {
   const systemColorScheme = useColorScheme();

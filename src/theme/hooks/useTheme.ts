@@ -24,10 +24,6 @@ export function useTheme() {
 }
 
 // Separate hooks for specific theme aspects
-export function useThemeColors() {
-  return useThemeStore((state) => state.theme.colors);
-}
-
 export function useThemeTypography() {
   return useThemeStore((state) => state.theme.typography);
 }

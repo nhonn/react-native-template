@@ -1,21 +1,21 @@
 # React Native Template
 
-Modern Expo + Expo Router template with a small, production-oriented baseline: typed navigation, a custom UI kit, a theme system, i18n, and a lightweight state setup.
+Modern Expo + React Navigation template with a small, production-oriented baseline: typed navigation, a theme system, i18n, and a lightweight state setup.
 
 ## Features
 
 ### Core
 
-- **React Native**: 0.85.3 + React 19.2.3
-- **Expo**: SDK 56
-- **Navigation**: Expo Router 6 (tabs, stacks, modals)
+- **React Native**: 0.86.3 + React 19.2.3 (New Architecture)
+- **Expo**: SDK 57
+- **Navigation**: React Navigation 7 (tabs, stacks, modals)
 - **TypeScript**: strict type checking
 - **Package manager**: Bun
 
 ### Styling & Theme
 
-- **Styling**: @expo/ui style/textStyle + React Native StyleSheet
-- **Theming**: light/dark mode + system theme sync
+- **Styling**: [react-native-unistyles](https://unistyl.es) for RN views + `@expo/ui` style/textStyle on native trees
+- **Theming**: light/dark mode + system theme sync (Legend State store bridged to `UnistylesRuntime`)
 - **Design tokens**: colors, spacing, typography, radii, shadows
 
 ### UI
@@ -26,24 +26,24 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: t
 
 ### State / Storage / Tooling
 
-- **State**: Zustand with MMKV persistence
-- **Forms**: React Hook Form + Valibot
+- **State**: Legend State with MMKV persistence
+- **Forms**: React Hook Form
 - **List rendering**: LegendList v3 utility wrapper
 - **Monetization**: RevenueCat utility
 - **Quality**: Oxlint + Oxfmt + Lefthook
-- **Testing**: Jest + React Native Testing Library (Expo preset)
 
 ## Project Structure
 
 ```
 src/
-├── app/                # Expo Router screens
 ├── components/         # Common, layouts
 ├── hooks/              # App-level hooks (debounce/throttle/etc.)
 ├── i18n/               # i18next setup + locales (en)
+├── navigation/         # Navigators, linking, param lists
 ├── providers/          # Top-level providers (ErrorBoundary, etc.)
+├── screens/            # Screen UI rendered by navigators
 ├── stores/             # App stores (settings, etc.)
-├── theme/              # Theme system (tokens, hooks, store)
+├── theme/              # Theme system (tokens, hooks, store, unistyles registry)
 ├── types/              # Shared TS types
 └── utils/              # Utilities (storage, logger, date, etc.)
 ```
@@ -102,6 +102,31 @@ export function Example() {
   );
 }
 ```
+
+### Styling
+
+RN views are styled with [react-native-unistyles](https://unistyl.es). Import `StyleSheet` from `react-native-unistyles` (never `react-native`), define styles at module level, and reach theme tokens through the `theme` callback argument. Styles update automatically on light/dark change — no hook needed.
+
+```tsx
+import { View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
+
+const styles = StyleSheet.create((theme) => ({
+  card: {
+    padding: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surface.elevated,
+  },
+}));
+
+export function Card() {
+  return <View style={styles.card}>{/* ... */}</View>;
+}
+```
+
+Avoid inline `style={{...}}` on RN views and theme reads in JSX. `@expo/ui` props (`style`, `textStyle` on `Host`/`Column`/`Text`, …) are `@expo/ui`'s own API and stay inline.
+
+The unistyles themes are registered in `src/theme/unistyles.ts`; the light/dark decision itself lives in the Legend State theme store (`themePrefs$`) and is bridged to `UnistylesRuntime.setTheme` on every mode change.
 
 ### Theming
 

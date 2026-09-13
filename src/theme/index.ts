@@ -23,7 +23,6 @@ export {
   useIsDarkTheme,
   useTheme,
   useThemeBorderRadius,
-  useThemeColors,
   useThemeConfig,
   useThemeMode,
   useThemeOpacity,
@@ -31,10 +30,10 @@ export {
   useThemeSpacing,
   useThemeTypography,
 } from "./hooks/useTheme";
-// Hooks
-export { useThemedStyle, useThemedValue } from "./hooks/useThemedStyle";
 // Store and Hooks
-export { useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
+export { initializeUnistylesTheme, useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
+// Unistyles bridge
+export { applyUnistylesTheme, createTheme } from "./unistyles";
 export { darkColorScheme } from "./themes/dark";
 // Themes
 export { lightColorScheme } from "./themes/light";

@@ -1,11 +1,12 @@
 import { Button, Host, Icon, Text } from "@expo/ui";
 import { useNavigation } from "@react-navigation/native";
 import type { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native-unistyles";
 
 import { resetToTabs } from "@/navigation/navigation-ref";
-import { useTheme, useThemeColors } from "@/theme/hooks/useTheme";
+import { useTheme } from "@/theme/hooks/useTheme";
 import type { BaseLayoutProps } from "./types";
 
 const BACK_ICON = Icon.select({
@@ -23,7 +24,6 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   callToAction,
 }) => {
   const navigation = useNavigation();
-  const colors = useThemeColors();
   const { isDark } = useTheme();
 
   const handleBack = () => {
@@ -37,9 +37,9 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   };
 
   return (
-    <SafeAreaView edges={safeAreaEdges} style={[styles.root, { backgroundColor: colors.background.primary }]}>
-      <View style={[styles.flex, { backgroundColor: colors.surface.primary }]}>
-        <View style={[styles.header, { backgroundColor: colors.interactive.primary }]}>
+    <SafeAreaView edges={safeAreaEdges} style={styles.root}>
+      <View style={styles.flex}>
+        <View style={styles.header}>
           <View style={styles.headerLeft}>
             {showBack ? (
               <Host colorScheme={isDark ? "dark" : "light"} matchContents>
@@ -56,26 +56,25 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
           </View>
           {callToAction}
         </View>
-        <View style={[styles.body, { backgroundColor: colors.surface.primary }, contentContainerStyle]}>
-          {children}
-        </View>
+        <View style={[styles.body, contentContainerStyle]}>{children}</View>
       </View>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  root: { flex: 1 },
-  flex: { flex: 1 },
+const styles = StyleSheet.create((theme) => ({
+  root: { flex: 1, backgroundColor: theme.colors.background.primary },
+  flex: { flex: 1, backgroundColor: theme.colors.surface.primary },
   header: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 12,
+    padding: theme.spacing[3],
+    backgroundColor: theme.colors.interactive.primary,
   },
-  headerLeft: { maxWidth: "60%", flexDirection: "row", alignItems: "center", gap: 8 },
-  body: { flex: 1, padding: 12 },
-});
+  headerLeft: { maxWidth: "60%", flexDirection: "row", alignItems: "center", gap: theme.spacing[2] },
+  body: { flex: 1, padding: theme.spacing[3], backgroundColor: theme.colors.surface.primary },
+}));
 
 BaseLayout.displayName = "BaseLayout";

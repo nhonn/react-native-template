@@ -1,7 +1,8 @@
 import { resetToTabs } from "@/navigation/navigation-ref";
 import { Component, type ErrorInfo, type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 
 import { logger } from "@/utils/logger";
 import { captureException } from "@/utils/sentry";
@@ -116,63 +117,63 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   screen: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.colors.background.primary,
   },
   content: {
     flexGrow: 1,
     justifyContent: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: theme.spacing[6],
+    paddingVertical: theme.spacing[8],
   },
   header: {
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: theme.spacing[8],
   },
   title: {
-    marginBottom: 8,
+    marginBottom: theme.spacing[2],
     textAlign: "center",
     fontSize: 24,
     fontWeight: "700",
-    color: "#111827",
+    color: theme.colors.text.primary,
   },
   message: {
     textAlign: "center",
     fontSize: 16,
     lineHeight: 24,
-    color: "#4b5563",
+    color: theme.colors.text.secondary,
   },
   actions: {
-    gap: 12,
+    gap: theme.spacing[3],
   },
   primaryButton: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
-    backgroundColor: "#111827",
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.text.primary,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[4],
   },
   primaryButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#ffffff",
+    color: theme.colors.background.primary,
   },
   secondaryButton: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
+    borderRadius: theme.borderRadius.md,
     borderWidth: 1,
-    borderColor: "#d1d5db",
-    backgroundColor: "#ffffff",
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    borderColor: theme.colors.border.secondary,
+    backgroundColor: theme.colors.background.primary,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[4],
   },
   secondaryButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#374151",
+    color: theme.colors.text.secondary,
   },
-});
+}));
