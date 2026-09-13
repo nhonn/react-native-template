@@ -5,16 +5,7 @@
     "correctness": "error"
   },
   "rules": {
-    "no-explicit-any": "off",
-    "react-hooks/exhaustive-deps": "off",
-    "no-unused-vars": [
-      "error",
-      {
-        "argsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
-      }
-    ]
+    "no-explicit-any": "off"
   },
   "ignorePatterns": [".agents/**"],
   "env": {
