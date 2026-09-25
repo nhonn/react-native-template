@@ -9,10 +9,11 @@
     "ios": "expo run:ios",
     "lint": "oxlint --fix .",
     "typecheck": "tsc --noEmit",
-    "prebuild": "pnpm exec expo prebuild --clean",
-    "prebuild:dev": "APP_VARIANT=development pnpm exec expo prebuild --clean",
+    "prebuild": "nubx expo prebuild --clean",
+    "prebuild:dev": "APP_VARIANT=development nubx expo prebuild --clean",
     "format": "oxfmt --check .",
-    "format:write": "oxfmt --write ."
+    "format:write": "oxfmt --write .",
+    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && lefthook install || true"
   },
   "dependencies": {
     "@expo/material-symbols": "0.1.1",
@@ -67,7 +68,17 @@
     "oxlint": "1.82.0",
     "typescript": "6.0.3"
   },
-  "packageManager": "pnpm@12.4.1",
+  "devEngines": {
+    "packageManager": {
+      "name": "nub",
+      "version": "^0.9.3",
+      "onFail": "ignore"
+    }
+  },
+  "allowScripts": {
+    "@sentry/cli": true,
+    "lefthook": true
+  },
   "expo": {
     "install": {
       "exclude": [

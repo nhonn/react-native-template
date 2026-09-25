@@ -1,0 +1,7 @@
+{
+  "$schema": "https://nubjs.com/schema/latest.json",
+  "install": {
+    "minimumReleaseAge": "0s",
+    "publicHoist": ["@types/*"],
+  },
+}
