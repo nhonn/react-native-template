@@ -87,6 +87,10 @@ APP_VARIANT=production bunx expo prebuild --clean
 
 Use `APP_VARIANT=development bunx expo prebuild --clean` before the next dev session so CLI schemes point at the Dev app again.
 
+### Node for Xcode / Android Studio
+
+Xcode and Android Studio often run without a login-shell `PATH`, so bare `node` fails during native builds. The Expo config plugins `./plugins/withIosNode` and `./plugins/withAndroidNode` run on prebuild and pin a stable absolute `NODE_BINARY` into `ios/.xcode.env.local` plus the Xcode target build settings (and Android Gradle / `gradlew`). Re-run `expo prebuild` (or `--clean`) after changing Node installs so the pin refreshes.
+
 ## Usage
 
 ### UI Components
