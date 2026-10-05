@@ -51,5 +51,5 @@ module.exports = {
   },
 
   // Files to ignore when creating a new project
-  ignoreFiles: [".git/**/*", "node_modules/**/*", ".github/**/*", "LICENSE"],
+  ignoreFiles: [".git/**/*", "node_modules/**/*", ".github/**/*"],
 };

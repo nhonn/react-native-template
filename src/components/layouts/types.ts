@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
+import type { ViewProps } from "react-native";
 
 export interface BareLayoutProps {
   children?: ReactNode;
-  contentContainerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: ViewProps["style"];
   safeAreaEdges?: ("top" | "bottom" | "left" | "right")[];
 }
 
@@ -14,7 +14,7 @@ export interface BaseLayoutProps {
   safeAreaEdges?: ("top" | "bottom" | "left" | "right")[];
   onBack?: () => void;
   callToAction?: ReactNode;
-  contentContainerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: ViewProps["style"];
 }
 
 export interface ModalLayoutProps {
