@@ -10,7 +10,7 @@ Modern Expo + React Navigation template with a small, production-oriented baseli
 - **Expo**: SDK 58 (preview / expo@next)
 - **Navigation**: React Navigation 7 (tabs, stacks, modals)
 - **TypeScript**: strict type checking
-- **Package manager**: [nub](https://nubjs.com) (pnpm-compatible installer, runs on stock Node)
+- **Package manager**: [bun](https://bun.sh) (`bun install`, `bun.lock`)
 
 ### Styling & Theme
 
@@ -51,19 +51,19 @@ src/
 ## Getting Started
 
 ```bash
-brew install nub   # or: curl -fsSL https://nubjs.com/install.sh | bash
-nub install
-nub run start
+brew install oven-sh/bun/bun   # or: curl -fsSL https://bun.sh/install | bash
+bun install
+bun run start
 ```
 
 Run native:
 
 ```bash
-nub run ios
-nub run android
+bun run ios
+bun run android
 ```
 
-Add or remove dependencies with `nub add` / `nub remove`; nub owns the lockfile (`nub.lock`), so `npm install`, `pnpm install`, and `expo install` must not be used to change the tree.
+Add or remove dependencies with `bun add` / `bun remove`; bun owns the lockfile (`bun.lock`), so `npm install`, `pnpm install`, and `expo install` must not be used to change the tree.
 
 ### App variants
 
@@ -82,10 +82,10 @@ Read the resolved variant at runtime with `Constants.expoConfig?.extra?.variant`
 Switching a local native project to another variant:
 
 ```bash
-APP_VARIANT=production nubx expo prebuild --clean
+APP_VARIANT=production bunx expo prebuild --clean
 ```
 
-Use `APP_VARIANT=development nubx expo prebuild --clean` before the next dev session so CLI schemes point at the Dev app again.
+Use `APP_VARIANT=development bunx expo prebuild --clean` before the next dev session so CLI schemes point at the Dev app again.
 
 ## Usage
 
@@ -164,15 +164,15 @@ Subscriptions use RevenueCat (`react-native-purchases` + `react-native-purchases
 
 The wrapper expects a `premium` entitlement and paywall placements `settings` and `onboarding_v1` in the RevenueCat dashboard. Initialization is skipped when the current platform key is missing.
 
-Expo Go can load the SDK in Preview API Mode, but real purchases require a development build. After adding or changing these native packages, remake the native client (`nub run prebuild` or an EAS development build).
+Expo Go can load the SDK in Preview API Mode, but real purchases require a development build. After adding or changing these native packages, remake the native client (`bun run prebuild` or an EAS development build).
 
 ## Scripts
 
-- `nub run start` - start Expo dev server
-- `nub run ios` - run iOS build
-- `nub run android` - run Android build
-- `nub run lint` - run Oxlint with auto-fix
-- `nub run format` - check formatting with Oxfmt
-- `nub run format:write` - format with Oxfmt
-- `nub run typecheck` - TypeScript typecheck
-- `nub run prebuild` - regenerate native projects (`APP_VARIANT=development` with `prebuild:dev`)
+- `bun run start` - start Expo dev server
+- `bun run ios` - run iOS build
+- `bun run android` - run Android build
+- `bun run lint` - run Oxlint with auto-fix
+- `bun run format` - check formatting with Oxfmt
+- `bun run format:write` - format with Oxfmt
+- `bun run typecheck` - TypeScript typecheck
+- `bun run prebuild` - regenerate native projects (`APP_VARIANT=development` with `prebuild:dev`)

@@ -2,7 +2,7 @@ pre-commit:
   parallel: true
   commands:
     format:
-      run: nubx oxfmt --write .
+      run: bunx oxfmt --write .
       glob:
         - "*.js"
         - "*.jsx"
@@ -13,4 +13,4 @@ pre-commit:
         - "*.css"
       stage_fixed: true
     typecheck:
-      run: nub run typecheck
+      run: bun run typecheck

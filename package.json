@@ -9,8 +9,8 @@
     "ios": "expo run:ios",
     "lint": "oxlint --fix .",
     "typecheck": "tsc --noEmit",
-    "prebuild": "nubx expo prebuild --clean",
-    "prebuild:dev": "APP_VARIANT=development nubx expo prebuild --clean",
+    "prebuild": "bunx expo prebuild --clean",
+    "prebuild:dev": "APP_VARIANT=development bunx expo prebuild --clean",
     "format": "oxfmt --check .",
     "format:write": "oxfmt --write .",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && lefthook install || true"
@@ -70,14 +70,10 @@
   },
   "devEngines": {
     "packageManager": {
-      "name": "nub",
-      "version": "^0.9.3",
+      "name": "bun",
+      "version": "^1.4.2",
       "onFail": "ignore"
     }
-  },
-  "allowScripts": {
-    "@sentry/cli": true,
-    "lefthook": true
   },
   "expo": {
     "install": {
@@ -88,5 +84,9 @@
         "react-native-worklets"
       ]
     }
-  }
+  },
+  "trustedDependencies": [
+    "@sentry/cli",
+    "lefthook"
+  ]
 }
