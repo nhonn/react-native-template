@@ -1,6 +1,6 @@
 # Agent instructions
 
-This is an Expo (SDK 58) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **nub** (`nub.lock`) with a pnpm-shaped CLI. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
+This is an Expo (SDK 58) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **bun** (`bun.lock`). Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
 
 ## Stack (do not swap without being asked)
 
@@ -19,20 +19,19 @@ This is an Expo (SDK 58) + React Navigation template. App code lives under `src/
 
 Do not add Zustand, Recoil, Redux, or a second UI kit. Do not add a UI provider.
 
-### Package manager: nub
+### Package manager: bun
 
-[nub](https://nubjs.com) owns this project, so `pnpm`, `npm`, and `bun` refuse to run here. Use nub's pnpm-shaped CLI:
+[bun](https://bun.sh) owns this project. `bun.lock` is the lockfile; use bun's CLI for every install, script, and binary:
 
 | Task | Command |
-| Install | `nub install` (`nub ci` in CI) |
-| Add / remove a dependency | `nub add <pkg>` / `nub remove <pkg>` |
-| Run a `package.json` script | `nub run <script>` |
-| Run a local binary | `nubx <bin>` (replaces `npx` / `pnpm exec`) |
+| Install | `bun install` (`bun install --frozen-lockfile` in CI) |
+| Add / remove a dependency | `bun add <pkg>` / `bun remove <pkg>` |
+| Run a `package.json` script | `bun run <script>` |
+| Run a local binary | `bunx <bin>` (replaces `npx` / `pnpm exec`) |
 
-- Never change the tree with `npm install`, `pnpm add`, or `expo install` — lockfile-sniffing tools do not recognize `nub.lock` and will fall back to npm.
-- Dependency lifecycle scripts are deny-by-default. The approved set is the `allowScripts` map in `package.json`; approve new ones with `nub approve-builds`, or add them to that map.
-- `nub.jsonc` pins `install.minimumReleaseAge: "0s"` (release-age gate off for this template).
-- Root `prepare` runs `lefthook install`, because nub caches dependency postinstall side effects machine-wide and that cache can't install per-project git hooks.
+- Never change the tree with `npm install`, `pnpm add`, or `expo install` — they write `package-lock.json` / `pnpm-lock.yaml` and drift from `bun.lock`.
+- Dependency lifecycle scripts are deny-by-default. The approved set is the `trustedDependencies` array in `package.json`; approve new ones with `bun pm trust <pkg>`, or add them to that array.
+- Root `prepare` runs `lefthook install` so a plain `bun install` wires the per-project git hooks.
 
 ---
 
@@ -239,7 +238,7 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ## Git commits
 
-Lefthook **pre-commit** runs `nubx oxfmt --write` (auto-stages fixes) and `nub run typecheck`. A commit that fails `tsc` will be rejected. Run `nub run lint` and `nub run typecheck` before you commit when you touched types or many files.
+Lefthook **pre-commit** runs `bunx oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` and `bun run typecheck` before you commit when you touched types or many files.
 
 ### Message format
 
