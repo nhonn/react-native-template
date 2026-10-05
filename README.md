@@ -6,8 +6,8 @@ Modern Expo + React Navigation template with a small, production-oriented baseli
 
 ### Core
 
-- **React Native**: 0.86.3 + React 19.2.3 (New Architecture)
-- **Expo**: SDK 57
+- **React Native**: 0.88.0-rc.3 + React 19.3.0 (New Architecture)
+- **Expo**: SDK 58 (preview / expo@next)
 - **Navigation**: React Navigation 7 (tabs, stacks, modals)
 - **TypeScript**: strict type checking
 - **Package manager**: [nub](https://nubjs.com) (pnpm-compatible installer, runs on stock Node)

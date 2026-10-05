@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { InteractionManager } from "react-native";
 
 import { logger } from "@/utils/logger";
 
@@ -55,7 +54,15 @@ export const useRefreshControl = ({
       }
 
       // Wait for interactions to complete before refreshing
-      await InteractionManager.runAfterInteractions();
+      if (typeof requestIdleCallback === "function") {
+        await new Promise<void>((resolve) => {
+          requestIdleCallback(() => resolve());
+        });
+      } else {
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve());
+        });
+      }
 
       if (isMounted.current) {
         await onRefresh();

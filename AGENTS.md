@@ -1,6 +1,6 @@
 # Agent instructions
 
-This is an Expo (SDK 57) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **nub** (`nub.lock`) with a pnpm-shaped CLI. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
+This is an Expo (SDK 58) + React Navigation template. App code lives under `src/`. The TypeScript path alias `@/*` maps to `./src/*`. Package manager is **nub** (`nub.lock`) with a pnpm-shaped CLI. Do not invent a second folder convention or migrate the tree to a generic Expo skeleton.
 
 ## Stack (do not swap without being asked)
 
