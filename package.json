@@ -54,6 +54,7 @@
     "react-native-reanimated": "4.7.0",
     "react-native-safe-area-context": "5.9.1",
     "react-native-screens": "4.28.0",
+    "react-native-skia": "3.0.3",
     "react-native-unistyles": "3.4.0",
     "react-native-worklets": "0.13.0",
     "tslib": "2.8.1"

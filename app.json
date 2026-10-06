@@ -28,6 +28,9 @@
       [
         "expo-build-properties",
         {
+          "android": {
+            "minSdkVersion": 26
+          },
           "ios": {
             "useFrameworks": "dynamic",
             "forceStaticLinking": ["RNPurchases", "RNPaywalls"]
