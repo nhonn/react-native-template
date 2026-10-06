@@ -21,6 +21,7 @@ Modern Expo + React Navigation template with a small, production-oriented baseli
 ### UI
 
 - **UI**: `@expo/ui` universal components (Host, Button, Text, Column, Row, etc.)
+- **2D Graphics**: [react-native-skia](https://shopify.github.io/react-native-skia/) 3.0.3 (unscoped Skia 3)
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
