@@ -9,6 +9,7 @@
     "ios": "expo run:ios",
     "lint": "oxlint --fix .",
     "typecheck": "tsc --noEmit",
+    "verify:locales": "bun ./scripts/verify-locales.mjs",
     "prebuild": "bunx expo prebuild --clean",
     "prebuild:dev": "APP_VARIANT=development bunx expo prebuild --clean",
     "format": "oxfmt --check .",

@@ -1,6 +1,8 @@
 pre-commit:
   parallel: true
   commands:
+    verify-locales:
+      run: bun run verify:locales
     format:
       run: bunx oxfmt --write .
       glob:
