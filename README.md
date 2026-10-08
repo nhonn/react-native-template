@@ -21,6 +21,7 @@ Modern Expo + React Navigation template with a small, production-oriented baseli
 ### UI
 
 - **UI**: `@expo/ui` universal components (Host, Button, Text, Column, Row, etc.)
+- **2D Graphics**: [react-native-skia](https://shopify.github.io/react-native-skia/) 3.0.3 (unscoped Skia 3)
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
@@ -175,4 +176,5 @@ Expo Go can load the SDK in Preview API Mode, but real purchases require a devel
 - `bun run format` - check formatting with Oxfmt
 - `bun run format:write` - format with Oxfmt
 - `bun run typecheck` - TypeScript typecheck
+- `bun run verify:locales` - verify i18n key parity across locales
 - `bun run prebuild` - regenerate native projects (`APP_VARIANT=development` with `prebuild:dev`)
