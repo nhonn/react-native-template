@@ -238,7 +238,7 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ## Git commits
 
-Lefthook **pre-commit** runs `bunx oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` and `bun run typecheck` before you commit when you touched types or many files.
+Lefthook **pre-commit** runs `bun run verify:locales`, `bunx oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` and `bun run typecheck` before you commit when you touched types or many files.
 
 ### Message format
 
