@@ -176,4 +176,5 @@ Expo Go can load the SDK in Preview API Mode, but real purchases require a devel
 - `bun run format` - check formatting with Oxfmt
 - `bun run format:write` - format with Oxfmt
 - `bun run typecheck` - TypeScript typecheck
+- `bun run verify:locales` - verify i18n key parity across locales
 - `bun run prebuild` - regenerate native projects (`APP_VARIANT=development` with `prebuild:dev`)
