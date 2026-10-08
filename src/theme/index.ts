@@ -34,6 +34,7 @@ export {
 export { initializeUnistylesTheme, useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
 // Unistyles bridge
 export { applyUnistylesTheme, createTheme } from "./unistyles";
+export { createNavigationTheme } from "./navigation";
 export { darkColorScheme } from "./themes/dark";
 // Themes
 export { lightColorScheme } from "./themes/light";
