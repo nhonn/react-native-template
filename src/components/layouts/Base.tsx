@@ -1,11 +1,10 @@
 import { Button, Host, Icon, Text } from "@expo/ui";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import type { FC } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native-unistyles";
 
-import { resetToTabs } from "@/navigation/navigation-ref";
 import { useTheme } from "@/theme/hooks/useTheme";
 import type { BaseLayoutProps } from "./types";
 
@@ -23,16 +22,16 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   safeAreaEdges = ["top"],
   callToAction,
 }) => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const { isDark, theme } = useTheme();
 
   const handleBack = () => {
     if (onBack) {
       onBack();
-    } else if (navigation.canGoBack()) {
-      navigation.goBack();
+    } else if (router.canGoBack()) {
+      router.back();
     } else {
-      resetToTabs();
+      router.replace("/(tabs)");
     }
   };
 
