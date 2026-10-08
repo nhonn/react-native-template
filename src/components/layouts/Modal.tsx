@@ -1,5 +1,5 @@
 import { Button, Host, Icon, Text } from "@expo/ui";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import type { FC } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,11 +14,11 @@ const CLOSE_ICON = Icon.select({
 });
 
 export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const { isDark } = useTheme();
 
   const handleClose = () => {
-    navigation.goBack();
+    router.back();
   };
 
   return (

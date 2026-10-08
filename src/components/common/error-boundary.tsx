@@ -1,4 +1,4 @@
-import { resetToTabs } from "@/navigation/navigation-ref";
+import { router } from "expo-router";
 import { Component, type ErrorInfo, type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -101,7 +101,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   handleGoHome = () => {
     this.handleReset();
-    resetToTabs();
+    router.replace("/(tabs)");
   };
 
   render() {

@@ -1,6 +1,6 @@
 # React Native Template
 
-Modern Expo + React Navigation template with a small, production-oriented baseline: typed navigation, a theme system, i18n, and a lightweight state setup.
+Modern Expo + Expo Router template with a small, production-oriented baseline: file-based navigation, a theme system, i18n, and a lightweight state setup.
 
 ## Features
 
@@ -8,7 +8,7 @@ Modern Expo + React Navigation template with a small, production-oriented baseli
 
 - **React Native**: 0.88.0-rc.3 + React 19.3.0 (New Architecture)
 - **Expo**: SDK 58 (preview / expo@next)
-- **Navigation**: React Navigation 7 (tabs, stacks, modals)
+- **Navigation**: Expo Router (tabs, stacks, modals)
 - **TypeScript**: strict type checking
 - **Package manager**: [bun](https://bun.sh) (`bun install`, `bun.lock`)
 
@@ -36,13 +36,18 @@ Modern Expo + React Navigation template with a small, production-oriented baseli
 ## Project Structure
 
 ```
+app/                     # Expo Router layouts & route wrappers
+├── (tabs)/             # Tab routes & tab layout
+├── _layout.tsx         # Root layout & providers
+├── modal-one.tsx       # Modal route
+├── stack-one.tsx       # Stack push route
+└── +not-found.tsx      # Unmatched route
 src/
 ├── components/         # Common, layouts
 ├── hooks/              # App-level hooks (debounce/throttle/etc.)
 ├── i18n/               # i18next setup + locales (en)
-├── navigation/         # Navigators, linking, param lists
 ├── providers/          # Top-level providers (ErrorBoundary, etc.)
-├── screens/            # Screen UI rendered by navigators
+├── screens/            # Screen UI rendered by routes
 ├── stores/             # App stores (settings, etc.)
 ├── theme/              # Theme system (tokens, hooks, store, unistyles registry)
 ├── types/              # Shared TS types

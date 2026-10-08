@@ -1,5 +1,6 @@
 import { wrap } from "@sentry/react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { ThemeProvider } from "@react-navigation/native";
+import { Stack } from "expo-router";
 import { hideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
@@ -8,39 +9,57 @@ import "react-native-reanimated";
 import { StyleSheet } from "react-native-unistyles";
 
 import { initializeI18n } from "@/i18n";
-import { RootStack } from "@/navigation";
-import { linking } from "@/navigation/linking";
-import { navigationRef } from "@/navigation/navigation-ref";
-import { createNavigationTheme } from "@/navigation/theme";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
+import { createNavigationTheme } from "@/theme/navigation";
 import { initializeUnistylesTheme } from "@/theme/stores/useThemeStore";
 import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
 import { initSentry, captureException } from "@/utils/sentry";
 import { initializeSplashScreen } from "@/utils/splashScreen";
 
+export {
+  // Catch any errors thrown by the Layout component.
+  ErrorBoundary,
+} from "expo-router";
+
+export const unstable_settings = {
+  initialRouteName: "(tabs)",
+};
+
 const styles = StyleSheet.create({
   root: { flex: 1 },
 });
 
-function AppContent() {
+function RootLayoutNav() {
   const { theme } = useTheme();
   const navigationTheme = createNavigationTheme(theme);
 
   return (
     <GestureHandlerRootView style={styles.root}>
       <MainProvider>
-        <NavigationContainer ref={navigationRef} theme={navigationTheme} linking={linking}>
-          <RootStack />
+        <ThemeProvider value={navigationTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="stack-one" options={{ headerShown: false, animation: "slide_from_right" }} />
+            <Stack.Screen
+              name="modal-one"
+              options={{
+                headerShown: false,
+                presentation: "modal",
+                animation: "slide_from_bottom",
+              }}
+            />
+            <Stack.Screen name="+not-found" options={{ title: "Oops!" }} />
+          </Stack>
           <StatusBar style="auto" />
-        </NavigationContainer>
+        </ThemeProvider>
       </MainProvider>
     </GestureHandlerRootView>
   );
 }
 
-function App() {
+function RootLayout() {
   const [ready, setReady] = useState(false);
   const didInitRef = useRef(false);
 
@@ -69,7 +88,7 @@ function App() {
     return null;
   }
 
-  return <AppContent />;
+  return <RootLayoutNav />;
 }
 
-export default wrap(App);
+export default wrap(RootLayout);

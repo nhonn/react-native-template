@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme, type Theme as NavigationTheme } from "@react-navigation/native";
 
-import type { Theme } from "@/theme";
+import type { Theme } from "./types";
 
 /**
  * Maps the template's design tokens onto React Navigation's theme so
