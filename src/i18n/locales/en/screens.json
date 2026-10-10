@@ -13,8 +13,10 @@
   },
   "tab2": {
     "title": "Tab 2",
-    "subtitle": "LegendList with pull-to-refresh.",
-    "item": "Item {{index}}"
+    "subtitle": "WatermelonDB notes rendered with LegendList.",
+    "placeholder": "New note",
+    "add": "Add",
+    "empty": "No notes yet."
   },
   "stack1": {
     "title": "Stack 1",
