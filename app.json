@@ -47,6 +47,7 @@
           "organization": "my-template-project"
         }
       ],
+      "expo-watermelondb-plugin",
       "@rnrepo/expo-config-plugin"
     ]
   }
