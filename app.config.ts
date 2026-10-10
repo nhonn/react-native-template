@@ -4,13 +4,13 @@ type AppVariant = "development" | "preview" | "production";
 
 function resolveVariant(value: string | undefined): AppVariant {
   switch (value) {
-    case "dev":
-    case "development":
-      return "development";
+    case "production":
+      return "production";
     case "preview":
       return "preview";
+    // Unset (local `expo start` / `expo prebuild`), "dev" and "development".
     default:
-      return "production";
+      return "development";
   }
 }
 
