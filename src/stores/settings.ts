@@ -1,6 +1,7 @@
 import { persistObservable } from "@legendapp/state/persist";
 import { useSelector } from "@legendapp/state/react";
 
+import { setAppLanguage } from "@/i18n";
 import type { TextSizePreference } from "@/theme/types";
 import type { ValidDateFormat } from "@/types/date";
 import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
@@ -65,6 +66,7 @@ const settingsActions: SettingsActions = {
   },
   setLanguage: (language) => {
     settings$.language.set(language);
+    void setAppLanguage(language);
   },
   setDateFormat: (format) => {
     settings$.dateFormat.set(format);

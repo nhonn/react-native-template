@@ -58,17 +58,33 @@ const i18nConfig = {
   },
 } as const;
 
-export const initializeI18n = async (): Promise<void> => {
-  try {
-    const languageResult = storage.getString(StorageKeys.LANGUAGE);
-    const storedLanguage = languageResult ? (languageResult as Languages) : null;
+const isSupportedLanguage = (language: string | undefined): language is Languages =>
+  SUPPORTED_LANGUAGES.includes(language as Languages);
 
-    const selectedLanguage = storedLanguage || getDeviceLanguage();
+export const initializeI18n = async (): Promise<string> => {
+  try {
+    const storedLanguage = storage.getString(StorageKeys.LANGUAGE);
+    const selectedLanguage = isSupportedLanguage(storedLanguage) ? storedLanguage : getDeviceLanguage();
     await i18n.use(initReactI18next).init({ ...i18nConfig, lng: selectedLanguage });
   } catch (error) {
     logger.error("Failed to initialize i18n:", error);
     await i18n.init(i18nConfig);
   }
+  return i18n.language;
+};
+
+/**
+ * Switches the active language and persists it to the key read by
+ * `initializeI18n`. Prefer `useSettingsStore.getState().setLanguage`, which
+ * also keeps `settings$` in sync.
+ */
+export const setAppLanguage = async (language: string): Promise<void> => {
+  if (!isSupportedLanguage(language)) {
+    logger.warn("Unsupported language:", language);
+    return;
+  }
+  storage.setString(StorageKeys.LANGUAGE, language);
+  await i18n.changeLanguage(language);
 };
 
 export const getI18nInstance = () => i18n;
