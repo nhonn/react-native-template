@@ -1,0 +1,72 @@
+--- a/WatermelonDB.podspec
++++ b/WatermelonDB.podspec
+@@ -13,12 +13,12 @@
+   s.platforms    = { :ios => "12.0", :tvos => "12.0" }
+   s.source = { :git => "https://github.com/Nozbe/WatermelonDB.git", :tag => "v#{s.version}" }
+   s.source_files = "native/ios/**/*.{h,m,mm,swift,c,cpp}", "native/shared/**/*.{h,c,cpp}"
++  s.exclude_files = "native/ios/WatermelonDB/JSIInstaller.{h,mm}"
+   s.public_header_files = [
+     # FIXME: I don't think we should be exporting all headers as public
+     # (although that is CocoaPods default behavior)
+     # but this is needed for WatermelonDB to work in use_frameworks! mode
+     # 'native/ios/**/*.h',
+-    'native/ios/WatermelonDB/JSIInstaller.h',
+     'native/ios/WatermelonDB/WatermelonDB.h',
+   ]
+   s.pod_target_xcconfig = {
+--- a/native/ios/WatermelonDB/objc/WMDatabaseBridge.m
++++ b/native/ios/WatermelonDB/objc/WMDatabaseBridge.m
+@@ -1,6 +1,5 @@
+ #import "WMDatabaseBridge.h"
+ #import "WMDatabaseDriver.h"
+-#import "JSIInstaller.h"
+ 
+ @implementation WMDatabaseBridge {
+     NSMutableDictionary<NSNumber *, WMDatabaseDriver *> *_connections;
+@@ -190,33 +189,6 @@
+     WITH_DRIVER({
+         return [driver getLocal:key error:errorPtr];
+     })
+-}
+-
+-#pragma mark - JSI Support
+-
+-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(initializeJSI)
+-{
+-    __block RCTCxxBridge *bridge = (RCTCxxBridge *) _bridge;
+-    dispatch_sync([self methodQueue], ^{
+-        installWatermelonJSI(bridge);
+-    });
+-    
+-    return @YES;
+-}
+-
+-
+-RCT_EXPORT_METHOD(provideSyncJson:(nonnull NSNumber *)id
+-    json:(nonnull NSString *)json
+-    resolve:(RCTPromiseResolveBlock)resolve
+-    reject:(RCTPromiseRejectBlock)reject)
+-{
+-    NSError *error;
+-    watermelondbProvideSyncJson(id.intValue, [json dataUsingEncoding:NSUTF8StringEncoding], &error);
+-    if (error) {
+-        reject(@"db.provideSyncJson.error", error.localizedDescription, error);
+-    } else {
+-        resolve(@YES);
+-    }
+ }
+ 
+ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getRandomBytes:(nonnull NSNumber *)count)
+--- a/native/android/build.gradle
++++ b/native/android/build.gradle
+@@ -26,6 +26,10 @@ android {
+ 
+     namespace "com.nozbe.watermelondb"
+ 
++    buildFeatures {
++        buildConfig true
++    }
++
+     defaultConfig {
+         minSdkVersion getExtOrIntegerDefault('minSdkVersion')
+         targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')

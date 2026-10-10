@@ -12,9 +12,9 @@ const adapter = new SQLiteAdapter({
   dbName: "app",
   schema,
   migrations,
-  // Synchronous JSI mode. Needs a development build (not Expo Go) with
-  // expo-watermelondb-plugin applied during prebuild.
-  jsi: true,
+  // WatermelonDB's JSI adapter depends on React Native's removed RCTCxxBridge API, so use the
+  // native bridge dispatcher on both platforms. Needs a development build (not Expo Go).
+  jsi: false,
   onSetUpError: (error) => {
     logger.error("Database setup failed:", error);
     captureException(error);
@@ -25,3 +25,9 @@ export const database = new Database({
   adapter,
   modelClasses: [Note],
 });
+
+/**
+ * Resolves once the schema is created (or migrated). Readers and writers do not wait for it, so
+ * await it before the first query or write — on Android schema setup is an async bridge call.
+ */
+export const databaseReady: Promise<void> = adapter.initializingPromise;

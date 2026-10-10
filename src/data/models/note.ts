@@ -1,10 +1,17 @@
 import { Model } from "@nozbe/watermelondb";
-import { date, field, readonly } from "@nozbe/watermelondb/decorators";
+
+import { defineColumns } from "../define-columns";
 
 export class Note extends Model {
   static table = "notes";
 
-  @field("title") title!: string;
-  @readonly @date("created_at") createdAt!: Date;
-  @readonly @date("updated_at") updatedAt!: Date;
+  title!: string;
+  /** Epoch ms; WatermelonDB fills `created_at` / `updated_at` automatically. */
+  createdAt!: number;
+  updatedAt!: number;
 }
+
+Object.defineProperties(
+  Note.prototype,
+  defineColumns({ title: "title", createdAt: "created_at", updatedAt: "updated_at" }),
+);
