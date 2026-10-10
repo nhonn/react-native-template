@@ -1,9 +1,9 @@
-import { DarkTheme, DefaultTheme, type Theme as NavigationTheme } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, type Theme as NavigationTheme } from "expo-router";
 
 import type { Theme } from "./types";
 
 /**
- * Maps the template's design tokens onto React Navigation's theme so
+ * Maps the template's design tokens onto expo-router's navigation theme so
  * navigators (headers, backgrounds, tab bars) follow the theme store.
  */
 export const createNavigationTheme = (theme: Theme): NavigationTheme => {

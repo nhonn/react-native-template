@@ -1,13 +1,16 @@
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 
 export function NotFoundScreen() {
+  const { t } = useTranslation("screens");
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This screen does not exist.</Text>
+      <Text style={styles.text}>{t("notFound.message")}</Text>
       <Pressable onPress={() => router.replace("/")} style={styles.link}>
-        <Text style={styles.linkText}>Go to home screen!</Text>
+        <Text style={styles.linkText}>{t("notFound.goHome")}</Text>
       </Pressable>
     </View>
   );
