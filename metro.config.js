@@ -22,7 +22,7 @@ config.serializer = {
 config.resolver = {
   ...config.resolver,
   assetExts: [...(config.resolver?.assetExts || []), "bin"],
-  sourceExts: [...(config.resolver?.sourceExts || []), "mjs", "sql"],
+  sourceExts: [...(config.resolver?.sourceExts || []), "mjs"],
 };
 
 config.watchFolders = [];
