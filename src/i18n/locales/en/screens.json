@@ -1,4 +1,9 @@
 {
+  "notFound": {
+    "title": "Oops!",
+    "message": "This screen does not exist.",
+    "goHome": "Go to home screen!"
+  },
   "tab1": {
     "title": "Tab 1",
     "subtitle": "A native @expo/ui tree inside Host.",

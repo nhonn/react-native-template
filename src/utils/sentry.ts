@@ -16,7 +16,7 @@ export const initSentry = (): void => {
   try {
     init({
       dsn: sentryDsn,
-      enabled: !__DEV__ || Boolean(sentryDsn),
+      enabled: !__DEV__,
       tracesSampleRate: 0,
     });
   } catch (error) {

@@ -121,14 +121,8 @@ export function setJSON<T>(key: string, value: T): void {
  * Storage keys constants for type safety.
  */
 export const StorageKeys = {
-  // App state
+  // Read by initializeI18n; written by setLanguage in src/i18n
   LANGUAGE: "language",
-  THEME: "theme",
-  FIRST_LAUNCH: "isFirstLaunch",
-
-  // User preferences
-  NOTIFICATIONS_ENABLED: "notificationsEnabled",
-  BIOMETRIC_ENABLED: "biometricEnabled",
 } as const;
 
 export type StorageKey = (typeof StorageKeys)[keyof typeof StorageKeys];
