@@ -5,6 +5,8 @@ import { StyleSheet } from "react-native-unistyles";
 
 import { useTheme } from "@/theme/hooks/useTheme";
 
+import { PulseCanvas } from "./pulse-canvas";
+
 export function TabOneScreen() {
   const { t } = useTranslation("screens");
   const { isDark, setMode } = useTheme();
@@ -15,7 +17,7 @@ export function TabOneScreen() {
 
   return (
     <View style={styles.root}>
-      <Host colorScheme={isDark ? "dark" : "light"} style={{ flex: 1 }}>
+      <Host colorScheme={isDark ? "dark" : "light"} matchContents={{ vertical: true }}>
         <Column spacing={16} style={{ padding: 16 }}>
           <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{t("tab1.title")}</Text>
           <Text>{t("tab1.subtitle")}</Text>
@@ -25,6 +27,7 @@ export function TabOneScreen() {
           </Row>
         </Column>
       </Host>
+      <PulseCanvas />
       <View style={styles.card}>
         <RNText style={styles.cardTitle}>{t("tab1.cardTitle")}</RNText>
         <RNText style={styles.cardBody}>{t("tab1.cardBody")}</RNText>
@@ -37,7 +40,7 @@ const styles = StyleSheet.create((theme) => ({
   root: { flex: 1, backgroundColor: theme.colors.background.primary },
   card: {
     margin: theme.spacing[4],
-    marginTop: 0,
+    marginTop: theme.spacing[4],
     padding: theme.spacing[4],
     gap: theme.spacing[1],
     borderRadius: theme.borderRadius.lg,
