@@ -77,6 +77,14 @@
         "react-native-reanimated",
         "react-native-worklets"
       ]
+    },
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-skia",
+          "@nozbe/simdjson"
+        ]
+      }
     }
   },
   "trustedDependencies": [
