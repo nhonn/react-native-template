@@ -10,14 +10,15 @@ This is an Expo (SDK 58) + Expo Router template. App code lives under `src/` (sc
 | Navigation | Expo Router file-based routing (`app/` layouts and route wrappers) |
 | Screen bodies | `src/screens/*`, imported by route wrappers |
 | State | Legend State (`@legendapp/state`) + MMKV persist |
-| Forms | React Hook Form |
+| Database | WatermelonDB (`@nozbe/watermelondb`), SQLite adapter with `jsi: true`, in `src/data/` |
+| Graphics | `react-native-skia` (unscoped Skia 3) with Reanimated; theme colors from `useTheme()` |
 | Lists | `@/components/common/legend-list` (`@legendapp/list`) |
 | i18n | i18next + `react-i18next`, JSON namespaces under `src/i18n/locales` |
 | Errors | Sentry (`@/utils/sentry`) + local `ErrorBoundary` |
 | Subscriptions | RevenueCat (`@/utils/revenuecat`) |
 | Lint / format | Oxlint + Oxfmt; Lefthook runs format + `tsc` on commit |
 
-Do not add Zustand, Recoil, Redux, or a second UI kit. Do not add a UI provider.
+Do not add Zustand, Recoil, Redux, a form library without being asked, or a second UI kit. Do not add a UI provider.
 
 ### Package manager: bun
 
@@ -57,9 +58,10 @@ src/
 ├── components/
 │   ├── common/             # shared primitives (pressable, error-boundary, legend-list)
 │   └── layouts/            # Layout.Base / Bare / Modal
-├── hooks/                  # app-wide hooks (debounce, throttle, refresh)
+├── data/                   # WatermelonDB schema, migrations, models/, database instance
+├── hooks/                  # app-wide hooks (refresh control)
 ├── i18n/                   # initializeI18n + locales/<lang>/<ns>.json
-├── providers/              # MainProvider (ErrorBoundary + theme tracking)
+├── providers/              # MainProvider (ErrorBoundary + DatabaseProvider + theme tracking)
 ├── stores/                 # app observables (settings$)
 ├── theme/                  # tokens, hooks, theme store, light/dark schemes
 ├── types/                  # shared TS types
@@ -80,6 +82,7 @@ Config and native identity stay at the repo root: `app.json`, `app.config.ts`, `
 | App-wide hook                        | `src/hooks/`                                                                  |
 | Theme token / theme hook             | `src/theme/` (not `src/hooks`)                                                |
 | Cross-screen persisted state         | `src/stores/`                                                                 |
+| Relational / queryable local data    | `src/data/` (schema, migrations, `models/`); register models in `database.ts` |
 | Theme mode / colors                  | `src/theme/stores/`                                                           |
 | String the user sees                 | `src/i18n/locales/<lang>/<ns>.json` + `t()`                                   |
 | One-off helper                       | `src/utils/`                                                                  |
@@ -92,7 +95,7 @@ Layouts and routes live in `app/`; screen UI lives in `src/screens`. Read params
 - Files and folders: **kebab-case** (`error-boundary.tsx`, `tab-one/`).
 - Hooks: `useX.ts` (camelCase after `use`).
 - Stores: observable `foo$` in `src/stores/foo.ts`; hook export `useFooStore`.
-- Platform splits: `name.ios.tsx` / `name.android.tsx` / `name.web.tsx` plus a default `name.tsx`. Same public props on every variant.
+- Platform splits (none exist in the template yet; use only when needed): `name.ios.tsx` / `name.android.tsx` / `name.web.tsx` plus a default `name.tsx`. Same public props on every variant.
 
 Do not introduce `src/features/`, `src/lib/`, or put screen UI in `app/` or the repo root.
 
@@ -219,7 +222,7 @@ Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider
 | Theme mode / follow-system                          | `src/theme/stores/useThemeStore.ts`                                               |
 | One-off key/value (i18n language bootstrap, etc.)   | `@/utils/storage` (`StorageKeys`)                                                 |
 | Server/async cache, lists from network              | Keep fetch close to the screen or a dedicated store; do not dump into `settings$` |
-| Form field state                                    | React Hook Form, local to the screen                                              |
+| Form field state                                    | `useState` / `useNativeState` local to the screen (no form library installed)     |
 | Transient UI (open sheet, selected tab in a screen) | `useState` / `useReducer` in that component                                       |
 | URL / navigation state                              | Expo Router route paths and params                                                |
 
@@ -233,17 +236,26 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ---
 
+### Database (WatermelonDB)
+
+- Everything lives in `src/data/`: `schema.ts`, `migrations.ts`, `models/<name>.ts`, `database.ts` (SQLite adapter, `jsi: true`). Export from `src/data/index.ts`; `DatabaseProvider` is composed into `MainProvider`.
+- Changing a table: bump `version` in `schema.ts` **and** add a step in `migrations.ts`. Register new models in `modelClasses`.
+- Models use legacy decorators (`@field`, `@date`, `@readonly`) from `@nozbe/watermelondb/decorators`. Decorator support comes from `babel-preset-expo` (`decorators: { legacy: true }`) and `experimentalDecorators` in `tsconfig.json`; do not add a separate Babel decorators plugin.
+- Read via `useDatabase()` + `collection.query(...).observe()` (see `src/screens/tab-two/useNotes.ts`); write inside `database.write(...)`.
+- Needs a development build (JSI, not Expo Go). Native wiring is the `expo-watermelondb-plugin` entry in `app.json`; rebuild native after changing it.
+- Do not put queryable/relational data in `settings$` or MMKV.
+
 ## i18n, errors
 
-- User-visible copy goes through `useTranslation("<namespace>")` and keys in `src/i18n/locales/en/*.json`. Add a language by adding `locales/<code>/` and registering it in `src/i18n/index.ts`.
+- User-visible copy goes through `useTranslation("<namespace>")` and keys in `src/i18n/locales/en/*.json`. Add a language by adding `locales/<code>/` and registering it in `src/i18n/index.ts`. Change language with `useSettingsStore.getState().setLanguage(code)` — it updates `settings$`, persists the `StorageKeys.LANGUAGE` key that `initializeI18n` reads, and calls `i18n.changeLanguage`.
 - Log with `@/utils/logger`. Report unexpected failures with Sentry (`captureException`) after `initSentry()` (already in root init).
-- Init order is owned by `app/_layout.tsx` (`initSentry` → splash → `initializeI18n` + `initializeRevenueCat`). Do not add competing startup effects in random screens.
+- Init order is owned by `app/_layout.tsx`: `initSentry()` and `preventAutoHideAsync()` run at module scope; then `initializeI18n` + `initializeRevenueCat` run in the root effect before the splash screen is hidden. Do not add competing startup effects in random screens.
 
 ---
 
 ## Git commits
 
-Lefthook **pre-commit** runs `bun run verify:locales`, `bunx oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` and `bun run typecheck` before you commit when you touched types or many files.
+Lefthook **pre-commit** runs `bun run verify:locales`, `bunx oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` (check only; `bun run lint:fix` applies fixes) and `bun run typecheck` before you commit when you touched types or many files.
 
 ### Message format
 
@@ -262,10 +274,10 @@ Lefthook **pre-commit** runs `bun run verify:locales`, `bunx oxfmt --write` (aut
 Examples that match this repo’s history:
 
 ```
-feat: adopt HeroUI Native as the default UI library
+feat(data): add WatermelonDB with SQLite JSI adapter
 feat: replace Zustand with Legend State
 fix(settings): stop persisting premium onto disk
-refactor(analytics): migrate from PostHog to Firebase and Sentry
+refactor: migrate to expo-router
 chore: replace Biome with Oxlint and Oxfmt
 ```
 
