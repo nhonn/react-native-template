@@ -1,36 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "api-design": {
-      "source": "margelo/react-native-skills",
-      "sourceType": "github",
-      "skillPath": "skills/api-design/SKILL.md",
-      "computedHash": "ee49af1da08164a039ac94fccfeb8a995d2ad79d4491058d69af83a795694cb9"
-    },
-    "build-nitro-modules": {
-      "source": "margelo/react-native-skills",
-      "sourceType": "github",
-      "skillPath": "skills/build-nitro-modules/SKILL.md",
-      "computedHash": "9fce6b96add81fc0baf4594edd0c70c811c25ab2109d25b16f148c46c6d754b4"
-    },
-    "building-components": {
-      "source": "vercel/components.build",
-      "sourceType": "github",
-      "skillPath": "skills/building-components/SKILL.md",
-      "computedHash": "20889af7cb9b3abca1e38824f7fffaa873eb0cc4d45187967b97bd85462cf934"
-    },
-    "cpp": {
-      "source": "margelo/react-native-skills",
-      "sourceType": "github",
-      "skillPath": "skills/cpp/SKILL.md",
-      "computedHash": "3a50a3ad2f940b1efa6429aad3fe69786479de4f4d137831cf3f55f3a16c174b"
-    },
-    "expo-module": {
-      "source": "expo/skills",
-      "sourceType": "github",
-      "skillPath": "plugins/expo/skills/expo-module/SKILL.md",
-      "computedHash": "456ae977187a49db5d79ac9d42ccec37bd330bcfaba389cf8951e3c3bf31a86d"
-    },
     "expo-native-ui": {
       "source": "expo/skills",
       "sourceType": "github",
@@ -55,12 +25,6 @@
       "skillPath": "plugins/expo/skills/expo-ui/SKILL.md",
       "computedHash": "47fe6f34daa6392f3e1ab42248fe6e08f5997b1c602f47fb822619d8e38d92de"
     },
-    "kotlin": {
-      "source": "margelo/react-native-skills",
-      "sourceType": "github",
-      "skillPath": "skills/kotlin/SKILL.md",
-      "computedHash": "13214bdae9eee96ec4add645f0e625cee8213de70629eec980c80fcb250458d1"
-    },
     "legend-list-best-practices": {
       "source": "LegendApp/legend-skills",
       "sourceType": "github",
@@ -72,12 +36,6 @@
       "sourceType": "github",
       "skillPath": "legend-state-best-practices/SKILL.md",
       "computedHash": "8b715d31ac66687d0957210766b1c636c68629ea09c23f067fc220703dcf6f24"
-    },
-    "nitro-fetch": {
-      "source": "margelo/react-native-skills",
-      "sourceType": "github",
-      "skillPath": "skills/react-native-nitro-fetch/SKILL.md",
-      "computedHash": "8bba6ef22ee96510b10f0ea576f67a1cf1fafb22f457f30988adc388648b85e1"
     },
     "react-coding-style": {
       "source": "LegendApp/legend-skills",
@@ -97,23 +55,11 @@
       "skillPath": "skills/react-native-mmkv/SKILL.md",
       "computedHash": "96b4224d99089192160f9a2d1f3c29f4ca9155dfa69d2583719c2dad95826959"
     },
-    "react-navigation": {
-      "source": "callstackincubator/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/react-navigation/SKILL.md",
-      "computedHash": "f09111c137b0bac6e43ff5ff57297afc93ae51583797acf779733ace4d1ced60"
-    },
     "simplify": {
       "source": "LegendApp/legend-skills",
       "sourceType": "github",
       "skillPath": "simplify/SKILL.md",
       "computedHash": "180ed43986ecdbb309fc662bd8c99d8276f5ed0f6d12a752d886d25e809e3773"
-    },
-    "swift": {
-      "source": "margelo/react-native-skills",
-      "sourceType": "github",
-      "skillPath": "skills/swift/SKILL.md",
-      "computedHash": "1d26f5cbc0b4f14f24e6a96ac49a95b58817ee046c4ad12bb4a9b3b7c9b70c09"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",
