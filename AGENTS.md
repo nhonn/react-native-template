@@ -10,7 +10,7 @@ This is an Expo (SDK 58) + Expo Router template. App code lives under `src/` (sc
 | Navigation | Expo Router file-based routing (`app/` layouts and route wrappers) |
 | Screen bodies | `src/screens/*`, imported by route wrappers |
 | State | Legend State (`@legendapp/state`) + MMKV persist |
-| Database | WatermelonDB (`@nozbe/watermelondb`), SQLite adapter with `jsi: true`, in `src/data/` |
+| Database | WatermelonDB (`@nozbe/watermelondb`), SQLite adapter with `jsi: false`, in `src/data/` |
 | Graphics | `react-native-skia` (unscoped Skia 3) with Reanimated; theme colors from `useTheme()` |
 | Lists | `@/components/common/legend-list` (`@legendapp/list`) |
 | i18n | i18next + `react-i18next`, JSON namespaces under `src/i18n/locales` |
@@ -238,11 +238,11 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ### Database (WatermelonDB)
 
-- Everything lives in `src/data/`: `schema.ts`, `migrations.ts`, `models/<name>.ts`, `database.ts` (SQLite adapter, `jsi: true`). Export from `src/data/index.ts`; `DatabaseProvider` is composed into `MainProvider`.
+- Everything lives in `src/data/`: `schema.ts`, `migrations.ts`, `models/<name>.ts`, `database.ts` (SQLite adapter, `jsi: false`, plus `define-columns.ts`). Export from `src/data/index.ts`; `DatabaseProvider` is composed into `MainProvider`.
 - Changing a table: bump `version` in `schema.ts` **and** add a step in `migrations.ts`. Register new models in `modelClasses`.
-- Models use legacy decorators (`@field`, `@date`, `@readonly`) from `@nozbe/watermelondb/decorators`. Decorator support comes from `babel-preset-expo` (`decorators: { legacy: true }`) and `experimentalDecorators` in `tsconfig.json`; do not add a separate Babel decorators plugin.
+- Models do not use decorators (`experimentalDecorators` is off). Declare typed fields on the class and bind them with `Object.defineProperties(Model.prototype, defineColumns({...}))` from `src/data/define-columns.ts` (see `models/note.ts`).
 - Read via `useDatabase()` + `collection.query(...).observe()` (see `src/screens/tab-two/useNotes.ts`); write inside `database.write(...)`.
-- Needs a development build (JSI, not Expo Go). Native wiring is the `expo-watermelondb-plugin` entry in `app.json`; rebuild native after changing it.
+- Needs a development build (not Expo Go). Native wiring is `plugins/withWatermelonDb.js` (simdjson pod + static pods) plus `ios.useFrameworks: "static"` in `app.json`, and `patches/watermelondb@0.28.0.patch` via `patchedDependencies`; rebuild native after changing them. `jsi` stays `false` (RN 0.88 lacks `RCTCxxBridge`). Await `databaseReady` from `@/data` before the first query or write.
 - Do not put queryable/relational data in `settings$` or MMKV.
 
 ## i18n, errors

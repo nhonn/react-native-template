@@ -164,14 +164,14 @@ This template ships with English resources by default. Add more languages by ext
 
 ### Database (WatermelonDB)
 
-Local persistence uses [WatermelonDB](https://watermelondb.dev) on the SQLite adapter with `jsi: true`.
+Local persistence uses [WatermelonDB](https://watermelondb.dev) on the SQLite adapter with `jsi: false` (the native bridge dispatcher on both platforms; the 0.28 JSI adapter needs React Native's removed `RCTCxxBridge`).
 
 - `src/data/schema.ts`, `src/data/migrations.ts` — schema and migrations. Bump `version` and add a migration step together.
-- `src/data/models/` — models (legacy decorators, e.g. `src/data/models/note.ts`). Register new models in `modelClasses` in `src/data/database.ts`.
-- `src/data/database.ts` — the `database` instance. `DatabaseProvider` is composed into `MainProvider`, so `useDatabase()` works anywhere under the root layout.
+- `src/data/models/` — models without decorators: declare typed fields and bind them with `defineColumns` (`src/data/define-columns.ts`), e.g. `src/data/models/note.ts`. Register new models in `modelClasses` in `src/data/database.ts`.
+- `src/data/database.ts` — the `database` instance and `databaseReady` (await it before the first query or write; Android schema setup is async). `DatabaseProvider` is composed into `MainProvider`, so `useDatabase()` works anywhere under the root layout.
 - `src/screens/tab-two` — add/list example (`useNotes.ts` observes a query).
 
-Native setup comes from the `expo-watermelondb-plugin` config plugin in `app.json` (registers `WatermelonDBJSIPackage` on Android; iOS pods are autolinked). JSI mode needs a development build — WatermelonDB does not run in Expo Go. Decorators work through `babel-preset-expo` (`decorators: { legacy: true }` in `babel.config.js`) plus `experimentalDecorators` in `tsconfig.json`. After adding or upgrading it, rebuild the native client (`bun run prebuild` or an EAS development build).
+Native setup comes from `plugins/withWatermelonDb.js` (referenced in `app.json`): it adds the npm-vendored `simdjson` pod and builds `WatermelonDB`/`simdjson` as static libraries in the Podfile. `expo-build-properties` sets `ios.useFrameworks: "static"`. `patches/watermelondb@0.28.0.patch` (wired through `patchedDependencies` in `package.json`) strips the iOS JSI installer and enables `buildConfig` on Android. Needs a development build — WatermelonDB does not run in Expo Go. Metro lists `@nozbe/watermelondb` in `nonInlinedRequires`. After changing any of this, rebuild native (`bun run prebuild` or an EAS development build).
 
 ### Skia
 

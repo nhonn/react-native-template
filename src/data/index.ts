@@ -1,2 +1,2 @@
-export { database } from "./database";
+export { database, databaseReady } from "./database";
 export { Note } from "./models/note";

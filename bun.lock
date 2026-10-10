@@ -23,7 +23,6 @@
         "expo-router": "~58.0.17",
         "expo-splash-screen": "~58.0.7",
         "expo-status-bar": "58.0.3",
-        "expo-watermelondb-plugin": "1.0.0",
         "i18next": "26.4.2",
         "react": "19.3.0",
         "react-i18next": "17.0.15",
@@ -55,6 +54,9 @@
     "lefthook",
     "@sentry/cli",
   ],
+  "patchedDependencies": {
+    "@nozbe/watermelondb@0.28.0": "patches/watermelondb@0.28.0.patch",
+  },
   "packages": {
     "2g": ["2g@0.4.4", "", { "peerDependencies": { "typescript": ">=5.8.0" }, "optionalPeers": ["typescript"], "bin": { "2g": "bin/cli.js" } }, "sha512-ZwH02IRQicm+92YzJZMS8imSAJaqTPI+VASb1zMnisotnWcEP4e7nb57Mr8C2dGAA5G8ZmialbMmpkGLWgAY/w=="],
 
@@ -729,8 +731,6 @@
     "expo-status-bar": ["expo-status-bar@58.0.3", "", { "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-+GMLHLA81LB+/m2DteQAN7kvH8unVj3zYGSj8D6Csf+mCrc4P6jJwaSbrz17qTizzEIJ5lv6SuU9Zfyy2vSNoQ=="],
 
     "expo-updates-interface": ["expo-updates-interface@58.0.1", "", { "peerDependencies": { "expo": "*" } }, "sha512-OF+3BtMXtUsXWDfpHVNus9yHpx7WjMwjxDfeeN9LQBYSq/UtYmNNHBSfzChYTuqljWFSOAHRfsDykV9EB73Wlg=="],
-
-    "expo-watermelondb-plugin": ["expo-watermelondb-plugin@1.0.0", "", { "peerDependencies": { "@expo/config-plugins": ">=53.0.0" } }, "sha512-NKxhQLvM9dXIFswHcEsmytoLK0UBl/RPseddrR7CP1KOC9sV+/pZTnaBSEpu0c5rutHKA+cFHJe/ARPzG5Kadg=="],
 
     "exponential-backoff": ["exponential-backoff@3.1.3", "", {}, "sha512-ZgEeZXj30q+I0EN+CbSSpIyPaJ5HVQD18Z1m+u1FXbAeT94mr1zw50q4q6jiiC447Nl/YTcIYSAftiGqetwXCA=="],
 
