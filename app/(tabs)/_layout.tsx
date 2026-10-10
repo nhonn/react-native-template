@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Host, Icon } from "@expo/ui";
+import { useTranslation } from "react-i18next";
 
 import { useTheme } from "@/theme/hooks/useTheme";
 
@@ -35,19 +36,21 @@ function TabBarIcon({
 }
 
 export default function TabLayout() {
+  const { t } = useTranslation("screens");
+
   return (
     <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Tab 1",
+          title: t("tab1.title"),
           tabBarIcon: ({ focused }) => <TabBarIcon name={focused ? HOME_ICON_SELECTED : HOME_ICON} />,
         }}
       />
       <Tabs.Screen
         name="tab-two"
         options={{
-          title: "Tab 2",
+          title: t("tab2.title"),
           tabBarIcon: ({ focused }) => <TabBarIcon name={focused ? TAB2_ICON_SELECTED : TAB2_ICON} />,
         }}
       />

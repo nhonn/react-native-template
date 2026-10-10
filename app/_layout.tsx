@@ -1,22 +1,29 @@
 import { wrap } from "@sentry/react-native";
-import { ThemeProvider } from "@react-navigation/native";
-import { Stack } from "expo-router";
-import { hideAsync } from "expo-splash-screen";
+import { Stack, ThemeProvider } from "expo-router";
+import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { StyleSheet } from "react-native-unistyles";
 
 import { initializeI18n } from "@/i18n";
+import { settings$ } from "@/stores/settings";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
 import { createNavigationTheme } from "@/theme/navigation";
 import { initializeUnistylesTheme } from "@/theme/stores/useThemeStore";
 import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
-import { initSentry, captureException } from "@/utils/sentry";
-import { initializeSplashScreen } from "@/utils/splashScreen";
+import { captureException, initSentry } from "@/utils/sentry";
+
+// Run once at module scope so crash reporting and the splash hold are in place
+// before the first render.
+initSentry();
+preventAutoHideAsync().catch((error: unknown) => {
+  logger.warn("Failed to prevent splash screen auto-hide:", error);
+});
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -32,8 +39,9 @@ const styles = StyleSheet.create({
 });
 
 function RootLayoutNav() {
+  const { t } = useTranslation("screens");
   const { theme } = useTheme();
-  const navigationTheme = createNavigationTheme(theme);
+  const navigationTheme = useMemo(() => createNavigationTheme(theme), [theme]);
 
   return (
     <GestureHandlerRootView style={styles.root}>
@@ -50,7 +58,7 @@ function RootLayoutNav() {
                 animation: "slide_from_bottom",
               }}
             />
-            <Stack.Screen name="+not-found" options={{ title: "Oops!" }} />
+            <Stack.Screen name="+not-found" options={{ title: t("notFound.title") }} />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>
@@ -71,10 +79,9 @@ function RootLayout() {
 
     (async () => {
       try {
-        initSentry();
         initializeUnistylesTheme();
-        await initializeSplashScreen();
-        await Promise.all([initializeI18n(), initializeRevenueCat()]);
+        const [language] = await Promise.all([initializeI18n(), initializeRevenueCat()]);
+        settings$.language.set(language);
       } catch (error) {
         logger.error("Root initialization failed:", error);
         captureException(error);

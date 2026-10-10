@@ -33,7 +33,7 @@
             "minSdkVersion": 26
           },
           "ios": {
-            "useFrameworks": "dynamic",
+            "useFrameworks": "static",
             "forceStaticLinking": ["RNPurchases", "RNPaywalls"]
           }
         }
@@ -47,6 +47,7 @@
           "organization": "my-template-project"
         }
       ],
+      "./plugins/withWatermelonDb",
       "@rnrepo/expo-config-plugin"
     ]
   }

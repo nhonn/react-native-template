@@ -6,8 +6,8 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: f
 
 ### Core
 
-- **React Native**: 0.88.0-rc.3 + React 19.3.0 (New Architecture)
-- **Expo**: SDK 58 (preview / expo@next)
+- **React Native**: 0.88.0-rc.4 + React 19.3.0 (New Architecture)
+- **Expo**: SDK 58
 - **Navigation**: Expo Router (tabs, stacks, modals)
 - **TypeScript**: strict type checking
 - **Package manager**: [bun](https://bun.sh) (`bun install`, `bun.lock`)
@@ -21,14 +21,14 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: f
 ### UI
 
 - **UI**: `@expo/ui` universal components (Host, Button, Text, Column, Row, etc.)
-- **2D Graphics**: [react-native-skia](https://shopify.github.io/react-native-skia/) 3.0.3 (unscoped Skia 3)
+- **2D Graphics**: [react-native-skia](https://shopify.github.io/react-native-skia/) 3.0.3 (unscoped Skia 3); tab one renders an animated Skia canvas (`src/screens/tab-one/pulse-canvas.tsx`) colored from the theme
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
 ### State / Storage / Tooling
 
 - **State**: Legend State with MMKV persistence
-- **Forms**: React Hook Form
+- **Database**: [WatermelonDB](https://watermelondb.dev) (SQLite adapter, JSI mode) in `src/data`; tab two adds and lists notes
 - **List rendering**: LegendList v3 utility wrapper
 - **Monetization**: RevenueCat utility
 - **Quality**: Oxlint + Oxfmt + Lefthook
@@ -44,7 +44,8 @@ app/                     # Expo Router layouts & route wrappers
 └── +not-found.tsx      # Unmatched route
 src/
 ├── components/         # Common, layouts
-├── hooks/              # App-level hooks (debounce/throttle/etc.)
+├── data/               # WatermelonDB schema, migrations, models, database
+├── hooks/              # App-level hooks (refresh control, etc.)
 ├── i18n/               # i18next setup + locales (en)
 ├── providers/          # Top-level providers (ErrorBoundary, etc.)
 ├── screens/            # Screen UI rendered by routes
@@ -73,15 +74,15 @@ Add or remove dependencies with `bun add` / `bun remove`; bun owns the lockfile 
 
 ### App variants
 
-Development and production installs can sit side by side. `app.json` holds the production identity; `app.config.ts` suffixes it when `APP_VARIANT` is not `production`.
+Development and production installs can sit side by side. `app.json` holds the production identity; `app.config.ts` suffixes it when `APP_VARIANT` is not `production`. When `APP_VARIANT` is unset (local `start`, `ios`, `android`, `prebuild`) it defaults to `development`; production must be requested explicitly.
 
-| Variant       | `APP_VARIANT`          | Name                        | Bundle ID / package             |
-| ------------- | ---------------------- | --------------------------- | ------------------------------- |
-| Dev (default) | `development` or `dev` | `my-template-app (Dev)`     | `com.mytemplateproject.dev`     |
-| Preview       | `preview`              | `my-template-app (Preview)` | `com.mytemplateproject.preview` |
-| Production    | `production`           | `my-template-app`           | `com.mytemplateproject`         |
+| Variant       | `APP_VARIANT`                 | Name                        | Bundle ID / package             |
+| ------------- | ----------------------------- | --------------------------- | ------------------------------- |
+| Dev (default) | unset, `development` or `dev` | `my-template-app (Dev)`     | `com.mytemplateproject.dev`     |
+| Preview       | `preview`                     | `my-template-app (Preview)` | `com.mytemplateproject.preview` |
+| Production    | `production`                  | `my-template-app`           | `com.mytemplateproject`         |
 
-Local scripts (`start`, `ios`, `android`, `prebuild`) set `APP_VARIANT=development`. EAS profiles in `eas.json` set the same variable per build. Only the development build registers the generated `exp+<slug>` scheme so the Metro QR code opens the Dev app.
+EAS profiles in `eas.json` set `APP_VARIANT` explicitly per build. Only the development build registers the generated `exp+<slug>` scheme so the Metro QR code opens the Dev app.
 
 Read the resolved variant at runtime with `Constants.expoConfig?.extra?.variant`. Register each identifier separately with Sentry, and any other service keyed to bundle ID.
 
@@ -161,6 +162,21 @@ export function ThemeExample() {
 
 This template ships with English resources by default. Add more languages by extending `src/i18n/locales/*` and `resources` in `src/i18n/index.ts`.
 
+### Database (WatermelonDB)
+
+Local persistence uses [WatermelonDB](https://watermelondb.dev) on the SQLite adapter with `jsi: false` (the native bridge dispatcher on both platforms; the 0.28 JSI adapter needs React Native's removed `RCTCxxBridge`).
+
+- `src/data/schema.ts`, `src/data/migrations.ts` — schema and migrations. Bump `version` and add a migration step together.
+- `src/data/models/` — models without decorators: declare typed fields and bind them with `defineColumns` (`src/data/define-columns.ts`), e.g. `src/data/models/note.ts`. Register new models in `modelClasses` in `src/data/database.ts`.
+- `src/data/database.ts` — the `database` instance and `databaseReady` (await it before the first query or write; Android schema setup is async). `DatabaseProvider` is composed into `MainProvider`, so `useDatabase()` works anywhere under the root layout.
+- `src/screens/tab-two` — add/list example (`useNotes.ts` observes a query).
+
+Native setup comes from `plugins/withWatermelonDb.js` (referenced in `app.json`): it adds the npm-vendored `simdjson` pod and builds `WatermelonDB`/`simdjson` as static libraries in the Podfile. `expo-build-properties` sets `ios.useFrameworks: "static"`. `patches/watermelondb@0.28.0.patch` (wired through `patchedDependencies` in `package.json`) strips the iOS JSI installer and enables `buildConfig` on Android. Needs a development build — WatermelonDB does not run in Expo Go. Metro lists `@nozbe/watermelondb` in `nonInlinedRequires`. After changing any of this, rebuild native (`bun run prebuild` or an EAS development build).
+
+### Skia
+
+`react-native-skia` (the unscoped Skia 3 package, successor of `@shopify/react-native-skia`) is installed. The tab one demo animates a `Canvas` with a Reanimated shared value and takes its colors from `useTheme()`, so it follows light/dark.
+
 ### Subscriptions
 
 Subscriptions use RevenueCat (`react-native-purchases` + `react-native-purchases-ui`). Set the public SDK keys in `.env`:
@@ -177,7 +193,8 @@ Expo Go can load the SDK in Preview API Mode, but real purchases require a devel
 - `bun run start` - start Expo dev server
 - `bun run ios` - run iOS build
 - `bun run android` - run Android build
-- `bun run lint` - run Oxlint with auto-fix
+- `bun run lint` - run Oxlint (check only)
+- `bun run lint:fix` - run Oxlint with auto-fix
 - `bun run format` - check formatting with Oxfmt
 - `bun run format:write` - format with Oxfmt
 - `bun run typecheck` - TypeScript typecheck

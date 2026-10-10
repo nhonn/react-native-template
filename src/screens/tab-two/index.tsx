@@ -1,40 +1,46 @@
+import { Button, Host, TextInput, useNativeState, type TextInputRef } from "@expo/ui";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import { Text as RNText, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 
 import { LegendList } from "@/components/common/legend-list";
-import { useRefreshControl } from "@/hooks/useRefreshControl";
+import { useTheme } from "@/theme/hooks/useTheme";
 
-interface ListItem {
-  id: number;
-}
-
-const createItems = (): ListItem[] => Array.from({ length: 30 }, (_, index) => ({ id: index + 1 }));
+import { useNotes } from "./useNotes";
 
 export function TabTwoScreen() {
   const { t } = useTranslation("screens");
-  const [items, setItems] = useState<ListItem[]>(createItems);
+  const { isDark } = useTheme();
+  const { notes, addNote } = useNotes();
+  const draft = useNativeState("");
+  const inputRef = useRef<TextInputRef>(null);
 
-  const { refreshing, onRefresh } = useRefreshControl({
-    onRefresh: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      setItems(createItems());
-    },
-  });
+  const handleAdd = () => {
+    void addNote(draft.value);
+    inputRef.current?.clear();
+  };
 
   return (
     <View style={styles.root}>
+      <RNText style={styles.subtitle}>{t("tab2.subtitle")}</RNText>
+      <View style={styles.form}>
+        <Host matchContents={{ vertical: true }} colorScheme={isDark ? "dark" : "light"} style={styles.input}>
+          <TextInput ref={inputRef} value={draft} placeholder={t("tab2.placeholder")} />
+        </Host>
+        <Host matchContents colorScheme={isDark ? "dark" : "light"}>
+          <Button label={t("tab2.add")} onPress={handleAdd} />
+        </Host>
+      </View>
       <LegendList
-        data={items}
-        keyExtractor={(item) => item.id.toString()}
+        data={notes}
+        keyExtractor={(note) => note.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <RNText style={styles.itemText}>{t("tab2.item", { index: item.id })}</RNText>
+            <RNText style={styles.itemText}>{item.title}</RNText>
           </View>
         )}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
+        ListEmptyComponent={<RNText style={styles.empty}>{t("tab2.empty")}</RNText>}
         estimatedItemSize={56}
         contentContainerStyle={styles.content}
       />
@@ -44,6 +50,14 @@ export function TabTwoScreen() {
 
 const styles = StyleSheet.create((theme) => ({
   root: { flex: 1, backgroundColor: theme.colors.background.primary },
+  subtitle: { color: theme.colors.text.secondary, padding: theme.spacing[4], paddingBottom: 0 },
+  form: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[2],
+    padding: theme.spacing[4],
+  },
+  input: { flex: 1 },
   content: { padding: theme.spacing[3] },
   item: {
     padding: theme.spacing[4],
@@ -52,4 +66,5 @@ const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.surface.elevated,
   },
   itemText: { color: theme.colors.text.primary, fontSize: 16, fontWeight: "500" },
+  empty: { color: theme.colors.text.secondary, textAlign: "center", padding: theme.spacing[4] },
 }));
