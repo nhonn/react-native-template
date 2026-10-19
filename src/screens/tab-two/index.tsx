@@ -1,10 +1,11 @@
 import { Button, Host, TextInput, useNativeState, type TextInputRef } from "@expo/ui";
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Text as RNText, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 
 import { LegendList } from "@/components/common/legend-list";
+import { Toast } from "@/components/common/toast";
 import { useTheme } from "@/theme/hooks/useTheme";
 
 import { useNotes } from "./useNotes";
@@ -15,10 +16,17 @@ export function TabTwoScreen() {
   const { notes, addNote } = useNotes();
   const draft = useNativeState("");
   const inputRef = useRef<TextInputRef>(null);
+  const [toastVisible, setToastVisible] = useState(false);
+
+  const hideToast = useCallback(() => setToastVisible(false), []);
 
   const handleAdd = () => {
+    if (!draft.value.trim()) {
+      return;
+    }
     void addNote(draft.value);
     inputRef.current?.clear();
+    setToastVisible(true);
   };
 
   return (
@@ -44,6 +52,7 @@ export function TabTwoScreen() {
         estimatedItemSize={56}
         contentContainerStyle={styles.content}
       />
+      <Toast message={t("tab2.added")} onHide={hideToast} visible={toastVisible} />
     </View>
   );
 }
