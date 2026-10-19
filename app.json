@@ -48,6 +48,17 @@
         }
       ],
       "./plugins/withWatermelonDb",
+      [
+        "react-native-nano-icons",
+        {
+          "iconSets": [
+            {
+              "inputDir": "./assets/icons/ui",
+              "fontFamily": "ui"
+            }
+          ]
+        }
+      ],
       "@rnrepo/expo-config-plugin"
     ]
   }
