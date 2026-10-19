@@ -1,4 +1,5 @@
 import { Button, Host, TextInput, useNativeState, type TextInputRef } from "@expo/ui";
+import { useBottomTabBarHeight } from "expo-router/tabs";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Text as RNText, View } from "react-native";
@@ -16,17 +17,21 @@ export function TabTwoScreen() {
   const { notes, addNote } = useNotes();
   const draft = useNativeState("");
   const inputRef = useRef<TextInputRef>(null);
-  const [toastVisible, setToastVisible] = useState(false);
+  const tabBarHeight = useBottomTabBarHeight();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const hideToast = useCallback(() => setToastVisible(false), []);
+  const hideToast = useCallback(() => setToastMessage(null), []);
 
-  const handleAdd = () => {
-    if (!draft.value.trim()) {
+  const handleAdd = async () => {
+    const title = draft.value.trim();
+    if (!title) {
       return;
     }
-    void addNote(draft.value);
-    inputRef.current?.clear();
-    setToastVisible(true);
+    const saved = await addNote(title);
+    if (saved) {
+      inputRef.current?.clear();
+    }
+    setToastMessage(saved ? t("tab2.added") : t("tab2.addFailed"));
   };
 
   return (
@@ -52,7 +57,12 @@ export function TabTwoScreen() {
         estimatedItemSize={56}
         contentContainerStyle={styles.content}
       />
-      <Toast message={t("tab2.added")} onHide={hideToast} visible={toastVisible} />
+      <Toast
+        message={toastMessage ?? ""}
+        offsetBottom={tabBarHeight}
+        onHide={hideToast}
+        visible={toastMessage !== null}
+      />
     </View>
   );
 }

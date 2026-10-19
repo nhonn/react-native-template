@@ -1,14 +1,23 @@
 import { useEffect } from "react";
 import { Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Portal } from "react-native-teleport";
 import { StyleSheet } from "react-native-unistyles";
+
+const DEFAULT_TAB_BAR_HEIGHT = 49;
 
 interface ToastProps {
   message: string;
   visible: boolean;
   onHide: () => void;
   durationMs?: number;
+  /**
+   * Distance from the screen bottom that the toast should clear. Tab screens
+   * pass `useBottomTabBarHeight()` (already includes the bottom inset); other
+   * callers can omit it and get the safe-area inset plus a default tab height.
+   */
+  offsetBottom?: number;
 }
 
 /**
@@ -17,7 +26,10 @@ interface ToastProps {
  * stacking hacks. Owns its auto-dismiss timer; the caller only toggles
  * `visible`.
  */
-export function Toast({ message, visible, onHide, durationMs = 2000 }: ToastProps) {
+export function Toast({ message, visible, onHide, durationMs = 2000, offsetBottom }: ToastProps) {
+  const insets = useSafeAreaInsets();
+  const bottom = offsetBottom ?? DEFAULT_TAB_BAR_HEIGHT + insets.bottom;
+
   useEffect(() => {
     if (!visible) {
       return;
@@ -32,7 +44,7 @@ export function Toast({ message, visible, onHide, durationMs = 2000 }: ToastProp
 
   return (
     <Portal hostName="root" name="toast">
-      <View pointerEvents="none" style={styles.container}>
+      <View pointerEvents="none" style={[styles.container, { bottom }]}>
         <Animated.View
           accessibilityLiveRegion="polite"
           accessibilityRole="alert"
@@ -52,7 +64,6 @@ const styles = StyleSheet.create((theme) => ({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 96,
     alignItems: "center",
     paddingHorizontal: theme.spacing[4],
   },
