@@ -1,37 +1,18 @@
 import { Tabs } from "expo-router";
-import { Host, Icon } from "@expo/ui";
+import type { ColorValue } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import { useTheme } from "@/theme/hooks/useTheme";
+import { Icon, type IconName } from "@/components/common/icon";
 
-const HOME_ICON = Icon.select({
-  ios: "house",
-  android: import("@expo/material-symbols/home.xml"),
-});
-const HOME_ICON_SELECTED = Icon.select({
-  ios: "house.fill",
-  android: import("@expo/material-symbols/home.xml"),
-});
-const TAB2_ICON = Icon.select({
-  ios: "clock",
-  android: import("@expo/material-symbols/history.xml"),
-});
-const TAB2_ICON_SELECTED = Icon.select({
-  ios: "clock.fill",
-  android: import("@expo/material-symbols/history.xml"),
-});
-
-function TabBarIcon({
-  name,
-}: {
-  name: typeof HOME_ICON | typeof HOME_ICON_SELECTED | typeof TAB2_ICON | typeof TAB2_ICON_SELECTED;
-}) {
-  const { isDark } = useTheme();
-
+function TabBarIcon({ name, color, size }: { name: IconName; color: ColorValue; size: number }) {
   return (
-    <Host colorScheme={isDark ? "dark" : "light"} matchContents>
-      <Icon name={name} size={24} />
-    </Host>
+    <Icon
+      accessibilityElementsHidden
+      color={color}
+      importantForAccessibility="no-hide-descendants"
+      name={name}
+      size={size}
+    />
   );
 }
 
@@ -44,14 +25,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: t("tab1.title"),
-          tabBarIcon: ({ focused }) => <TabBarIcon name={focused ? HOME_ICON_SELECTED : HOME_ICON} />,
+          tabBarIcon: ({ color, size }) => <TabBarIcon color={color} name="house" size={size} />,
         }}
       />
       <Tabs.Screen
         name="tab-two"
         options={{
           title: t("tab2.title"),
-          tabBarIcon: ({ focused }) => <TabBarIcon name={focused ? TAB2_ICON_SELECTED : TAB2_ICON} />,
+          tabBarIcon: ({ color, size }) => <TabBarIcon color={color} name="clock" size={size} />,
         }}
       />
     </Tabs>

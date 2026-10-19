@@ -1,21 +1,20 @@
-import { Button, Host, Icon, Text } from "@expo/ui";
+import { Host, Text } from "@expo/ui";
 import { useRouter } from "expo-router";
 import type { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native-unistyles";
 
+import { Icon } from "@/components/common/icon";
+import { IconButton } from "@/components/common/icon-button";
 import { useTheme } from "@/theme/hooks/useTheme";
 import type { ModalLayoutProps } from "./types";
 
-const CLOSE_ICON = Icon.select({
-  ios: "xmark",
-  android: import("@expo/material-symbols/close.xml"),
-});
-
 export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
   const router = useRouter();
-  const { isDark } = useTheme();
+  const { t } = useTranslation("common");
+  const { isDark, theme } = useTheme();
 
   const handleClose = () => {
     router.back();
@@ -29,11 +28,15 @@ export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
             <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{title}</Text>
           </Host>
         ) : null}
-        <Host colorScheme={isDark ? "dark" : "light"} matchContents>
-          <Button onPress={handleClose} variant="text">
-            <Icon name={CLOSE_ICON} size={24} />
-          </Button>
-        </Host>
+        <IconButton accessibilityLabel={t("close")} onPress={handleClose}>
+          <Icon
+            accessibilityElementsHidden
+            color={theme.colors.text.primary}
+            importantForAccessibility="no-hide-descendants"
+            name="x"
+            size={24}
+          />
+        </IconButton>
       </View>
       {children}
     </SafeAreaView>
