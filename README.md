@@ -21,7 +21,7 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: f
 ### UI
 
 - **UI**: `@expo/ui` universal components (Host, Button, Text, Column, Row, etc.)
-- **2D Graphics**: [react-native-skia](https://shopify.github.io/react-native-skia/) 3.0.3 (unscoped Skia 3); tab one renders an animated Skia canvas (`src/screens/tab-one/pulse-canvas.tsx`) colored from the theme
+- **2D Graphics**: [react-native-skia](https://shopify.github.io/react-native-skia/) 3.7.0 (unscoped Skia 3); tab one renders an animated Skia canvas (`src/screens/tab-one/pulse-canvas.tsx`) colored from the theme
 - **Pressable**: local gesture-handler pressable kept for custom hit targets
 - **Layouts**: Base/Bare/Modal layouts for screens
 
