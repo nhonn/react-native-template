@@ -34,10 +34,10 @@ export function useNotes() {
   }, [database]);
 
   const addNote = useCallback(
-    async (title: string) => {
+    async (title: string): Promise<boolean> => {
       const trimmed = title.trim();
       if (!trimmed) {
-        return;
+        return false;
       }
       try {
         await databaseReady;
@@ -46,8 +46,10 @@ export function useNotes() {
             note.title = trimmed;
           });
         });
+        return true;
       } catch (error: unknown) {
         logger.error("Failed to add note:", error);
+        return false;
       }
     },
     [database],

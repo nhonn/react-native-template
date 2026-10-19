@@ -17,6 +17,7 @@
     "placeholder": "New note",
     "add": "Add",
     "added": "Note added",
+    "addFailed": "Couldn't save note. Try again.",
     "empty": "No notes yet."
   },
   "stack1": {
