@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import { PortalProvider } from "react-native-teleport";
 import { StyleSheet } from "react-native-unistyles";
 
 import { initializeI18n } from "@/i18n";
@@ -45,24 +46,26 @@ function RootLayoutNav() {
 
   return (
     <GestureHandlerRootView style={styles.root}>
-      <MainProvider>
-        <ThemeProvider value={navigationTheme}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="stack-one" options={{ headerShown: false, animation: "slide_from_right" }} />
-            <Stack.Screen
-              name="modal-one"
-              options={{
-                headerShown: false,
-                presentation: "modal",
-                animation: "slide_from_bottom",
-              }}
-            />
-            <Stack.Screen name="+not-found" options={{ title: t("notFound.title") }} />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </MainProvider>
+      <PortalProvider>
+        <MainProvider>
+          <ThemeProvider value={navigationTheme}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="stack-one" options={{ headerShown: false, animation: "slide_from_right" }} />
+              <Stack.Screen
+                name="modal-one"
+                options={{
+                  headerShown: false,
+                  presentation: "modal",
+                  animation: "slide_from_bottom",
+                }}
+              />
+              <Stack.Screen name="+not-found" options={{ title: t("notFound.title") }} />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </MainProvider>
+      </PortalProvider>
     </GestureHandlerRootView>
   );
 }
