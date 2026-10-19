@@ -1,3 +1,4 @@
+import type { LayoutChangeEvent } from "react-native";
 import { Canvas, Circle, RadialGradient, vec } from "react-native-skia";
 import { Easing, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
@@ -16,6 +17,11 @@ export function PulseCanvas() {
   const size = useSharedValue({ width: 0, height: 0 });
   const progress = useSharedValue(0);
 
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    size.set({ width, height });
+  };
+
   useEffect(() => {
     progress.set(
       withRepeat(withTiming(1, { duration: PULSE_DURATION_MS, easing: Easing.inOut(Easing.ease) }), -1, true),
@@ -30,7 +36,7 @@ export function PulseCanvas() {
   const ringOpacity = useDerivedValue(() => 1 - progress.value);
 
   return (
-    <Canvas style={styles.canvas} onSize={size}>
+    <Canvas style={styles.canvas} onLayout={onLayout}>
       <Circle
         c={center}
         r={ringRadius}
