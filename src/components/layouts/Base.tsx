@@ -1,17 +1,15 @@
-import { Button, Host, Icon, Text } from "@expo/ui";
+import { Host, Text } from "@expo/ui";
 import { useRouter } from "expo-router";
 import type { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native-unistyles";
 
+import { Icon } from "@/components/common/icon";
+import { IconButton } from "@/components/common/icon-button";
 import { useTheme } from "@/theme/hooks/useTheme";
 import type { BaseLayoutProps } from "./types";
-
-const BACK_ICON = Icon.select({
-  ios: "chevron.left",
-  android: import("@expo/material-symbols/arrow_back.xml"),
-});
 
 export const BaseLayout: FC<BaseLayoutProps> = ({
   title,
@@ -23,6 +21,7 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   callToAction,
 }) => {
   const router = useRouter();
+  const { t } = useTranslation("common");
   const { isDark, theme } = useTheme();
 
   const handleBack = () => {
@@ -41,11 +40,15 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             {showBack ? (
-              <Host colorScheme={isDark ? "dark" : "light"} matchContents>
-                <Button onPress={handleBack} variant="text">
-                  <Icon color={theme.colors.text.inverse} name={BACK_ICON} size={24} />
-                </Button>
-              </Host>
+              <IconButton accessibilityLabel={t("back")} onPress={handleBack}>
+                <Icon
+                  accessibilityElementsHidden
+                  color={theme.colors.text.inverse}
+                  importantForAccessibility="no-hide-descendants"
+                  name="chevron-left"
+                  size={24}
+                />
+              </IconButton>
             ) : null}
             {title ? (
               <Host colorScheme={isDark ? "dark" : "light"} matchContents>

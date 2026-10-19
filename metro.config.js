@@ -1,4 +1,5 @@
 const { getDefaultConfig } = require("expo/metro-config");
+const { withNanoIcons } = require("react-native-nano-icons/metro");
 
 const config = getDefaultConfig(__dirname);
 
@@ -41,4 +42,6 @@ config.resolver = {
 
 config.watchFolders = [];
 
-module.exports = config;
+module.exports = withNanoIcons(config, {
+  iconSets: [{ inputDir: "./assets/icons/ui", fontFamily: "ui" }],
+});
