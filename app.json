@@ -47,7 +47,6 @@
           "organization": "my-template-project"
         }
       ],
-      "./plugins/withWatermelonDb",
       [
         "react-native-nano-icons",
         {
@@ -58,8 +57,7 @@
             }
           ]
         }
-      ],
-      "@rnrepo/expo-config-plugin"
+      ]
     ]
   }
 }

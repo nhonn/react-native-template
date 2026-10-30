@@ -1,4 +1,4 @@
-import { Model } from "@nozbe/watermelondb";
+import { Model } from "react-native-watermelondb";
 
 import { defineColumns } from "../define-columns";
 

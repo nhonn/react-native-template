@@ -1,4 +1,4 @@
-import type { Model } from "@nozbe/watermelondb";
+import type { Model } from "react-native-watermelondb";
 
 type RawValue = Parameters<Model["_setRaw"]>[1];
 

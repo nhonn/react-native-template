@@ -1,93 +1,67 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
 # dependencies
 node_modules/
 
 # Expo
 .expo/
+expo-env.d.ts
 dist/
 web-build/
 
-# Native
+# Native (prebuild output; keep native code under modules/)
+/android/
+/ios/
 .kotlin/
+/modules/**/android/build/
+!modules/**/android/
+!modules/**/ios/
+
+# Nitro codegen output
+nitrogen/generated/
+
+# signing / secrets
 *.orig.*
 *.jks
 *.p8
 *.p12
 *.key
+*.pem
 *.mobileprovision
+.env
+.env*.local
 
-# Metro
+# caches / build info
+.cache/
+.metro/
 .metro-health-check*
+.eslintcache
+babel.cache.json
+*.tsbuildinfo
 
 # debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
-.DS_Store
-*.pem
-
-# local env files
-.env*.local
-
-# typescript
-*.tsbuildinfo
-
-app-example
-
-.env
-.env.local
-
-/android/
-/ios/
-/modules/**/android/build/
-!modules/**/android/
-!modules/**/ios/
-
-# Build optimization caches
-node_modules/.cache/
-.expo/cache/
-.cache/
-
-# TypeScript incremental build info
-*.tsbuildinfo
-tsconfig.tsbuildinfo
-
-# Babel cache
-babel.cache.json
-
-# ESLint cache
-.eslintcache
-
-# Metro cache
-.metro/
-
-# Temporary files
+# temp
 *.tmp
 *.temp
 .tmp/
 .temp/
 
-# IDE files
+# tests
+coverage
+e2e/results/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 .idea/
 *.swp
 *.swo
 
-# OS generated files
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-ios
-android
-.env
-
-# E2E Test Results
-e2e/results/
+# agents / misc
+app-example
 .trae
-coverage
-
-# ZCode agent files
 .zcode/

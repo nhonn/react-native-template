@@ -3,16 +3,5 @@ pre-commit:
   commands:
     verify-locales:
       run: bun run verify:locales
-    format:
-      run: bunx oxfmt --write .
-      glob:
-        - "*.js"
-        - "*.jsx"
-        - "*.ts"
-        - "*.tsx"
-        - "*.json"
-        - "*.jsonc"
-        - "*.css"
-      stage_fixed: true
     typecheck:
       run: bun run typecheck

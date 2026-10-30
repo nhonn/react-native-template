@@ -3,13 +3,12 @@
  * Legend State observable for theme management
  */
 
-import { computed } from "@legendapp/state";
-import { persistObservable } from "@legendapp/state/persist";
+import { computed, observable } from "@legendapp/state";
+import { observablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
+import { syncObservable } from "@legendapp/state/sync";
 import { useSelector } from "@legendapp/state/react";
 import React from "react";
 import { Appearance, useColorScheme } from "react-native";
-
-import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
 
 import { applyUnistylesTheme, createTheme } from "../unistyles";
 import type { Theme, ThemeConfig, ThemeMode } from "../types";
@@ -39,17 +38,15 @@ const getInitialMode = (followSystemTheme: boolean, defaultMode: ThemeMode): The
   return defaultMode;
 };
 
-export const themePrefs$ = persistObservable(
-  {
-    mode: getInitialMode(true, "light"),
-    followSystemTheme: true,
-    defaultMode: "light" as ThemeMode,
-  },
-  {
-    local: "theme-store",
-    pluginLocal: ObservablePersistMMKVNative,
-  },
-);
+export const themePrefs$ = observable({
+  mode: getInitialMode(true, "light"),
+  followSystemTheme: true,
+  defaultMode: "light" as ThemeMode,
+});
+
+syncObservable(themePrefs$, {
+  persist: { name: "theme-store", plugin: observablePersistMMKV({ id: "obsPersist" }) },
+});
 
 export const theme$ = computed(() => createTheme(themePrefs$.mode.get()));
 

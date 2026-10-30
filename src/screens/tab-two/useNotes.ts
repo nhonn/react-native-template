@@ -1,5 +1,5 @@
-import { Q } from "@nozbe/watermelondb";
-import { useDatabase } from "@nozbe/watermelondb/react";
+import { Q } from "react-native-watermelondb";
+import { useDatabase } from "react-native-watermelondb/react";
 import { useCallback, useEffect, useState } from "react";
 
 import { databaseReady, type Note } from "@/data";

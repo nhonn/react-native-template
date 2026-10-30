@@ -1,4 +1,4 @@
-import { appSchema, tableSchema } from "@nozbe/watermelondb";
+import { appSchema, tableSchema } from "react-native-watermelondb";
 
 export const schema = appSchema({
   // Bump on every schema change and add a matching step in ./migrations.ts.

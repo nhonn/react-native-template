@@ -1,4 +1,4 @@
-import { DatabaseProvider } from "@nozbe/watermelondb/react";
+import { DatabaseProvider } from "react-native-watermelondb/react";
 import type { ReactNode } from "react";
 
 import { ErrorBoundary } from "@/components/common/error-boundary";
