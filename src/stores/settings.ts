@@ -1,10 +1,11 @@
-import { persistObservable } from "@legendapp/state/persist";
+import { observable } from "@legendapp/state";
+import { observablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
+import { syncObservable } from "@legendapp/state/sync";
 import { useSelector } from "@legendapp/state/react";
 
 import { setAppLanguage } from "@/i18n";
 import type { TextSizePreference } from "@/theme/types";
 import type { ValidDateFormat } from "@/types/date";
-import { ObservablePersistMMKVNative } from "@/utils/legend-persist";
 
 export interface RuntimeSettings {
   premium: boolean;
@@ -38,24 +39,23 @@ const defaultPersistentSettings: PersistentSettings = {
   textSizePreference: "default",
 };
 
-export const settings$ = persistObservable(
-  {
-    ...defaultRuntimeSettings,
-    ...defaultPersistentSettings,
-  },
-  {
-    local: {
-      name: "settings",
-      transform: {
-        out: (value) => {
-          const { premium: _premium, ...persisted } = value;
-          return persisted as typeof value;
-        },
+export const settings$ = observable<RuntimeSettings & PersistentSettings>({
+  ...defaultRuntimeSettings,
+  ...defaultPersistentSettings,
+});
+
+syncObservable(settings$, {
+  persist: {
+    name: "settings",
+    plugin: observablePersistMMKV({ id: "obsPersist" }),
+    transform: {
+      save: (value) => {
+        const { premium: _premium, ...persisted } = value;
+        return persisted as typeof value;
       },
     },
-    pluginLocal: ObservablePersistMMKVNative,
   },
-);
+});
 
 const settingsActions: SettingsActions = {
   setIsPremium: (isPremium) => {

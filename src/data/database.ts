@@ -1,5 +1,5 @@
-import { Database } from "@nozbe/watermelondb";
-import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
+import { Database } from "react-native-watermelondb";
+import SQLiteAdapter from "react-native-watermelondb/adapters/sqlite";
 
 import { logger } from "@/utils/logger";
 import { captureException } from "@/utils/sentry";
@@ -12,9 +12,7 @@ const adapter = new SQLiteAdapter({
   dbName: "app",
   schema,
   migrations,
-  // WatermelonDB's JSI adapter depends on React Native's removed RCTCxxBridge API, so use the
-  // native bridge dispatcher on both platforms. Needs a development build (not Expo Go).
-  jsi: false,
+  // Nitro C++ engine; calls run synchronously on the JS thread. Needs a development build.
   onSetUpError: (error) => {
     logger.error("Database setup failed:", error);
     captureException(error);

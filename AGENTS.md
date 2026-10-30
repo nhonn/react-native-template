@@ -6,17 +6,17 @@ This is an Expo (SDK 58) + Expo Router template. App code lives under `src/` (sc
 
 | UI | `@expo/ui` universal. Import from `@expo/ui`. Every `@expo/ui` tree sits in `Host`. |
 | Styling | `@expo/ui` `style` / `textStyle` on native trees. RN views: react-native-unistyles `StyleSheet.create((theme) => ...)`. Never `className`, Tailwind, or Uniwind. Never `StyleSheet` from `react-native`. |
-| Icons | `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-symbol>", android: import("@expo/material-symbols/<name>.xml") })`. Never Phosphor. |
+| Icons | `@expo/ui` `Icon`. Never Phosphor. |
 | Navigation | Expo Router file-based routing (`app/` layouts and route wrappers) |
 | Screen bodies | `src/screens/*`, imported by route wrappers |
 | State | Legend State (`@legendapp/state`) + MMKV persist |
-| Database | WatermelonDB (`@nozbe/watermelondb`), SQLite adapter with `jsi: false`, in `src/data/` |
+| Database | WatermelonDB (`react-native-watermelondb`, Nitro SQLite adapter), in `src/data/` |
 | Graphics | `react-native-skia` (unscoped Skia 3) with Reanimated; theme colors from `useTheme()` |
 | Lists | `@/components/common/legend-list` (`@legendapp/list`) |
 | i18n | i18next + `react-i18next`, JSON namespaces under `src/i18n/locales` |
 | Errors | Sentry (`@/utils/sentry`) + local `ErrorBoundary` |
 | Subscriptions | RevenueCat (`@/utils/revenuecat`) |
-| Lint / format | Oxlint + Oxfmt; Lefthook runs format + `tsc` on commit |
+| Lint / format | Oxlint; Lefthook runs locale check + `tsc` on commit |
 
 Do not add Zustand, Recoil, Redux, a form library without being asked, or a second UI kit. Do not add a UI provider.
 
@@ -150,7 +150,7 @@ Do not introduce `src/features/`, `src/lib/`, or put screen UI in `app/` or the 
 
 New reusable UI: kebab-case file, one primary named export. When a component grows, use a folder + `index.tsx` and colocate private parts.
 
-Icons: `@expo/ui` `Icon` + `@expo/material-symbols`. `Icon.select({ ios: "<sf-symbol>", android: import("@expo/material-symbols/<name>.xml") })`. Never Phosphor.
+Icons: `@expo/ui` `Icon`. Never Phosphor.
 
 ### Styling
 
@@ -197,9 +197,9 @@ Global and persisted state uses `@legendapp/state` observables, not React Contex
 Pattern (see `src/stores/settings.ts` and `src/theme/stores/useThemeStore.ts`):
 
 1. Split **runtime** fields (must not persist) from **persistent** fields.
-2. Create `foo$` with `persistObservable` when anything should survive process death.
-3. Persist through `ObservablePersistMMKVNative` from `@/utils/legend-persist`.
-4. Use a `transform.out` (or omit keys) so ephemeral fields like `premium` never hit disk.
+2. Create `foo$` with `observable` + `syncObservable` (`persist`) when anything should survive process death.
+3. Persist through `observablePersistMMKV({ id: "obsPersist" })` from `@legendapp/state/persist-plugins/mmkv`.
+4. Use `persist.transform.save` (or omit keys) so ephemeral fields like `premium` never hit disk.
 5. Put mutations in a named `*Actions` object that writes with `.set()` / observable APIs.
 6. Export a hook via `useSelector` that can take an optional selector. Attach `.getState()` for non-React callers.
 
@@ -218,7 +218,7 @@ Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider
 
 | Data                                                | Mechanism                                                                         |
 | --------------------------------------------------- | --------------------------------------------------------------------------------- |
-| User settings, flags that must persist              | `src/stores/*` + `persistObservable` + MMKV plugin                                |
+| User settings, flags that must persist              | `src/stores/*` + `syncObservable` + MMKV plugin                                |
 | Theme mode / follow-system                          | `src/theme/stores/useThemeStore.ts`                                               |
 | One-off key/value (i18n language bootstrap, etc.)   | `@/utils/storage` (`StorageKeys`)                                                 |
 | Server/async cache, lists from network              | Keep fetch close to the screen or a dedicated store; do not dump into `settings$` |
@@ -238,11 +238,11 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ### Database (WatermelonDB)
 
-- Everything lives in `src/data/`: `schema.ts`, `migrations.ts`, `models/<name>.ts`, `database.ts` (SQLite adapter, `jsi: false`, plus `define-columns.ts`). Export from `src/data/index.ts`; `DatabaseProvider` is composed into `MainProvider`.
+- Everything lives in `src/data/`: `schema.ts`, `migrations.ts`, `models/<name>.ts`, `database.ts` (Nitro SQLite adapter, plus `define-columns.ts`). Export from `src/data/index.ts`; `DatabaseProvider` is composed into `MainProvider`.
 - Changing a table: bump `version` in `schema.ts` **and** add a step in `migrations.ts`. Register new models in `modelClasses`.
 - Models do not use decorators (`experimentalDecorators` is off). Declare typed fields on the class and bind them with `Object.defineProperties(Model.prototype, defineColumns({...}))` from `src/data/define-columns.ts` (see `models/note.ts`).
 - Read via `useDatabase()` + `collection.query(...).observe()` (see `src/screens/tab-two/useNotes.ts`); write inside `database.write(...)`.
-- Needs a development build (not Expo Go). Native wiring is `plugins/withWatermelonDb.js` (simdjson pod + static pods) plus `ios.useFrameworks: "static"` in `app.json`, and `patches/watermelondb@0.28.0.patch` via `patchedDependencies`; rebuild native after changing them. `jsi` stays `false` (RN 0.88 lacks `RCTCxxBridge`). Await `databaseReady` from `@/data` before the first query or write.
+- Needs a development build (not Expo Go); the native engine is a Nitro module (`react-native-nitro-modules`, `rxjs` peer). Await `databaseReady` from `@/data` before the first query or write.
 - Do not put queryable/relational data in `settings$` or MMKV.
 
 ## i18n, errors
@@ -255,7 +255,7 @@ Do not persist derived data, functions, or React nodes. Do not create a new MMKV
 
 ## Git commits
 
-Lefthook **pre-commit** runs `bun run verify:locales`, `bunx oxfmt --write` (auto-stages fixes) and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` (check only; `bun run lint:fix` applies fixes) and `bun run typecheck` before you commit when you touched types or many files.
+Lefthook **pre-commit** runs `bun run verify:locales` and `bun run typecheck`. A commit that fails `tsc` will be rejected. Run `bun run lint` (check only; `bun run lint:fix` applies fixes) and `bun run typecheck` before you commit when you touched types or many files.
 
 ### Message format
 
@@ -278,7 +278,7 @@ feat(data): add WatermelonDB with SQLite JSI adapter
 feat: replace Zustand with Legend State
 fix(settings): stop persisting premium onto disk
 refactor: migrate to expo-router
-chore: replace Biome with Oxlint and Oxfmt
+chore: replace Biome with Oxlint
 ```
 
 ### What to put in a commit

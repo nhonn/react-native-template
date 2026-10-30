@@ -13,7 +13,7 @@ const nonInlinedRequires = [
   "react-compiler-runtime",
   "react-native",
   // WatermelonDB's import-time setup must run eagerly, never deferred by inlineRequires.
-  "@nozbe/watermelondb",
+  "react-native-watermelondb",
 ];
 
 config.transformer = {
