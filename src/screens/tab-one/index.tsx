@@ -1,7 +1,6 @@
 import { Column, Host, Row, Switch, Text } from "@expo/ui";
+import { Text as TwText, View } from "@tamagui/tailwind";
 import { useTranslation } from "react-i18next";
-import { Text as RNText, View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
 
 import { useTheme } from "@/theme/hooks/useTheme";
 
@@ -16,7 +15,7 @@ export function TabOneScreen() {
   };
 
   return (
-    <View style={styles.root}>
+    <View className="flex-1 bg-background-primary">
       <Host colorScheme={isDark ? "dark" : "light"} matchContents={{ vertical: true }}>
         <Column spacing={16} style={{ padding: 16 }}>
           <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{t("tab1.title")}</Text>
@@ -28,24 +27,10 @@ export function TabOneScreen() {
         </Column>
       </Host>
       <PulseCanvas />
-      <View style={styles.card}>
-        <RNText style={styles.cardTitle}>{t("tab1.cardTitle")}</RNText>
-        <RNText style={styles.cardBody}>{t("tab1.cardBody")}</RNText>
+      <View className="m-4 gap-1 rounded-lg bg-surface-elevated p-4">
+        <TwText className="text-[16px] font-semibold text-text-primary">{t("tab1.cardTitle")}</TwText>
+        <TwText className="text-text-secondary">{t("tab1.cardBody")}</TwText>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  root: { flex: 1, backgroundColor: theme.colors.background.primary },
-  card: {
-    margin: theme.spacing[4],
-    marginTop: theme.spacing[4],
-    padding: theme.spacing[4],
-    gap: theme.spacing[1],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.surface.elevated,
-  },
-  cardTitle: { color: theme.colors.text.primary, fontSize: 16, fontWeight: "600" },
-  cardBody: { color: theme.colors.text.secondary },
-}));

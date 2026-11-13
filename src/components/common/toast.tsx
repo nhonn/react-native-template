@@ -1,11 +1,19 @@
+import { Text, View } from "@tamagui/tailwind";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Portal } from "react-native-teleport";
-import { StyleSheet } from "react-native-unistyles";
+
+import { styledNative } from "./styled-native";
 
 const DEFAULT_TAB_BAR_HEIGHT = 49;
+
+// shadow-md from the theme shadows (offset 0/4, radius 6, opacity 0.1). The Android
+// `elevation: 4` the old style spread in has no Tailwind equivalent in this grammar.
+const ToastBox = styledNative(
+  Animated.View,
+  "max-w-[90%] rounded-lg bg-text-primary px-4 py-3 shadow-[0px_4px_6px_rgba(0,0,0,0.1)]",
+);
 
 interface ToastProps {
   message: string;
@@ -44,40 +52,16 @@ export function Toast({ message, visible, onHide, durationMs = 2000, offsetBotto
 
   return (
     <Portal hostName="root" name="toast">
-      <View pointerEvents="none" style={[styles.container, { bottom }]}>
-        <Animated.View
+      <View className="pointer-events-none absolute inset-x-0 items-center px-4" style={{ bottom }}>
+        <ToastBox
           accessibilityLiveRegion="polite"
           accessibilityRole="alert"
           accessible
           entering={FadeInDown.duration(180)}
-          style={styles.toast}
         >
-          <Text style={styles.text}>{message}</Text>
-        </Animated.View>
+          <Text className="text-[15px] font-medium text-background-primary">{message}</Text>
+        </ToastBox>
       </View>
     </Portal>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    paddingHorizontal: theme.spacing[4],
-  },
-  toast: {
-    maxWidth: "90%",
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.text.primary,
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
-    ...theme.shadows.md,
-  },
-  text: {
-    color: theme.colors.background.primary,
-    fontSize: 15,
-    fontWeight: "500",
-  },
-}));

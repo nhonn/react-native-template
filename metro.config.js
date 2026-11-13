@@ -1,4 +1,5 @@
 const { getDefaultConfig } = require("expo/metro-config");
+const { withTamagui } = require("@tamagui/metro-plugin");
 const { withNanoIcons } = require("react-native-nano-icons/metro");
 
 const config = getDefaultConfig(__dirname);
@@ -42,6 +43,12 @@ config.resolver = {
 
 config.watchFolders = [];
 
-module.exports = withNanoIcons(config, {
-  iconSets: [{ inputDir: "./assets/icons/ui", fontFamily: "ui" }],
-});
+module.exports = withTamagui(
+  withNanoIcons(config, {
+    iconSets: [{ inputDir: "./assets/icons/ui", fontFamily: "ui" }],
+  }),
+  {
+    components: ["tamagui", "@tamagui/tailwind"],
+    config: "./tamagui.config.ts",
+  },
+);

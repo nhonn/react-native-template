@@ -14,8 +14,8 @@ Modern Expo + Expo Router template with a small, production-oriented baseline: f
 
 ### Styling & Theme
 
-- **Styling**: [react-native-unistyles](https://unistyl.es) for RN views + `@expo/ui` style/textStyle on native trees
-- **Theming**: light/dark mode + system theme sync (Legend State store bridged to `UnistylesRuntime`)
+- **Styling**: [Tamagui Tailwind](https://tamagui.dev/docs/core/tailwind) (`@tamagui/tailwind` `View`/`Text`/`styled` + `className`) for RN views + `@expo/ui` style/textStyle on native trees
+- **Theming**: light/dark mode + system theme sync (Legend State store feeds `TamaguiProvider` / `Theme`)
 - **Design tokens**: colors, spacing, typography, radii, shadows
 
 ### UI
@@ -50,7 +50,7 @@ src/
 ├── providers/          # Top-level providers (ErrorBoundary, etc.)
 ├── screens/            # Screen UI rendered by routes
 ├── stores/             # App stores (settings, etc.)
-├── theme/              # Theme system (tokens, hooks, store, unistyles registry)
+├── theme/              # Theme system (tokens, hooks, store)
 ├── types/              # Shared TS types
 └── utils/              # Utilities (storage, logger, date, etc.)
 ```
@@ -115,28 +115,35 @@ export function Example() {
 
 ### Styling
 
-RN views are styled with [react-native-unistyles](https://unistyl.es). Import `StyleSheet` from `react-native-unistyles` (never `react-native`), define styles at module level, and reach theme tokens through the `theme` callback argument. Styles update automatically on light/dark change — no hook needed.
+RN views are styled with [Tamagui Tailwind](https://tamagui.dev/docs/core/tailwind): `View` and `Text` from `@tamagui/tailwind` take a `className` of utilities.
 
 ```tsx
-import { View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
-
-const styles = StyleSheet.create((theme) => ({
-  card: {
-    padding: theme.spacing[4],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.surface.elevated,
-  },
-}));
+import { View } from "@tamagui/tailwind";
 
 export function Card() {
-  return <View style={styles.card}>{/* ... */}</View>;
+  return <View className="gap-1 rounded-lg bg-surface-elevated p-4">{/* ... */}</View>;
 }
 ```
 
-Avoid inline `style={{...}}` on RN views and theme reads in JSX. `@expo/ui` props (`style`, `textStyle` on `Host`/`Column`/`Text`, …) are `@expo/ui`'s own API and stay inline.
+**Setup**
 
-The unistyles themes are registered in `src/theme/unistyles.ts`; the light/dark decision itself lives in the Legend State theme store (`themePrefs$`) and is bridged to `UnistylesRuntime.setTheme` on every mode change.
+- `tamagui.config.ts` (repo root) builds the config from `@tamagui/config/v6` and replaces its tokens and themes with the template's own, imported from `src/theme/constants` and `src/theme/themes`:
+  - `space` / `size` = `Spacing` (`p-4` = 16, `p-3.5` = 14, `gap-1` = 4)
+  - `radius` = `BorderRadius` (`rounded-lg` = 12; `none` is a reserved Tamagui name, `rounded-none` works without it)
+  - `color` = flattened `Colors` (`bg-gray-50`, `text-primary-500`)
+  - `light` / `dark` themes = `lightColorScheme` / `darkColorScheme` flattened to kebab-case keys: `bg-background-primary`, `bg-surface-elevated`, `text-text-secondary`, `border-border-secondary`, `bg-interactive-primary-hover`. Theme classes switch with the mode.
+- `MainProvider` wraps the app in `TamaguiProvider` + `<Theme name={mode}>`; `mode` comes from the Legend State theme store (`themePrefs$`), which remains the single source of truth for light/dark.
+- `metro.config.js` wraps the config with `withTamagui` from `@tamagui/metro-plugin` (`components: ["tamagui", "@tamagui/tailwind"]`). `babel.config.js` only needs `babel-preset-expo` and the Reanimated plugin.
+- Third-party components that do not take `className` (`SafeAreaView`, `GestureHandlerRootView`, `Animated.View`, Skia `Canvas`) are wrapped once at module level with `styledNative(Component, "classes")` from `@/components/common/styled-native`.
+
+**Rules**
+
+- Conflicting classes resolve by position, not like web Tailwind: write the winning class last (`rounded rounded-r-none`).
+- Use `flex-1` for `flex: 1`; fixed font sizes and percentages use arbitrary values (`text-[16px]`, `max-w-[60%]`).
+- Props that take a style object, not a class (`contentContainerStyle`, computed safe-area offsets), get a plain object; read tokens with `getTokenValue("$4", "space")` from `tamagui`.
+- `@expo/ui` props (`style`, `textStyle` on `Host`/`Column`/`Text`, …) are `@expo/ui`'s own API and stay inline.
+
+To sync an app with this template, copy `tamagui.config.ts`, the `withTamagui` metro wrapper, `MainProvider`, `styled-native.ts`, and `src/theme`.
 
 ### Theming
 

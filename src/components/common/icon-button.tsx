@@ -1,5 +1,5 @@
+import { View } from "@tamagui/tailwind";
 import type { ReactNode } from "react";
-import { StyleSheet } from "react-native-unistyles";
 
 import { Pressable } from "./pressable";
 
@@ -15,24 +15,12 @@ interface IconButtonProps {
  */
 export function IconButton({ accessibilityLabel, onPress, children }: IconButtonProps) {
   return (
-    <Pressable
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      hitSlop={12}
-      onPress={onPress}
-      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-    >
-      {children}
+    <Pressable accessibilityLabel={accessibilityLabel} accessibilityRole="button" hitSlop={12} onPress={onPress}>
+      {({ pressed }) => (
+        <View className={pressed ? "size-6 items-center justify-center opacity-50" : "size-6 items-center justify-center"}>
+          {children}
+        </View>
+      )}
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    width: 24,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  pressed: { opacity: 0.5 },
-});
