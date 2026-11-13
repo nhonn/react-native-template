@@ -5,7 +5,7 @@ This is an Expo (SDK 58) + Expo Router template. App code lives under `src/` (sc
 ## Stack (do not swap without being asked)
 
 | UI | `@expo/ui` universal. Import from `@expo/ui`. Every `@expo/ui` tree sits in `Host`. |
-| Styling | `@expo/ui` `style` / `textStyle` on native trees. RN views: react-native-unistyles `StyleSheet.create((theme) => ...)`. Never `className`, Tailwind, or Uniwind. Never `StyleSheet` from `react-native`. |
+| Styling | `@expo/ui` `style` / `textStyle` on native trees. RN views: Tamagui Tailwind authoring (`@tamagui/tailwind` `View`/`Text`/`styled` + `className`), tokens in `tamagui.config.ts`. Never `StyleSheet`, Uniwind, or NativeWind. |
 | Icons | `@expo/ui` `Icon`. Never Phosphor. |
 | Navigation | Expo Router file-based routing (`app/` layouts and route wrappers) |
 | Screen bodies | `src/screens/*`, imported by route wrappers |
@@ -18,7 +18,7 @@ This is an Expo (SDK 58) + Expo Router template. App code lives under `src/` (sc
 | Subscriptions | RevenueCat (`@/utils/revenuecat`) |
 | Lint / format | Oxlint; Lefthook runs locale check + `tsc` on commit |
 
-Do not add Zustand, Recoil, Redux, a form library without being asked, or a second UI kit. Do not add a UI provider.
+Do not add Zustand, Recoil, Redux, a form library without being asked, or a second UI kit. Do not add a UI provider beyond `TamaguiProvider` in `MainProvider`.
 
 ### Package manager: bun
 
@@ -61,7 +61,7 @@ src/
 ├── data/                   # WatermelonDB schema, migrations, models/, database instance
 ├── hooks/                  # app-wide hooks (refresh control)
 ├── i18n/                   # initializeI18n + locales/<lang>/<ns>.json
-├── providers/              # MainProvider (ErrorBoundary + DatabaseProvider + theme tracking)
+├── providers/              # MainProvider (TamaguiProvider + ErrorBoundary + DatabaseProvider + theme tracking)
 ├── stores/                 # app observables (settings$)
 ├── theme/                  # tokens, hooks, theme store, light/dark schemes
 ├── types/                  # shared TS types
@@ -135,8 +135,8 @@ Do not introduce `src/features/`, `src/lib/`, or put screen UI in `app/` or the 
 - Universal first. Platform-specific `@expo/ui/swift-ui` / `jetpack-compose` only when universal lacks the control; isolate in `src/components/**/*.ios.tsx` / `*.android.tsx` (never under `app/`).
 - `Button` uses `label` + `variant`: `"filled"` | `"outlined"` | `"text"`. `Switch`/`Checkbox` use `value` + `onValueChange`. Controlled `TextInput` uses `useNativeState`, not a string `value`.
 - `@expo/ui` `List` is not for large datasets — keep `@/components/common/legend-list`.
-- Do not wrap `@expo/ui` in a local kit. Do not add HeroUI/NativeBase/another kit. Do not add a UI provider. Do not add Tailwind, Uniwind, or `className`.
-- RN-only gaps (card/spinner/divider): RN `View` / `ActivityIndicator` + unistyles `StyleSheet`, or platform-specific `@expo/ui` when needed.
+- Do not wrap `@expo/ui` in a local kit. Do not add HeroUI/NativeBase/another kit. Do not add a UI provider beyond `TamaguiProvider`. `className` is only for `@tamagui/tailwind` components; no `tailwindcss`, Uniwind, or NativeWind.
+- RN-only gaps (card/spinner/divider): `@tamagui/tailwind` `View` / RN `ActivityIndicator` (wrap with `styledNative`), or platform-specific `@expo/ui` when needed.
 - Theme mode: `useTheme()` / `useThemeStore()`. After mode changes, `Host colorScheme` is the only native theming hook — do not call `Uniwind.setTheme`.
 
 ### Local components that stay local
@@ -154,27 +154,21 @@ Icons: `@expo/ui` `Icon`. Never Phosphor.
 
 ### Styling
 
-- React Native trees: **react-native-unistyles**. Import `StyleSheet` from `react-native-unistyles` (never from `react-native`), define styles at module level as `StyleSheet.create((theme) => ({...}))`, and apply with `styles.x`. Themed styles update automatically on mode change — no hook needed.
-- Never inline `style={{...}}` on RN views, never read theme colors in JSX, and never `className`, Tailwind, or Uniwind. `@expo/ui` `style` / `textStyle` props on native trees are the exception — they are `@expo/ui`'s own API and stay inline.
+- RN trees: **Tamagui with Tailwind authoring**. Import `View` / `Text` from `@tamagui/tailwind` and style with `className` utilities. Third-party RN components (`SafeAreaView`, `GestureHandlerRootView`, `Animated.View`, Skia `Canvas`) are wrapped once at module level with `styledNative(Component, "classes")` from `@/components/common/styled-native` (a typed `styled()` from `@tamagui/tailwind`).
+- Never `StyleSheet` (from `react-native` or anywhere), Uniwind, NativeWind, or `tailwindcss`. Never hand-pick hex values in a class — use token / theme classes. Runtime-computed values (safe-area `bottom`, a `contentContainerStyle` that cannot take `className`) are the only inline `style` on RN views; read tokens there with `getTokenValue("$4", "space")` from `tamagui`. `@expo/ui` `style` / `textStyle` props on native trees stay inline as `@expo/ui`'s own API.
+- Tokens and themes live in `tamagui.config.ts` at the repo root, derived from `src/theme/constants` and `src/theme/themes` (not re-typed): `space`/`size` = `Spacing` (`p-4` = 16), `radius` = `BorderRadius` (`rounded-lg` = 12; no `none` token — `rounded-none` is built in), `color` = flattened `Colors` (`bg-gray-50`, `text-primary-500`), and `light` / `dark` themes = flattened `ColorScheme` in kebab case (`bg-background-primary`, `bg-surface-elevated`, `text-text-secondary`, `border-border-secondary`, `bg-interactive-primary-hover`). Theme classes follow the active mode automatically.
+- Conflicting classes resolve by position: write the winning class last.
+- Fixed font sizes use arbitrary values (`text-[16px]`); `flex-1`, not `flex`, for `flex: 1`.
 - Theme mode: `useTheme()` / `useThemeStore()` from `@/theme`. Do not call `Appearance` ad hoc in screens.
-- The mode decision stays in `themePrefs$` (Legend State + MMKV). The store bridges it to unistyles via `applyUnistylesTheme()` (`src/theme/unistyles.ts`) → `UnistylesRuntime.setTheme`. `Host colorScheme` remains the native-tree theming hook; do not call `Uniwind.setTheme`.
+- The mode decision stays in `themePrefs$` (Legend State + MMKV). `MainProvider` reads `useThemeMode()` and feeds `TamaguiProvider defaultTheme` + `<Theme name={mode}>`. `Host colorScheme` remains the native-tree theming hook. Metro uses `withTamagui` (`metro.config.js`); `babel.config.js` needs no Tamagui plugin.
 
 Example:
 
 ```tsx
-import { View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    flex: 1,
-    padding: theme.spacing[4],
-    backgroundColor: theme.colors.background.primary,
-  },
-}));
+import { View } from "@tamagui/tailwind";
 
 export function MyScreen() {
-  return <View style={styles.container}>{/* ... */}</View>;
+  return <View className="flex-1 bg-background-primary p-4">{/* ... */}</View>;
 }
 ```
 
@@ -212,7 +206,7 @@ useSettingsStore.getState().setLanguage("en");
 settings$.language.set("en");
 ```
 
-Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider` already runs `useSystemThemeTracking()`. Mode changes reach unistyles through `applyUnistylesTheme` (wired inside `applyMode` in the store); root init calls `initializeUnistylesTheme()` so a persisted manual override wins over the system. Native trees track theme changes via `Host colorScheme`; RN trees via unistyles stylesheets.
+Theme persistence lives in `themePrefs$` (`local: "theme-store"`). `MainProvider` already runs `useSystemThemeTracking()`. `MainProvider` feeds the resolved mode to `TamaguiProvider`/`Theme`, so RN trees follow mode changes through Tamagui themes; native trees track them via `Host colorScheme`.
 
 ### What belongs where
 

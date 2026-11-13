@@ -1,9 +1,8 @@
 import { Button, Column, Host, Text } from "@expo/ui";
+import { View } from "@tamagui/tailwind";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
 
 import { Layout } from "@/components/layouts";
 import { useTheme } from "@/theme/hooks/useTheme";
@@ -16,7 +15,7 @@ export function StackOneScreen() {
 
   return (
     <Layout.Base title={t("stack1.title")}>
-      <View style={styles.content}>
+      <View className="flex-1 items-center justify-center bg-surface-primary">
         <Host colorScheme={isDark ? "dark" : "light"} matchContents>
           <Column spacing={16}>
             <Text>{t("stack1.subtitle")}</Text>
@@ -29,12 +28,3 @@ export function StackOneScreen() {
     </Layout.Base>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  content: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.surface.primary,
-  },
-}));

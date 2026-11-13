@@ -65,3 +65,6 @@ Desktop.ini
 app-example
 .trae
 .zcode/
+
+# Tamagui generated
+.tamagui/

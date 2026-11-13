@@ -8,7 +8,7 @@
     "title": "Tab 1",
     "subtitle": "A native @expo/ui tree inside Host.",
     "darkMode": "Dark mode",
-    "cardTitle": "Unistyles card",
+    "cardTitle": "Tamagui card",
     "cardBody": "This RN view restyles automatically when the mode changes."
   },
   "tab2": {

@@ -10,7 +10,7 @@ import { useSelector } from "@legendapp/state/react";
 import React from "react";
 import { Appearance, useColorScheme } from "react-native";
 
-import { applyUnistylesTheme, createTheme } from "../unistyles";
+import { createTheme } from "../create-theme";
 import type { Theme, ThemeConfig, ThemeMode } from "../types";
 
 interface ThemeStoreState {
@@ -52,7 +52,6 @@ export const theme$ = computed(() => createTheme(themePrefs$.mode.get()));
 
 const applyMode = (mode: ThemeMode) => {
   themePrefs$.mode.set(mode);
-  applyUnistylesTheme(mode);
 };
 
 const themeActions: ThemeStoreActions = {
@@ -130,14 +129,6 @@ export const useThemeStore = Object.assign(
     },
   },
 ) as ThemeStoreHook;
-
-/**
- * Pushes the store's persisted, resolved mode into unistyles. Called once
- * during root init so a manual light/dark override wins over the system.
- */
-export function initializeUnistylesTheme() {
-  applyUnistylesTheme(themePrefs$.mode.peek());
-}
 
 export function useSystemThemeTracking() {
   const systemColorScheme = useColorScheme();

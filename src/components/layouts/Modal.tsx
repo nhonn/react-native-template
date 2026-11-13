@@ -1,14 +1,13 @@
 import { Host, Text } from "@expo/ui";
+import { View } from "@tamagui/tailwind";
 import { useRouter } from "expo-router";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native-unistyles";
 
 import { Icon } from "@/components/common/icon";
 import { IconButton } from "@/components/common/icon-button";
 import { useTheme } from "@/theme/hooks/useTheme";
+import { SafeScreen } from "./safe-screen";
 import type { ModalLayoutProps } from "./types";
 
 export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
@@ -21,8 +20,8 @@ export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View style={styles.header}>
+    <SafeScreen className="px-4 py-2">
+      <View className="flex-row items-center justify-between py-4">
         {title ? (
           <Host colorScheme={isDark ? "dark" : "light"} matchContents>
             <Text textStyle={{ fontSize: 20, fontWeight: "600" }}>{title}</Text>
@@ -39,23 +38,8 @@ export const ModalLayout: FC<ModalLayoutProps> = ({ title, children }) => {
         </IconButton>
       </View>
       {children}
-    </SafeAreaView>
+    </SafeScreen>
   );
 };
-
-const styles = StyleSheet.create((theme) => ({
-  root: {
-    flex: 1,
-    backgroundColor: theme.colors.background.primary,
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: theme.spacing[4],
-  },
-}));
 
 ModalLayout.displayName = "ModalLayout";

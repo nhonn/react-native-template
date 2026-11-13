@@ -1,8 +1,7 @@
 import { BottomSheet, Button, Column, Host, Text } from "@expo/ui";
+import { View } from "@tamagui/tailwind";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
 
 import { Layout } from "@/components/layouts";
 import { useTheme } from "@/theme/hooks/useTheme";
@@ -15,7 +14,7 @@ export function ModalOneScreen() {
   return (
     <>
       <Layout.Modal title={t("modal1.title")}>
-        <View style={styles.content}>
+        <View className="flex-1 items-center justify-center bg-background-primary">
           <Host colorScheme={isDark ? "dark" : "light"} matchContents>
             <Column spacing={16}>
               <Text>{t("modal1.subtitle")}</Text>
@@ -33,12 +32,3 @@ export function ModalOneScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  content: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.background.primary,
-  },
-}));

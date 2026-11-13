@@ -1,37 +1,19 @@
+import { Text, View } from "@tamagui/tailwind";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Pressable, Text, View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
+import { Pressable } from "react-native";
 
 export function NotFoundScreen() {
   const { t } = useTranslation("screens");
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{t("notFound.message")}</Text>
-      <Pressable onPress={() => router.replace("/")} style={styles.link}>
-        <Text style={styles.linkText}>{t("notFound.goHome")}</Text>
+    <View className="flex-1 items-center justify-center bg-background-primary p-5">
+      <Text className="text-text-primary">{t("notFound.message")}</Text>
+      <Pressable onPress={() => router.replace("/")}>
+        <View className="mt-[15px] py-[15px]">
+          <Text className="text-interactive-primary">{t("notFound.goHome")}</Text>
+        </View>
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: theme.spacing[5],
-    backgroundColor: theme.colors.background.primary,
-  },
-  text: {
-    color: theme.colors.text.primary,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    color: theme.colors.interactive.primary,
-  },
-}));

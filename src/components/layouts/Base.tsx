@@ -1,14 +1,13 @@
 import { Host, Text } from "@expo/ui";
+import { View } from "@tamagui/tailwind";
 import { useRouter } from "expo-router";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native-unistyles";
 
 import { Icon } from "@/components/common/icon";
 import { IconButton } from "@/components/common/icon-button";
 import { useTheme } from "@/theme/hooks/useTheme";
+import { SafeScreen } from "./safe-screen";
 import type { BaseLayoutProps } from "./types";
 
 export const BaseLayout: FC<BaseLayoutProps> = ({
@@ -35,10 +34,10 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   };
 
   return (
-    <SafeAreaView edges={safeAreaEdges} style={styles.root}>
-      <View style={styles.flex}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
+    <SafeScreen edges={safeAreaEdges}>
+      <View className="flex-1 bg-surface-primary">
+        <View className="w-full flex-row items-center justify-between bg-interactive-primary p-3">
+          <View className="max-w-[60%] flex-row items-center gap-2">
             {showBack ? (
               <IconButton accessibilityLabel={t("back")} onPress={handleBack}>
                 <Icon
@@ -58,25 +57,12 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
           </View>
           {callToAction}
         </View>
-        <View style={[styles.body, contentContainerStyle]}>{children}</View>
+        <View className="flex-1 bg-surface-primary p-3" style={contentContainerStyle}>
+          {children}
+        </View>
       </View>
-    </SafeAreaView>
+    </SafeScreen>
   );
 };
-
-const styles = StyleSheet.create((theme) => ({
-  root: { flex: 1, backgroundColor: theme.colors.background.primary },
-  flex: { flex: 1, backgroundColor: theme.colors.surface.primary },
-  header: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: theme.spacing[3],
-    backgroundColor: theme.colors.interactive.primary,
-  },
-  headerLeft: { maxWidth: "60%", flexDirection: "row", alignItems: "center", gap: theme.spacing[2] },
-  body: { flex: 1, padding: theme.spacing[3], backgroundColor: theme.colors.surface.primary },
-}));
 
 BaseLayout.displayName = "BaseLayout";

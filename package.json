@@ -22,6 +22,9 @@
     "@legendapp/list": "3.7.0",
     "@legendapp/state": "3.0.0-beta.48",
     "@sentry/react-native": "^8.33.0",
+    "@tamagui/config": "^3.3.3",
+    "@tamagui/metro-plugin": "^3.3.3",
+    "@tamagui/tailwind": "^3.3.3",
     "dayjs": "1.11.23",
     "expo": "~58.0.21",
     "expo-build-properties": "~58.0.11",
@@ -49,10 +52,10 @@
     "react-native-screens": "~4.30.0",
     "react-native-skia": "^3.7.0",
     "react-native-teleport": "1.2.3",
-    "react-native-unistyles": "3.7.0",
     "react-native-watermelondb": "^0.1.5",
     "react-native-worklets": "0.13.0",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "tamagui": "^3.3.3"
   },
   "devDependencies": {
     "@expo/metro-runtime": "~58.0.15",

@@ -7,14 +7,13 @@ import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { PortalProvider } from "react-native-teleport";
-import { StyleSheet } from "react-native-unistyles";
 
+import { styledNative } from "@/components/common/styled-native";
 import { initializeI18n } from "@/i18n";
 import { settings$ } from "@/stores/settings";
 import { MainProvider } from "@/providers/MainProvider";
 import { useTheme } from "@/theme/hooks/useTheme";
 import { createNavigationTheme } from "@/theme/navigation";
-import { initializeUnistylesTheme } from "@/theme/stores/useThemeStore";
 import { logger } from "@/utils/logger";
 import { initializeRevenueCat } from "@/utils/revenuecat";
 import { captureException, initSentry } from "@/utils/sentry";
@@ -35,9 +34,7 @@ export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
-const styles = StyleSheet.create({
-  root: { flex: 1 },
-});
+const Root = styledNative(GestureHandlerRootView, "flex-1");
 
 function RootLayoutNav() {
   const { t } = useTranslation("screens");
@@ -45,7 +42,7 @@ function RootLayoutNav() {
   const navigationTheme = useMemo(() => createNavigationTheme(theme), [theme]);
 
   return (
-    <GestureHandlerRootView style={styles.root}>
+    <Root>
       <PortalProvider>
         <MainProvider>
           <ThemeProvider value={navigationTheme}>
@@ -66,7 +63,7 @@ function RootLayoutNav() {
           </ThemeProvider>
         </MainProvider>
       </PortalProvider>
-    </GestureHandlerRootView>
+    </Root>
   );
 }
 
@@ -82,7 +79,6 @@ function RootLayout() {
 
     (async () => {
       try {
-        initializeUnistylesTheme();
         const [language] = await Promise.all([initializeI18n(), initializeRevenueCat()]);
         settings$.language.set(language);
       } catch (error) {
