@@ -30,8 +30,8 @@ const ErrorFallback: FC<ErrorFallbackProps> = ({ onReset, onGoHome }) => {
   const contentStyle = {
     flexGrow: 1,
     justifyContent: "center",
-    paddingHorizontal: getTokenValue("$6", "space"),
-    paddingVertical: getTokenValue("$8", "space"),
+    paddingHorizontal: getTokenValue("6", "space"),
+    paddingVertical: getTokenValue("8", "space"),
   } as const;
 
   return (
