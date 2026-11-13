@@ -11,7 +11,7 @@ import { useTheme } from "@/theme/hooks/useTheme";
 
 import { useNotes } from "./useNotes";
 
-const LIST_CONTENT_STYLE = { padding: getTokenValue("$3", "space") };
+const LIST_CONTENT_STYLE = { padding: getTokenValue("3", "space") };
 const INPUT_HOST_STYLE = { flex: 1 };
 
 export function TabTwoScreen() {

@@ -140,7 +140,7 @@ export function Card() {
 
 - Conflicting classes resolve by position, not like web Tailwind: write the winning class last (`rounded rounded-r-none`).
 - Use `flex-1` for `flex: 1`; fixed font sizes and percentages use arbitrary values (`text-[16px]`, `max-w-[60%]`).
-- Props that take a style object, not a class (`contentContainerStyle`, computed safe-area offsets), get a plain object; read tokens with `getTokenValue("$4", "space")` from `tamagui`.
+- Props that take a style object, not a class (`contentContainerStyle`, computed safe-area offsets), get a plain object; read tokens with `getTokenValue("4", "space")` from `tamagui` (Tamagui v3 keys have no `$` prefix).
 - `@expo/ui` props (`style`, `textStyle` on `Host`/`Column`/`Text`, …) are `@expo/ui`'s own API and stay inline.
 
 To sync an app with this template, copy `tamagui.config.ts`, the `withTamagui` metro wrapper, `MainProvider`, `styled-native.ts`, and `src/theme`.
