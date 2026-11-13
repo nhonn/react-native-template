@@ -1,9 +1,7 @@
-import { type ComponentRef, forwardRef, type ReactNode } from "react";
+import { type ComponentRef, forwardRef } from "react";
 import { Pressable as GHPressable, type PressableProps as GHPressableProps } from "react-native-gesture-handler";
 
-export type PressableProps = Omit<GHPressableProps, "children"> & {
-  children?: ReactNode;
-};
+export type PressableProps = GHPressableProps;
 
 export type PressableRef = ComponentRef<typeof GHPressable>;
 

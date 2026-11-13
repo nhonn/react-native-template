@@ -1,8 +1,9 @@
 import { router } from "expo-router";
 import { Component, type ErrorInfo, type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { StyleSheet } from "react-native-unistyles";
+import { Pressable, ScrollView } from "react-native";
+import { Text, View } from "@tamagui/tailwind";
+import { getTokenValue } from "tamagui";
 
 import { logger } from "@/utils/logger";
 import { captureException } from "@/utils/sentry";
@@ -26,30 +27,30 @@ interface ErrorFallbackProps {
 
 const ErrorFallback: FC<ErrorFallbackProps> = ({ onReset, onGoHome }) => {
   const { t } = useTranslation("error_boundary");
+  const contentStyle = {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: getTokenValue("$6", "space"),
+    paddingVertical: getTokenValue("$8", "space"),
+  } as const;
 
   return (
-    <View style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{t("title")}</Text>
-          <Text style={styles.message}>{t("message")}</Text>
+    <View className="flex-1 bg-background-primary">
+      <ScrollView contentContainerStyle={contentStyle} showsVerticalScrollIndicator={false}>
+        <View className="mb-8 items-center">
+          <Text className="mb-2 text-center text-[24px] font-bold text-text-primary">{t("title")}</Text>
+          <Text className="text-center text-[16px] leading-[24px] text-text-secondary">{t("message")}</Text>
         </View>
-        <View style={styles.actions}>
-          <Pressable
-            accessibilityLabel={t("try_again")}
-            accessibilityRole="button"
-            onPress={onReset}
-            style={styles.primaryButton}
-          >
-            <Text style={styles.primaryButtonText}>{t("try_again")}</Text>
+        <View className="gap-3">
+          <Pressable accessibilityLabel={t("try_again")} accessibilityRole="button" onPress={onReset}>
+            <View className="items-center justify-center rounded-md bg-text-primary px-4 py-3.5">
+              <Text className="text-[16px] font-semibold text-background-primary">{t("try_again")}</Text>
+            </View>
           </Pressable>
-          <Pressable
-            accessibilityLabel={t("go_home")}
-            accessibilityRole="button"
-            onPress={onGoHome}
-            style={styles.secondaryButton}
-          >
-            <Text style={styles.secondaryButtonText}>{t("go_home")}</Text>
+          <Pressable accessibilityLabel={t("go_home")} accessibilityRole="button" onPress={onGoHome}>
+            <View className="items-center justify-center rounded-md border border-border-secondary bg-background-primary px-4 py-3.5">
+              <Text className="text-[16px] font-semibold text-text-secondary">{t("go_home")}</Text>
+            </View>
           </Pressable>
         </View>
       </ScrollView>
@@ -116,64 +117,3 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     return this.props.children;
   }
 }
-
-const styles = StyleSheet.create((theme) => ({
-  screen: {
-    flex: 1,
-    backgroundColor: theme.colors.background.primary,
-  },
-  content: {
-    flexGrow: 1,
-    justifyContent: "center",
-    paddingHorizontal: theme.spacing[6],
-    paddingVertical: theme.spacing[8],
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: theme.spacing[8],
-  },
-  title: {
-    marginBottom: theme.spacing[2],
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: "700",
-    color: theme.colors.text.primary,
-  },
-  message: {
-    textAlign: "center",
-    fontSize: 16,
-    lineHeight: 24,
-    color: theme.colors.text.secondary,
-  },
-  actions: {
-    gap: theme.spacing[3],
-  },
-  primaryButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.text.primary,
-    paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[4],
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: theme.colors.background.primary,
-  },
-  secondaryButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border.secondary,
-    backgroundColor: theme.colors.background.primary,
-    paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[4],
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: theme.colors.text.secondary,
-  },
-}));

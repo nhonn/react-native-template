@@ -2,11 +2,13 @@ import type { LayoutChangeEvent } from "react-native";
 import { Canvas, Circle, RadialGradient, vec } from "react-native-skia";
 import { Easing, useDerivedValue, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
-import { StyleSheet } from "react-native-unistyles";
 
+import { styledNative } from "@/components/common/styled-native";
 import { useTheme } from "@/theme/hooks/useTheme";
 
 const PULSE_DURATION_MS = 1800;
+
+const PulseSurface = styledNative(Canvas, "mx-4 h-[180px] rounded-lg bg-surface-elevated");
 
 /**
  * Skia demo: a pulsing, gradient-filled circle driven by a Reanimated shared
@@ -36,7 +38,7 @@ export function PulseCanvas() {
   const ringOpacity = useDerivedValue(() => 1 - progress.value);
 
   return (
-    <Canvas style={styles.canvas} onLayout={onLayout}>
+    <PulseSurface onLayout={onLayout}>
       <Circle
         c={center}
         r={ringRadius}
@@ -52,15 +54,6 @@ export function PulseCanvas() {
           colors={[theme.colors.interactive.primaryHover, theme.colors.interactive.primary]}
         />
       </Circle>
-    </Canvas>
+    </PulseSurface>
   );
 }
-
-const styles = StyleSheet.create((theme) => ({
-  canvas: {
-    height: 180,
-    marginHorizontal: theme.spacing[4],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.surface.elevated,
-  },
-}));

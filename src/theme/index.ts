@@ -31,9 +31,8 @@ export {
   useThemeTypography,
 } from "./hooks/useTheme";
 // Store and Hooks
-export { initializeUnistylesTheme, useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
-// Unistyles bridge
-export { applyUnistylesTheme, createTheme } from "./unistyles";
+export { useSystemThemeTracking, useThemeStore } from "./stores/useThemeStore";
+export { createTheme } from "./create-theme";
 export { createNavigationTheme } from "./navigation";
 export { darkColorScheme } from "./themes/dark";
 // Themes
